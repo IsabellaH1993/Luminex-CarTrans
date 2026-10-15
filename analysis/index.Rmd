@@ -39,7 +39,10 @@ editor_options:
 #### Transplantation Risk [link](TransplantationRisk_vsBaseline.html)
 
 # Analytes of interest
-#### PD-L1, IL2R, CXCL10 and Grem2 [link](Analytes_filtered.html)
+#### PD-L1 [link](Analytes_PDL1.html)
+#### IL2R  
+#### CXCL10 
+#### Grem2
 
 # Correlation
 
