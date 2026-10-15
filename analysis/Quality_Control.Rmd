@@ -119,7 +119,7 @@ plot_limits <- function(data, lims, log = FALSE) {
 }
 ```
 
-```{r plot both, fig.width=20, fig.height=36, out.width="100%", dpi=150}
+```{r plot_both, fig.width=20, fig.height=36, out.width="100%", dpi=150}
 plot_limits(lum_long, c("LLOQ", "ULOQ"))
 ```
 

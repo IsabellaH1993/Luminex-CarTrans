@@ -308,7 +308,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -319,8 +319,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -333,12 +333,12 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
-<strong>Knit directory:</strong> <code>Luminex/</code> <span
+<strong>Knit directory:</strong> <code>Luminex_CarTrans/</code> <span
 class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
@@ -358,18 +358,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -460,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree427a81f0458dc75ce4ee7ba34c9daf7b0a0be91btargetblank427a81fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/427a81f0458dc75ce4ee7ba34c9daf7b0a0be91b" target="_blank">427a81f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree427a81f0458dc75ce4ee7ba34c9daf7b0a0be91btargetblank427a81fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -478,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/427a81f0458dc75ce4ee7ba34c9daf7b0a0be91b" target="_blank">427a81f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -498,11 +501,14 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    Quality-Control_files/
     Ignored:    analysis/.DS_Store
+    Ignored:    data/
     Ignored:    html/
 
 Unstaged changes:
-    Modified:   .gitignore
-    Deleted:    analysis/Quality Control.Rmd
+    Modified:   analysis/Kinetics.Rmd
+    Modified:   analysis/Luminex_HeatmapVisit.Rmd
+    Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
+    Modified:   analysis/Quality_Control.Rmd
 
 </code></pre>
 <p>
@@ -547,6 +553,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/c51e568298eca20ab55002e444a3c4bc5d92f7ff/docs/Quality_Control.html" target="_blank">c51e568</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -607,8 +630,47 @@ ggplot(table_Grem2, aes(x = label, y = grem2)) +
   labs(x = &quot;Date&quot;, y = &quot;Grem2&quot;) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
-<p><img src="figure/Quality_Control.Rmd/dotplot-1.png" alt="" width="672" style="display: block; margin: auto;" />
-# Quality control Luminex analytes</p>
+<p><img src="figure/Quality_Control.Rmd/dotplot-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dotplot-1">
+Past versions of dotplot-1.png
+</button>
+</p>
+<div id="fig-dotplot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c51e568298eca20ab55002e444a3c4bc5d92f7ff/docs/figure/Quality_Control.Rmd/dotplot-1.png" target="_blank">c51e568</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="quality-control-luminex-analytes" class="section level1">
+<h1>Quality control Luminex analytes</h1>
 <pre class="r"><code>table_lum_overall &lt;- table_lum_overall %&gt;%
   mutate(
     Runs = as.character(Runs),
@@ -656,11 +718,85 @@ plot_limits &lt;- function(data, lims, log = FALSE) {
           legend.position = &quot;top&quot;)
 }</code></pre>
 <pre class="r"><code>plot_limits(lum_long, c(&quot;LLOQ&quot;, &quot;ULOQ&quot;))</code></pre>
-<p><img src="figure/Quality_Control.Rmd/plot%20both-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Quality_Control.Rmd/plot_both-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>plot_limits(lum_long, &quot;LLOQ&quot;)</code></pre>
 <p><img src="figure/Quality_Control.Rmd/lloq-plot-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-lloq-plot-1">
+Past versions of lloq-plot-1.png
+</button>
+</p>
+<div id="fig-lloq-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c51e568298eca20ab55002e444a3c4bc5d92f7ff/docs/figure/Quality_Control.Rmd/lloq-plot-1.png" target="_blank">c51e568</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>plot_limits(lum_long, &quot;ULOQ&quot;)</code></pre>
 <p><img src="figure/Quality_Control.Rmd/uloq-plot-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-uloq-plot-1">
+Past versions of uloq-plot-1.png
+</button>
+</p>
+<div id="fig-uloq-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c51e568298eca20ab55002e444a3c4bc5d92f7ff/docs/figure/Quality_Control.Rmd/uloq-plot-1.png" target="_blank">c51e568</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -691,23 +827,21 @@ other attached packages:
  [1] here_1.0.2      readxl_1.5.0.1  lubridate_1.9.5 forcats_1.0.1  
  [5] stringr_1.6.0   dplyr_1.2.1     purrr_1.2.2     readr_2.2.0    
  [9] tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.3   tidyverse_2.0.0
-[13] workflowr_1.7.2
 
 loaded via a namespace (and not attached):
  [1] sass_0.4.10        generics_0.1.4     stringi_1.8.9      hms_1.1.4         
  [5] digest_0.6.39      magrittr_2.0.5     timechange_0.4.0   evaluate_1.0.5    
  [9] grid_4.6.1         RColorBrewer_1.1-3 fastmap_1.2.0      cellranger_1.1.0  
-[13] rprojroot_2.1.1    jsonlite_2.0.0     zip_3.0.2          processx_3.9.0    
-[17] whisker_0.4.1      promises_1.5.0     httr_1.4.9         scales_1.4.0      
-[21] jquerylib_0.1.4    cli_3.6.6          rlang_1.3.0        withr_3.0.3       
-[25] cachem_1.1.0       yaml_2.3.12        otel_0.2.0         tools_4.6.1       
-[29] tzdb_0.5.0         httpuv_1.6.17      vctrs_0.7.3        R6_2.6.1          
-[33] lifecycle_1.0.5    git2r_0.36.2       fs_2.1.0           pkgconfig_2.0.3   
-[37] callr_3.8.0        openxlsx_4.2.9     pillar_1.11.1      bslib_0.12.0      
-[41] later_1.4.8        gtable_0.3.6       glue_1.8.1         Rcpp_1.1.2        
-[45] xfun_0.61          tidyselect_1.2.1   rstudioapi_0.19.0  knitr_1.52        
-[49] farver_2.1.2       htmltools_0.5.9    labeling_0.4.3     rmarkdown_2.32    
-[53] compiler_4.6.1     getPass_0.2-4      S7_0.2.2          </code></pre>
+[13] rprojroot_2.1.1    workflowr_1.7.2    jsonlite_2.0.0     zip_3.0.2         
+[17] whisker_0.4.1      promises_1.5.0     scales_1.4.0       jquerylib_0.1.4   
+[21] cli_3.6.6          rlang_1.3.0        withr_3.0.3        cachem_1.1.0      
+[25] yaml_2.3.12        otel_0.2.0         tools_4.6.1        tzdb_0.5.0        
+[29] httpuv_1.6.17      vctrs_0.7.3        R6_2.6.1           lifecycle_1.0.5   
+[33] git2r_0.36.2       fs_2.1.0           pkgconfig_2.0.3    openxlsx_4.2.9    
+[37] pillar_1.11.1      bslib_0.12.0       later_1.4.8        gtable_0.3.6      
+[41] glue_1.8.1         Rcpp_1.1.2         xfun_0.61          tidyselect_1.2.1  
+[45] rstudioapi_0.19.0  knitr_1.52         farver_2.1.2       htmltools_0.5.9   
+[49] labeling_0.4.3     rmarkdown_2.32     compiler_4.6.1     S7_0.2.2          </code></pre>
 </div>
 </div>
 </div>

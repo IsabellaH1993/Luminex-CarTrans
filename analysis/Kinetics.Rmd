@@ -184,7 +184,7 @@ df_long_NTproBNP$Timepoint <- factor(
 )
 ```
 
-```{r boxplot NTproBNP kinetics color per patient, fig.width=6, fig.height=7, out.width="80%"}
+```{r boxplot NTproBNP kinetics color per patient, fig.width=9, fig.height=6, out.width="100%"}
 ggplot(df_long_NTproBNP, aes(x = Timepoint, y = NTproBNP)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
@@ -266,7 +266,7 @@ df_long_TropT$Timepoint <- factor(
 )
 ```
 
-```{r boxplot TropT kinetics color per patient, fig.width=6, fig.height=7, out.width="80%"}
+```{r boxplot TropT kinetics color per patient, fig.width=9, fig.height=6, out.width="100%"}
 ggplot(df_long_TropT, aes(x = Timepoint, y = TropT)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
@@ -349,7 +349,7 @@ df_long_CRP$Timepoint <- factor(
 )
 ```
 
-```{r boxplot CRP kinetics color per patient, fig.width=6, fig.height=7,out.width="80%"}
+```{r boxplot CRP kinetics color per patient, fig.width=9, fig.height=6, out.width="100%"}
 ggplot(df_long_CRP, aes(x = Timepoint, y = CRP)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
@@ -432,7 +432,7 @@ df_long_Leuc$Timepoint <- factor(
 )
 ```
 
-```{r boxplot leukocytes kinetics color per patient, fig.width=6, fig.height=7, out.width="100%"}
+```{r boxplot leukocytes kinetics color per patient, fig.width=9, fig.height=6, out.width="100%"}
 ggplot(df_long_Leuc, aes(x = Timepoint, y = Leukocytes)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +

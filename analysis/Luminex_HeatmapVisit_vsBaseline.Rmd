@@ -373,6 +373,3 @@ Heatmap(heatmap_mat,
   show_row_names = TRUE
 )
 ```
-
-# Remove FGFbasic from analyte list (will give NAs)
-analyte_cols <- analyte_cols[analyte_cols != "FGFbasic"]
