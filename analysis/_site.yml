@@ -1,0 +1,22 @@
+name: "CarTrans"
+output_dir: ../docs
+navbar:
+  title: "Luminex CarTrans"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Quality Control"
+      href: Quality-Control.html
+    - text: "Clinical"
+      menu:
+        - text: "Table 1 and Heatmap"
+          href: TableOverall.html
+        - text: "Donor characteristics"
+          href: Donor-Characteristics.html
+        - text: "Kinetics"
+          href: Kinetics.html
+output:
+  workflowr::wflow_html:
+    toc: false
+    theme: cosmo
+    highlight: textmate
