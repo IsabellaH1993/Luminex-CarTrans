@@ -1,0 +1,342 @@
+---
+title: "Luminex Overview"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries}
+suppressPackageStartupMessages({ 
+ # Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+```
+
+```{r define filepath}
+basedir <- here ()
+```
+
+
+```{r import datasets, include=FALSE}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_healthy, table_lum_CarTrans_VX)%>% 
+  mutate(across(-c(Study_ID, Visit), ~ pmax(as.numeric(.), 1))) %>% #sets every value below 1 to 1 because of 0 values
+    filter(!Study_ID %in% c("CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004)
+```
+
+# Visualisation
+
+## Abundance bubble plot
+
+```{r abundance bubble plot overall, fig.height=5, fig.width=14}
+
+# Prepare data table for bubble plot
+  # Create the loop vector
+    parameters <- names(which(sapply(table_lum_CarTrans_overall, is.numeric) == TRUE)) 
+
+  # Prepare data table 
+    table_para <- table_lum_CarTrans_overall %>%
+                  mutate(Visit = case_when(Visit == "Healthy" ~ "Healthy",
+                                           Visit == "V0" ~ "Baseline",
+                                           Visit == "V1" ~ "Week 1",
+                                           Visit == "V2" ~ "Week 2",
+                                           Visit == "V3" ~ "Month 1-3",
+                                           Visit == "V4" ~ "Month 4-6",
+                                           Visit == "V5" ~ "Month 12",
+                                           grepl("^VX", Visit) ~ "Rejection Context",
+                                            TRUE ~ as.character(Visit)),
+                        Group=ifelse(Visit=="Healthy", "Healthy", "CarTrans")) %>%
+                  pivot_longer(cols = where(is.numeric),
+                               names_to = "Parameter",
+                               values_to = "Parameter_val")
+    
+# Calculate mean expression for the healthy participants
+  healthy_stats <- table_para %>%
+                   mutate(Group == "Healthy") %>%
+                   group_by(Parameter) %>%
+                   summarise(mean_expr_healthy = mean(Parameter_val, na.rm = TRUE))
+
+# Calculate mean expression for CarTrans cohort & calcuate FC
+  cohorts_stats <- table_para %>%
+                   filter(Group != "Healthy") %>%
+                   group_by(Parameter) %>%
+                   summarise(mean_expr_group = mean(Parameter_val, na.rm = TRUE)) %>%
+                   left_join(healthy_stats, by = "Parameter") %>%
+                   mutate(log2_fc = log2(mean_expr_group /mean_expr_healthy)) 
+
+  
+# Calculate abundance fold change > 1.5 per parameter in CarTrans vs Healthy
+  percentage_fc_increase <- table_para %>%
+                            filter(Group != "Healthy") %>%
+                            group_by(Parameter, Group) %>%
+                            left_join(healthy_stats, by = "Parameter") %>%
+                            mutate(log2_fc = log2(Parameter_val/mean_expr_healthy)) %>% 
+                            mutate(fc_1.5 = log2_fc >1.5) %>%
+                            summarise(percentage_fc_1.5 = mean(fc_1.5, na.rm = TRUE) * 100)
+  
+    # Merge stats tables
+      cohorts_stats <- cohorts_stats %>%
+                       left_join(percentage_fc_increase,by = c("Parameter"))
+    
+    # Order Parameters
+      list_parameter_groups <- read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+      cohorts_stats$Parameter <- factor(cohorts_stats$Parameter, levels = list_parameter_groups$Parameter)
+      
+# Create the Bubble Plot
+    bubble_plot <- ggplot(cohorts_stats, aes(x = Parameter, y = Group, 
+                                             size = abs(percentage_fc_1.5),
+                                             color = log2_fc)) + 
+                    geom_point(alpha = 1) + 
+                    scale_size(range = c(2, 9)) +
+                    scale_color_gradient2(mid = "white", high = "red", midpoint = 0) +
+                    labs(title = "Fold Change (Log2) by Parameter of CarTrans patients vs Healthy",
+                         x = "Parameter", y = "Group", 
+                         size = "Percentage of Patients (FC > 1.5)", color = "Log2 Fold Change") +
+                    theme_minimal() +
+                    theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+                          axis.text.y = element_text(size = 14))  
+
+# Display the plot
+  print(bubble_plot)
+```
+
+
+```{r abundance bubble plot each visit, fig.height=15, fig.width=15}
+# Prepare data table for bubble plot
+  # Create the loop vector
+    parameters <- names(which(sapply(table_lum_CarTrans_overall, is.numeric) == TRUE)) 
+    
+  # Prepare data table 
+    table_para <- table_lum_CarTrans_overall %>%
+                  mutate(Visit = case_when(Visit == "Healthy" ~ "Healthy",
+                                           Visit == "V0" ~ "Baseline",
+                                           Visit == "V1" ~ "Week 1",
+                                           Visit == "V2" ~ "Week 2",
+                                           Visit == "V3" ~ "Month 1-3",
+                                           Visit == "V4" ~ "Month 4-6",
+                                           Visit == "V5" ~ "Month 12",
+                                           grepl("^VX", Visit) ~ "Rejection Context",
+                                            TRUE ~ as.character(Visit))) %>%
+                  pivot_longer(cols = where(is.numeric),
+                               names_to = "Parameter",
+                               values_to = "Parameter_val")
+    
+# Calculate mean expression for the healthy participants
+  healthy_stats <- table_para %>%
+                   filter(Visit == "Healthy") %>%
+                   group_by(Parameter) %>%
+                   summarise(mean_expr_healthy = mean(Parameter_val, na.rm = TRUE))
+
+# Calculate mean expression for CarTrans cohort & calcuate FC
+  cohorts_stats <- table_para %>%
+                   filter(Visit != "Healthy") %>%
+                   group_by(Visit, Parameter) %>%
+                   summarise(mean_expr_visits = mean(Parameter_val, na.rm = TRUE)) %>%
+                   left_join(healthy_stats, by = "Parameter") %>%
+                   mutate(log2_fc = log2(mean_expr_visits / mean_expr_healthy))
+
+  
+# Calculate abundance fold change > 1.5 per parameter in AM cohort
+  percentage_fc_increase <- table_para %>%
+                            filter(Visit != "Healthy") %>%
+                            group_by(Visit, Parameter) %>%
+                            left_join(healthy_stats, by = "Parameter") %>%
+                            mutate(log2_fc = log2(Parameter_val / mean_expr_healthy)) %>%
+                            mutate(fc_1.5 = log2_fc >1.5) %>%
+                            summarise(percentage_fc_1.5 = mean(fc_1.5, na.rm = TRUE) * 100)
+  
+    # Merge stats tables
+      cohorts_stats <- cohorts_stats %>%
+                       left_join(percentage_fc_increase,by = c("Visit", "Parameter"))
+    
+    # Reorder Cohorts order
+      cohorts_stats <-  cohorts_stats %>%
+                        mutate(Visit = factor(Visit, levels = c("Healthy", "Baseline","Week 1", "Week 2", "Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
+    
+    # Order Parameters
+      list_parameter_groups <- read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+      cohorts_stats$Parameter <- factor(cohorts_stats$Parameter, levels = list_parameter_groups$Parameter)
+      
+# Create the Bubble Plot
+    bubble_plot <- ggplot(cohorts_stats, aes(x = Parameter, y = Visit, 
+                                             size = abs(percentage_fc_1.5),
+                                             color = log2_fc)) + 
+                    geom_point(alpha = 1) + 
+                    scale_size(range = c(2, 8)) +
+                    scale_y_discrete(limits = rev(levels(cohorts_stats$Visit))) +
+                    scale_color_gradient2(mid = "white", high = "red", midpoint = 0) +
+                    labs(title = "Fold Change (Log2) by Parameter and Visit",
+                         x = "Parameter", y = "Visit", 
+                         size = "Percentage of Patients (FC > 1.5)", color = "Log2 Fold Change") +
+                    theme_minimal() +
+                    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16), 
+                          axis.text.y = element_text(size = 15))  
+
+# Display the plot
+  print(bubble_plot)
+```
+
+## Combined volcano plot
+```{r combined volcano plot of healthy vs CarTrans}
+#  Set rownames
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  select(-Class_Sup, -Transplantation_risk)
+  
+# Rename Healthy vs all CarTrans Visits
+  table_lum_CarTrans_overall$Visit <- ifelse(table_lum_CarTrans_overall$Visit == "Healthy", "Healthy", "CarTrans")
+
+# Calculate p-values between CarTrans and healthy
+    
+  # Create the loop.vector (all the parameter columns)
+    names(which(sapply(table_lum_CarTrans_overall, is.numeric) == TRUE)) -> parameters 
+
+  # Create table for stats
+    table_lum_CarTrans_overall_stat <- data.table (Parameter = numeric(), group1 = character(), 
+                                              group2 = character(), n1 = numeric(),
+                                              n2 = numeric(), statistic = numeric (),
+                                              p = numeric (), p.signif = character(), FDR = numeric()) #FDR False Discovery Rate
+   
+  # Create loop for calculation of stat test by parameter between CarTrans and healthy cohort
+    for (i in parameters)
+      
+    { 
+      # Formula to insert parameter in loop 
+        formula = as.formula( paste(i, "Visit", sep="~") )
+          
+        stat_parameter <- table_lum_CarTrans_overall %>% 
+                          wilcox_test(formula = formula) %>%
+                          add_significance() %>%
+                          mutate(FDR = p.adjust(p, method = "BH")) %>% #Benjamini-Hochberg correction
+                          rename(Parameter = .y.)
+        
+      # Combine currently calculated stats with previous calculations
+        table_lum_CarTrans_overall_stat <- rbind(table_lum_CarTrans_overall_stat, stat_parameter)
+    }
+
+# Calculate FC between different Visits
+    
+      # Calculate Mean of parameters per group
+        table_lum_CarTrans_overall_log2  <- table_lum_CarTrans_overall %>% 
+                                       group_by(Visit) %>%
+                                       summarise(across(CCL11:BMP4, ~ mean(.x, na.rm = TRUE)))
+      
+      # Transverse Data Table and set rownames
+        table_lum_CarTrans_overall_log2_t  <- table_lum_CarTrans_overall_log2  %>% 
+                                         t %>% 
+                                         as.data.frame() %>% 
+                                         row_to_names(1)
+     
+     # Convert whole data table to numeric
+       table_lum_CarTrans_overall_log2_t  <- mutate_all(table_lum_CarTrans_overall_log2_t, 
+                                                   function(x) as.numeric(as.character(x)))
+       
+     # Calculate FC between healthy and CarTrans
+       table_lum_CarTrans_overall_log2_t$log2_fc <- log2(table_lum_CarTrans_overall_log2_t$CarTrans /
+                                                    table_lum_CarTrans_overall_log2_t$Healthy)
+       
+     # Add p-values to data table
+        # Extract only Parameters and p-values
+           stat.test_p <- table_lum_CarTrans_overall_stat %>% 
+                          dplyr::select(Parameter, FDR)
+
+        # Merge data tables (log2, FC, p val)
+          table_lum_CarTrans_overall_log2_t$Parameter <- rownames(table_lum_CarTrans_overall_log2_t)
+          table_lum_CarTrans_overall_volcano <- merge(table_lum_CarTrans_overall_log2_t, stat.test_p, by = "Parameter")
+ 
+  # Create Volcano Plot
+          
+     # Mark parameters if FC > 1.5 = upregulated
+       table_lum_CarTrans_overall_volcano$diff_expression <- ifelse (table_lum_CarTrans_overall_volcano$log2_fc > 1.5, 
+                                                                "up", "no")
+     
+     # Add new column to relabel parameters FC of > 1.5
+      table_lum_CarTrans_overall_volcano$label_para <- ifelse (table_lum_CarTrans_overall_volcano$log2_fc > 1.5, 
+                                                          table_lum_CarTrans_overall_volcano$Parameter, "")    
+    
+      plot_volcano <- EnhancedVolcano(table_lum_CarTrans_overall_volcano, 
+                                      lab = table_lum_CarTrans_overall_volcano$label_para,
+                                      x = 'log2_fc', y = 'FDR', 
+                                      FCcutoff = 1.5, pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                                      boxedLabels = TRUE, col = c("grey", "grey", "grey", "darkred"),   
+                                      xlab = bquote(~Log[2]~ "fold change"), ylab = bquote("FDR-adjusted p-value"),
+                                      xlim = c(0, 4.5), ylim = c(0, 4), pCutoff = 0.05,
+                                      title = NULL, subtitle = NULL, border = 'full',
+                                      drawConnectors = TRUE,widthConnectors = 0.5, colConnectors = "darkred") +
+                                      theme_classic() +
+                                      theme(panel.grid = element_blank(),
+                                            panel.border = element_rect(colour = "black", fill = NA,),
+                                            legend.position = "none")
+      
+      print( plot_volcano)
+```
+
+
+

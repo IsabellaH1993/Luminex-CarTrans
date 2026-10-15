@@ -1,0 +1,660 @@
+---
+title: "Immunsuppression_Luminex"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+
+```
+
+```{r define filepath}
+basedir <- here ()
+```
+
+
+```{r import datasets, include=FALSE}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  # Delete Class_Sup column
+table_lum_healthy     <- table_lum_healthy     %>% select(-Class_Sup, -Transplantation_risk)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-Class_Sup, -Transplantation_risk)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-Class_Sup, -Transplantation_risk)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-Class_Sup, -Transplantation_risk)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-Class_Sup, -Transplantation_risk)
+  
+# Combine Tables
+  table_lum_CarTrans_overall <- dplyr::bind_rows(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_healthy)  %>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, ATG_EMB1_3), ~{
+        x <- as.numeric(as.character(.))  
+        x[is.na(x)] <- 0.1                  # replace NA (for now!! later:Imputation)
+        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
+      })) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+# Definition of the immunosuppressed host
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004)
+```
+
+```{r prep metadata}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+```
+
+```{r r heatmap, fig.height=10, fig.width=13}
+list_ATG <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, ATG_EMB1_3, Visit)
+
+rownames(list_ATG) <- list_ATG$Sample_ID
+list_ATG<- list_ATG[, c("ATG_EMB1_3", "Visit"), drop = FALSE]  #,"Visit" add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
+
+# Remove metadata columns
+table_lum_CarTrans_overall_01 <- table_lum_CarTrans_overall %>%
+  dplyr::select(-Study_ID, -Visit, -Sample_ID, -ATG_EMB1_3)
+
+# Convert Data Table to Data Frame
+  table_lum_CarTrans_overall_01 <- as.data.frame(table_lum_CarTrans_overall_01)
+  
+# Transpose Data Table
+  table_lum_CarTrans_overall_01_t <- t(table_lum_CarTrans_overall_01)
+
+## Column Annotations
+  colnames(table_lum_CarTrans_overall_01_t) <- table_lum_CarTrans_overall$Sample_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups <- openxlsx::read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+
+  # Create list with Columns of data table
+    list_parameter_datatable <- as.data.frame(rownames(table_lum_CarTrans_overall_01_t))
+                                colnames(list_parameter_datatable) <- "Parameter"
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 <- merge(list_parameter_groups, list_parameter_datatable, by.y = "Parameter")
+
+# Define the predefined order for Group
+  group_order <- c("Cytokine", "Chemokine", "Growth factor/Tissue Cytokine", "Activation Marker")
+  
+# Filter and order
+  list_parameter_groups_02 <- list_parameter_groups_01 %>%
+#                              filter(Parameter %in% selected_markers) %>%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %>%
+#                              Parameter = factor(Parameter, levels = selected_markers)) %>%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 <- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_lum_CarTrans_overall_01_t_ordered <- as.data.frame(table_lum_CarTrans_overall_01_t)
+  table_lum_CarTrans_overall_01_t_ordered <- table_lum_CarTrans_overall_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_lum_CarTrans_overall_01_t_ordered <- as.matrix(table_lum_CarTrans_overall_01_t_ordered)
+
+#Convert back to numeric
+  table_lum_CarTrans_overall_01_t_ordered <- matrix(
+    as.numeric(trimws(table_lum_CarTrans_overall_01_t_ordered)),
+    nrow = nrow(table_lum_CarTrans_overall_01_t_ordered),
+    dimnames = dimnames(table_lum_CarTrans_overall_01_t_ordered))
+  
+# Log Transform 
+  table_lum_CarTrans_overall_01_t_ordered <- log2(table_lum_CarTrans_overall_01_t_ordered)
+  
+# Scale 
+  table_lum_CarTrans_overall_01_t_ordered <- t(apply(table_lum_CarTrans_overall_01_t_ordered, 1, scale))
+
+  
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors <- list(
+  ATG_EMB1_3 = c(
+    "Baseline" = "#E0F7FA",
+    "Healthy" = "grey",
+    "No" = "lightgreen",
+    "Yes" = "#FF6666"),
+    Visit = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Healthy" = "grey"),
+  Grouping = c(
+    "Cytokine" = "darkseagreen",
+    "Chemokine" = "lightblue", 
+    "Growth factor/Tissue Cytokine" = "mediumpurple3",
+    "Activation Marker" =  "lightpink"))
+
+# Column Annotation
+  col_anno <- HeatmapAnnotation(df = list_ATG, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno <- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_lum <- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_lum)
+  
+```
+
+```{r split by different conditions, fig.height=9, fig.width=14}
+# Reorder grouped visits
+#list_ATG$ATG_EMB1_3 <- factor(list_ATG$ATG_EMB1_3,levels = c("Healthy", "Baseline", "Yes", "No"))
+
+
+# Create Heatmap split by visits
+  heatmap_lum_split <- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = FALSE,
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(23, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno,
+                         column_split = list_ATG$ATG_EMB1_3,
+                         column_gap = unit(4, "mm") 
+                          )
+
+
+# Draw Heatmap
+  show(heatmap_lum_split)
+```
+
+```{r volcano plot ATG, fig.width=5, fig.height=6}
+
+# Exclude Healthy and Baseline Condition from the comparison
+table_ATG <- table_lum_CarTrans_overall %>%
+  dplyr::select(-Visit) %>% 
+  dplyr::filter(!ATG_EMB1_3 %in% c("Healthy", "Baseline"))
+
+# Calculate p-values between ATG groups
+     # Create the loop.vector (all the parameter columns)
+    names(which(sapply(table_ATG, is.numeric) == TRUE)) -> parameters 
+
+  # Create table for stats
+    table_ATG_stat <- data.table (Parameter = numeric(), group1 = character(), 
+                                              group2 = character(), n1 = numeric(),
+                                              n2 = numeric(), statistic = numeric (),
+                                              p = numeric (), p.signif = character(), FDR = numeric()) #FDR False Discovery Rate
+   
+  # Create loop for calculation of stat test by parameter between ATG Yes vs No
+    for (i in parameters)
+      
+    { 
+      # Formula to insert parameter in loop 
+        formula = as.formula( paste(i, "ATG_EMB1_3", sep="~") )
+          
+        stat_parameter <- table_ATG %>% 
+                          wilcox_test(formula = formula) %>%
+                          add_significance() %>%
+                          mutate(FDR = p.adjust(p, method = "BH")) %>% #Benjamini-Hochberg correction
+                          rename(Parameter = .y.)
+        
+      # Combine currently calculated stats with previous calculations
+        table_ATG_stat <- rbind(table_ATG_stat, stat_parameter)
+    }
+
+# Calculate FC between different Visits
+    
+      # Calculate Mean of parameters per group
+        table_ATG_log2  <- table_ATG %>% 
+                                       group_by(ATG_EMB1_3) %>%
+                                       summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE)))
+      
+      # Transverse Data Table and set rownames
+        table_ATG_log2_t  <- table_ATG_log2  %>% 
+                                         t %>% 
+                                         as.data.frame() %>% 
+                                         row_to_names(1)
+     
+     # Convert whole data table to numeric
+       table_ATG_log2_t  <- mutate_all(table_ATG_log2_t, 
+                                                   function(x) as.numeric(as.character(x)))
+       
+     # Calculate FC between Healthy and Month 1-3
+       table_ATG_log2_t$log2_fc <- log2(table_ATG_log2_t$Yes /
+                                                    table_ATG_log2_t$No)
+       
+     # Add p-values to data table
+        # Extract only Parameters and p-values
+           stat.test_p <- table_ATG_stat %>% 
+                          dplyr::select(Parameter, FDR)
+
+        # Merge data tables (log2, FC, p val)
+          table_ATG_log2_t$Parameter <- rownames(table_ATG_log2_t)
+          table_ATG_volcano <- merge(table_ATG_log2_t, stat.test_p, by = "Parameter")
+ 
+  # Create Volcano Plot
+          
+     # Mark parameters if FC < -1 = downregulated
+       table_ATG_volcano$diff_expression <- ifelse(table_ATG_volcano$log2_fc < -1.5, "down",
+                                                            ifelse(table_ATG_volcano$log2_fc > 1.5, "up", "no"))
+     
+     # Add new column to relabel parameters FC of <-1
+      table_ATG_volcano$label_para <- ifelse(table_ATG_volcano$log2_fc < -1.5 |
+                                                        table_ATG_volcano$log2_fc > 1.5,
+                                                      table_ATG_volcano$Parameter, "")   
+    
+      volcano_ATG <- EnhancedVolcano(table_ATG_volcano, 
+                                      lab = table_ATG_volcano$label_para,
+                                      x = 'log2_fc', y = 'FDR', 
+                                      FCcutoff = -1.5, pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                                      boxedLabels = TRUE, col = c("grey", "grey", "grey", "darkred"),   
+                                      xlab = bquote(~Log[2]~ "fold change"), ylab = bquote("FDR-adjusted p-value (0.05)"),
+                                      xlim = c(-3, 3), ylim = c(0, 5), pCutoff = 0.05,
+                                      title = "Log2 fold change ATG Yes vs No", subtitle = NULL, border = 'full',
+                                      drawConnectors = TRUE,widthConnectors = 0.5, colConnectors = "darkred") +
+                                      theme_classic() +
+                                      theme(panel.grid = element_blank(),
+                                            panel.border = element_rect(colour = "black", fill = NA,),
+                                            legend.position = "none")
+      
+      print( volcano_ATG)
+```
+
+```{r import datasets 2, include=FALSE}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+  table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+select(-Transplantation_risk)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup), ~{
+        x <- as.numeric(as.character(.))  
+        x[is.na(x)] <- 0                  # replace NA (for now!! later:Imputation)
+        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
+      })) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+```{r clean overall table 2}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004)
+```
+
+```{r prep metadata 2}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ "Rejection Context", 
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+
+# Rename Class_Sup
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+                            rename(`Class Immunosuppression` = Class_Sup)
+```
+
+```{r build dataframe for visualisation}
+#Prep table
+df_Sup <- table_lum_CarTrans_overall %>%
+  select(`Class Immunosuppression`, Visit) %>%
+  filter(!Visit %in% c("Healthy", "Baseline")) #Filter out Healthy and Baseline for plotting
+
+#Set order
+df_Sup$Visit <- factor(
+  df_Sup$Visit,
+  levels = c(
+    "Week 1",
+    "Week 2",
+    "Month 1-3",
+    "Month 4-6",
+    "Month 12",
+    "Rejection Context"
+  )
+)
+
+#Set colors for different gradings
+grade_colors_Sup <- c(  
+  "Baseline" = "#E0F7FA",
+  "Healthy" = "grey",
+  "1" = "#66bd63",
+  "2" = "#a6d96a",
+  "3"  = "#ffffbf",
+  "4" = "#fdae61",
+  "5" = "#f46d43",
+  "6" = "#d73027"
+)
+```
+
+```{r count plot immunosuppression}
+ggplot(df_Sup, aes(x = Visit, fill = `Class Immunosuppression`)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = grade_colors_Sup) +
+  labs(
+    title = "Immunosuppression Across Timepoints",
+    x = "Timepoint",
+    y = "Count"
+  ) +
+  theme_classic()
+```
+
+
+```{r distribution immunosuppression}
+# Create summary table with counts
+df_counts <- df_Sup %>%
+  count(Visit, `Class Immunosuppression`)
+
+ggplot(df_counts, aes(x = Visit, y=n, fill = `Class Immunosuppression`)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(
+    aes(label = n),
+    position = position_fill(vjust = 0.5),
+    size = 3
+  ) +
+  scale_fill_manual(values = grade_colors_Sup) +
+  labs(
+    title = "Immunosuppression Across Timepoints",
+    x = "Timepoint",
+    y = "Proportion"
+  ) +
+  theme_classic()
+```
+
+
+```{r prep data for z score and statistical testing}
+# define analyte columns
+analyte_cols <- setdiff(colnames(table_lum_CarTrans_overall),
+                        c("Study_ID", "Visit", "Sample_ID", "Class Immunosuppression"))
+
+# Log transform input values
+table_lum_CarTrans_overall_z <- table_lum_CarTrans_overall %>%
+  mutate(across(all_of(analyte_cols), ~ log2(pmax(., 1))))
+
+# Statistical test for normality using Shapiro-Wilk test (p>0.05 no evidence against normality)
+shapiro_results <- table_lum_CarTrans_overall_z %>%
+  summarise(across(all_of(analyte_cols),
+                   ~ list(shapiro.test(.)))) %>%
+  pivot_longer(everything(),
+               names_to = "analyte",
+               values_to = "test") %>%
+  mutate(
+    statistic = map_dbl(test, "statistic"),
+    p_value   = map_dbl(test, "p.value")
+  ) %>%
+  select(-test)
+
+print(shapiro_results)
+
+# Visualize distribution
+plot_qq_all <- function(data, cols) {
+  for (col in cols) {
+    x <- data[[col]]
+    
+    qqnorm(x, main = col)
+    qqline(x, col = "red")
+  }
+}
+
+# Run it
+plot_qq_all(table_lum_CarTrans_overall_z, analyte_cols)
+```
+
+```{r compute z score}
+# Calculate healthy mean and SD as reference
+healthy_stats <- table_lum_CarTrans_overall_z %>%
+  filter(Visit == "Healthy") %>%
+  summarise(across(all_of(analyte_cols),
+                   list(mean = ~mean(., na.rm = TRUE),
+                        sd   = ~sd(., na.rm = TRUE))))
+
+# compute z-scores + summarize (sample value - mean reference / sd reference)
+df_z <- table_lum_CarTrans_overall_z %>%
+  mutate(across(
+    all_of(analyte_cols),
+    ~ {
+      m <- healthy_stats[[paste0(cur_column(), "_mean")]]
+      s <- healthy_stats[[paste0(cur_column(), "_sd")]]
+      
+       if (is.na(s) || s == 0) {
+        NA_real_
+      } else {
+        (.x - m) / s
+      }
+    }
+  ))%>% 
+  filter(`Class Immunosuppression` != "Baseline")
+
+#Summarize without healthy
+df_summary <- df_z %>%
+  filter(Visit != "Healthy") %>%
+  group_by(`Class Immunosuppression`, Study_ID) %>%
+  summarise(across(all_of(analyte_cols), ~ mean(.x, na.rm = TRUE)),
+            .groups = "drop")
+
+# Set global score per group
+df_summary <- df_summary %>%mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))
+```
+
+```{r test significant differences healthy vs Immunosuppression}
+# Test on sample level
+df_sample <- df_z %>% mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))
+
+# Test samples vs Healthy using Wilcox (not normaly distributed data)
+vs_healthy <- df_sample %>%
+  filter(Visit != "Healthy") %>%
+  group_by(`Class Immunosuppression`) %>%
+  summarise(
+    mean_z = mean(global_z, na.rm = TRUE),
+    p_value = wilcox.test(global_z, mu = 0)$p.value,
+    .groups = "drop"
+  ) %>%
+  mutate(p_adj = p.adjust(p_value, method = "BH"))
+
+print(vs_healthy)
+```
+
+```{r test differences between Class_Sup}
+# Kruskal Wallis for non normal distribution overall (any Class different from healthy)
+kruskal.test(global_z ~ `Class Immunosuppression`, data = df_sample)
+
+# Pairwise comparison
+pairwise.wilcox.test(df_sample$global_z,df_sample$`Class Immunosuppression`,p.adjust.method = "BH")
+```
+
+```{r}
+ggplot(df_summary,
+       aes(x = `Class Immunosuppression`, y = global_z, group = Study_ID)) +
+  geom_line(alpha = 0.3) +
+  geom_point(alpha = 0.3) +
+  stat_summary(aes(group = 1), fun = mean, geom = "line", size = 1.5, color = "red") +
+  stat_summary(aes(group = 1), fun = mean, geom = "point", size = 3, color = "red") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), plot.caption = element_text(hjust = 0), plot.caption.position = "plot") +
+  labs(title = "Longitudinal Immune Profiling",
+       y = "Global Z-score (vs Healthy)",
+    caption = "*Global Z-score: mean Z-score across all analytes")
+ 
+```
+
+```{r plot test on sample level}
+ggplot(df_sample,
+       aes(x = `Class Immunosuppression`, y = global_z)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.3) +
+  
+  stat_compare_means(method = "kruskal.test", label.y = max(df_sample$global_z, na.rm = TRUE) + 1) +  # global test
+  
+  stat_compare_means(
+    method = "wilcox.test",
+    comparisons = combn(unique(df_sample$`Class Immunosuppression`), 2, simplify = FALSE),
+    label = "p.signif"
+  ) +
+  
+  theme_minimal() +
+  labs(
+    title = "Global Z-score across Immunosuppression Classes",
+    y = "Global Z-score (vs Healthy)"
+  )
+```
+
+
+```{r plot heatmap, fig.width=5, fig.height=8}
+# Remove FGFbasic from analyte list (includes NAs)
+analyte_cols <- analyte_cols[analyte_cols != "FGFbasic"]
+
+# Order Suppression Groups
+df_summary$`Class Immunosuppression` <- factor(df_summary$`Class Immunosuppression`, levels = c("1", "2", "3", "4", "5", "6"))
+
+# Average z-score per Class_Sup
+heatmap_data <- df_summary %>%
+  group_by(`Class Immunosuppression`) %>%
+  summarise(across(all_of(analyte_cols), mean, na.rm = TRUE)) %>%
+  as.data.frame()
+
+# Put Class_Sup as column names
+rownames(heatmap_data) <- heatmap_data$`Class Immunosuppression`
+heatmap_data <- heatmap_data %>%
+  select(-`Class Immunosuppression`)
+
+# Transpose:
+# rows = analytes
+# columns = Class_Sup
+heatmap_mat <- t(as.matrix(heatmap_data))
+
+
+# Plot
+Heatmap(heatmap_mat,
+  name = "Z-score",
+  col = colorRamp2(c(-3, 0, 3),c("blue", "white", "red")),
+  cluster_rows = TRUE,
+  cluster_columns = FALSE,
+  row_names_side = "right",
+  column_names_side = "top",
+  clustering_method_columns = "ward.D",
+  show_column_names = TRUE,
+  show_row_names = TRUE
+)
+```
+
+
+

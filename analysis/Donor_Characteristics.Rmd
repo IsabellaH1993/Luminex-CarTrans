@@ -1,0 +1,145 @@
+---
+title: "Donor Characteristics"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment, echo=FALSE}
+rm(list = ls())
+```
+
+
+```{r load libraries, echo=FALSE, warning=FALSE, message=FALSE}
+library(readxl)
+library (data.table)
+library(writexl)
+library(table1)
+library(tableone)
+library(flextable)
+library(magrittr)
+library(dplyr)
+library (sjPlot)
+library (sjlabelled)
+library(data.table) 
+library(ggplot2)
+library("gplots")
+library(pheatmap)
+library(here)
+library(officer)
+library(boot)
+library(purrr)
+```
+
+```{r define path}
+#herre::here() #check folder path
+basedir <- here()
+```
+
+```{r read in excel on combine all sheets to one file, include=FALSE}
+file <- here("data","CarTrans_Donor_Information.xlsx")
+
+# Map together different sheets
+sheets <- excel_sheets(file)
+
+data_list <- map(sheets,
+  ~ read_excel(file, sheet = .x)
+)
+
+names(data_list) <- sheets
+
+# Convert them into individual data frames
+purrr::map(names(data_list),
+~assign(.x, data_list[[.x]], envir = .GlobalEnv)
+)
+
+str(data_list)
+
+data <- data_list
+```
+
+```{r mutate data}
+
+# Mutate factors and define different levels
+
+## Clinical Data
+data$`Clinical Characteristics` <- data$`Clinical Characteristics` |>
+  dplyr::mutate(
+    
+     ### Sex
+    sex = dplyr::case_when(
+      sex == "M" ~ "Male",
+      sex == "F" ~ "Female",
+      TRUE ~ NA_character_
+    )
+  )
+    
+
+# Mutate class 
+data$`Clinical Characteristics`$age <- as.numeric(data$`Clinical Characteristics`$age)
+data$`Clinical Characteristics`$waiting_time_days <- as.numeric(data$`Clinical Characteristics`$waiting_time_days)
+```
+
+```{r rename columns}
+data$`Clinical Characteristics` <- data$`Clinical Characteristics` |>
+  dplyr::rename(
+    "Age" = age,
+    "Sex" = sex,
+    "Leading event" =generalcause,
+    "Allocation status deceased donor" = death_type,
+    "OCS (Heart in a box)" = OCS,
+    "Time on Waitlist (d)" = waiting_time_days
+  )
+
+data$`Transplantation Matching` <- data$`Transplantation Matching` |>
+  dplyr::rename(
+    "Sex mismatch" = sex_mismatch,
+    "AB0 mismatch" = AB0_mismatch
+  )
+    
+```
+
+```{r merge different lists into one dataframe}
+clin <- as.data.frame(data$`Clinical Characteristics`)
+transp <- as.data.frame(data$`Transplantation Matching`)
+
+
+# With merge only to dataframes can be merged, merging every dataframe sequentially
+df <- merge(clin, transp, by = "ID", all.x = TRUE)
+
+# Sanity check
+any(duplicated(names(df)))
+```
+
+```{r table1 for overall}
+caption  <- "Donor characteristics CarTrans cohort overall"
+#footnote <- "* late rejection: severe rejection ≥ ACR2R, ≥4 months after transplantation"
+
+
+table1(~ Age + Sex + `Leading event` + `Allocation status deceased donor`+ `OCS (Heart in a box)`+ `Time on Waitlist (d)` + `Sex mismatch` + `AB0 mismatch`,
+  data = df,
+  overall = c(left = "Overall"),
+  caption = caption
+)
+```
+
+```{r export in word, eval=FALSE, include=FALSE}
+t1 <- table1(~ Age + Sex + `Leading event` + `Allocation status deceased donor`+ `OCS (Heart in a box)`+ `Time on Waitlist (d)` + `Sex mismatch` + `AB0 mismatch`,
+  data = df,
+  overall = c(left = "Overall"),
+  caption = caption
+)
+
+# Convert to data frame
+t1_df <- as.data.frame(t1)
+
+# Convert to flextable
+ft <- flextable(t1_df)
+
+# Create Word document
+doc <- read_docx()
+doc <- body_add_flextable(doc, ft)
+
+# Save
+print(doc, target = "table1_donoroverall_short.docx")
+```

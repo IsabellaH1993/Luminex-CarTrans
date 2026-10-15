@@ -1,0 +1,534 @@
+---
+title: "Convalesence_Rejection"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+
+```
+
+```{r define filepath}
+basedir <- here ()
+```
+
+
+```{r import datasets, include=FALSE}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+  table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+select(-Transplantation_risk)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup), ~{
+        x <- as.numeric(as.character(.))  
+        x[is.na(x)] <- 0                  # replace NA (for now!! later:Imputation)
+        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
+      })) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+# Definition of the immunosuppressed host
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -Class_Sup)
+```
+
+```{r prep metadata}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+```
+
+```{r relabel timpoint}
+# Create annotation table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
+
+ table_lum_CarTrans_overall$Timepoint = factor(table_lum_CarTrans_overall$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+```
+
+# Set analysis for Month 1-3 vs Healthy 
+```{r heatmap Healthy vs Month 1-3, fig.height=9, fig.width=14} 
+# Subset for Healthy and Month 1-3
+table_convalesence <- table_lum_CarTrans_overall %>%filter(Visit %in% c("Healthy", "Month 1-3"))
+
+# Create annotation table
+list_convalesence <- table_convalesence %>%dplyr::select(Study_ID, Visit)
+
+rownames(list_convalesence ) <- list_convalesence $Study_ID
+list_convalesence  <- list_convalesence  [, c("Visit"), drop = FALSE]  
+
+# Remove metadata columns
+table_convalesence_01 <- table_convalesence  %>%
+  dplyr::select(-Study_ID, -Visit)
+
+# Convert Data Table to Data Frame
+  table_convalesence_01 <- as.data.frame(table_convalesence_01)
+  
+# Transpose Data Table
+  table_convalesence_01_t <- t(table_convalesence_01)
+  
+## Column Annotations
+  colnames(table_convalesence_01_t) <- table_convalesence$Study_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups <- openxlsx::read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+
+  # Create list with Columns of data table
+    list_parameter_datatable <- as.data.frame(rownames(table_convalesence_01_t))
+                                colnames(list_parameter_datatable) <- "Parameter"
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 <- merge(list_parameter_groups, list_parameter_datatable, by.y = "Parameter")
+
+# Define the predefined order for Group
+  group_order <- c("Cytokine", "Chemokine", "Growth factor/Tissue Cytokine", "Activation Marker")
+
+# Order list based on predefined order
+#  selected_markers <- c("HGF","IL2R", "CXCL9", "CXCL10", "IL6", "CCL3", "CCL4")
+  
+# Filter and order
+  list_parameter_groups_02 <- list_parameter_groups_01 %>%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %>%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 <- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_convalesence_01_t_ordered <- as.data.frame(table_convalesence_01_t)
+  table_convalesence_01_t_ordered <- table_convalesence_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_convalesence_01_t_ordered<- as.matrix(table_convalesence_01_t_ordered)
+
+#Convert back to numeric
+  table_convalesence_01_t_ordered <- matrix(
+    as.numeric(trimws(table_convalesence_01_t_ordered)),
+    nrow = nrow(table_convalesence_01_t_ordered),
+    dimnames = dimnames(table_convalesence_01_t_ordered))
+  
+# Log Transform 
+  table_convalesence_01_t_ordered<- log2(table_convalesence_01_t_ordered)
+  
+# Scale 
+  table_convalesence_01_t_ordered<- t(apply(table_convalesence_01_t_ordered, 1, scale))
+
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors <- list(
+    Visit = c(
+      "Healthy" = "grey",
+      "Month 1-3" = "#4DD0E1"),
+  Grouping = c(
+    "Cytokine" = "darkseagreen",
+    "Chemokine" = "lightblue", 
+    "Growth factor/Tissue Cytokine" = "mediumpurple3",
+    "Activation Marker" =  "lightpink"))
+
+# Column Annotation
+  col_anno <- HeatmapAnnotation(df = list_convalesence, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno <- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_convalesence <- Heatmap(table_convalesence_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                              ,  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_convalesence)
+  
+```
+
+
+```{r volcano plot of Healthy vs Month 1-3, fig.width=5, fig.height=6}
+table_convalesence <- table_lum_CarTrans_overall %>%filter(Visit %in% c("Healthy", "Month 1-3")) %>%
+  droplevels()
+
+# Calculate p-values between Healthy and Month 1-3
+     # Create the loop.vector (all the parameter columns)
+    names(which(sapply(table_convalesence, is.numeric) == TRUE)) -> parameters 
+
+  # Create table for stats
+    table_convalesence_stat <- data.table (Parameter = numeric(), group1 = character(), 
+                                              group2 = character(), n1 = numeric(),
+                                              n2 = numeric(), statistic = numeric (),
+                                              p = numeric (), p.signif = character(), FDR = numeric()) #FDR False Discovery Rate
+   
+  # Create loop for calculation of stat test by parameter between Healthy and Month 1-3
+    for (i in parameters)
+      
+    { 
+      # Formula to insert parameter in loop 
+        formula = as.formula( paste(i, "Visit", sep="~") )
+          
+        stat_parameter <- table_convalesence %>% 
+                          wilcox_test(formula = formula) %>%
+                          add_significance() %>%
+                          mutate(FDR = p.adjust(p, method = "BH")) %>% #Benjamini-Hochberg correction
+                          rename(Parameter = .y.)
+        
+      # Combine currently calculated stats with previous calculations
+        table_convalesence_stat <- rbind(table_convalesence_stat, stat_parameter)
+    }
+
+# Calculate FC between different Visits
+    
+      # Calculate Mean of parameters per group
+        table_convalesence_log2  <- table_convalesence %>% 
+                                       group_by(Visit) %>%
+                                       summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE)))
+      
+      # Transverse Data Table and set rownames
+        table_convalesence_log2_t  <- table_convalesence_log2  %>% 
+                                         t %>% 
+                                         as.data.frame() %>% 
+                                         row_to_names(1)
+     
+     # Convert whole data table to numeric
+       table_convalesence_log2_t  <- mutate_all(table_convalesence_log2_t, 
+                                                   function(x) as.numeric(as.character(x)))
+       
+     # Calculate FC between Healthy and Month 1-3
+       table_convalesence_log2_t$log2_fc <- log2(table_convalesence_log2_t$Healthy /
+                                                    table_convalesence_log2_t$`Month 1-3`)
+       
+     # Add p-values to data table
+        # Extract only Parameters and p-values
+           stat.test_p <- table_convalesence_stat %>% 
+                          dplyr::select(Parameter, FDR)
+
+        # Merge data tables (log2, FC, p val)
+          table_convalesence_log2_t$Parameter <- rownames(table_convalesence_log2_t)
+          table_convalesence_volcano <- merge(table_convalesence_log2_t, stat.test_p, by = "Parameter")
+ 
+  # Create Volcano Plot
+          
+     # Mark parameters if FC < -1.5 = downregulated
+       table_convalesence_volcano$diff_expression <- ifelse(table_convalesence_volcano$log2_fc < -1.5, "down",
+                                                            ifelse(table_convalesence_volcano$log2_fc > 1.5, "up", "no"))
+     
+     # Add new column to relabel parameters FC of <-1.5
+      table_convalesence_volcano$label_para <- ifelse(table_convalesence_volcano$log2_fc < -1.5 |
+                                                        table_convalesence_volcano$log2_fc > 1.5,
+                                                      table_convalesence_volcano$Parameter, "")   
+    
+      volcano_convalescence <- EnhancedVolcano(table_convalesence_volcano, 
+                                      lab = table_convalesence_volcano$label_para,
+                                      x = 'log2_fc', y = 'FDR', 
+                                      FCcutoff = 1.5, pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                                      boxedLabels = TRUE, col = c("grey", "grey", "grey", "darkred"),   
+                                      xlab = bquote(~Log[2]~ "fold change"), ylab = bquote("FDR-adjusted p-value (0.05)"),
+                                      xlim = c(-3, 3), ylim = c(0, 10), pCutoff = 0.05,
+                                      title = "Log2 fold change Month 1-3 vs Healthy", subtitle = NULL, border = 'full',
+                                      drawConnectors = TRUE,widthConnectors = 0.5, colConnectors = "darkred") +
+                                      theme_classic() +
+                                      theme(panel.grid = element_blank(),
+                                            panel.border = element_rect(colour = "black", fill = NA,),
+                                            legend.position = "none")
+      
+      print( volcano_convalescence)
+```
+
+
+# Define rejection vs Convalescence
+```{r test rejection}
+# Subset for Healthy and Month 1-3
+table_rejection <- table_lum_CarTrans_overall %>%filter(Visit == "Month 1-3" | ISHLT_2004 %in% c("ACR 2R", "ACR 3R"))
+
+# Rename Convalescence vs Rejection
+  table_rejection$ISHLT_2004 <- ifelse(table_rejection$ISHLT_2004 %in% c("ACR 2R", "ACR 3R"), "Rejection", "Convalescence")
+```
+
+```{r heatmap Rejection vs Month 1-3, fig.height=9, fig.width=14} 
+
+# Create annotation table
+list_rejection <- table_rejection%>%dplyr::select(Sample_ID, Phase=ISHLT_2004) #Rename ISHLT_2004 to Phase
+
+rownames(list_rejection) <- list_rejection$Sample_ID
+list_rejection  <- list_rejection [, c("Phase"), drop = FALSE]  
+
+# Remove metadata columns
+table_rejection_01 <- table_rejection  %>%
+  dplyr::select(-Study_ID, -Visit, - ISHLT_2004)
+
+# Convert Data Table to Data Frame
+  table_rejection_01 <- as.data.frame(table_rejection_01)
+  
+# Transpose Data Table
+  table_rejection_01_t <- t(table_rejection_01)
+  
+## Column Annotations
+  colnames(table_rejection_01_t) <- table_rejection$Study_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups <- read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+
+  # Create list with Columns of data table
+    list_parameter_datatable <- as.data.frame(rownames(table_rejection_01_t))
+                                colnames(list_parameter_datatable) <- "Parameter"
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 <- merge(list_parameter_groups, list_parameter_datatable, by.y = "Parameter")
+
+# Define the predefined order for Group
+  group_order <- c("Cytokine", "Chemokine", "Growth factor/Tissue Cytokine", "Activation Marker")
+  
+# Filter and order
+  list_parameter_groups_02 <- list_parameter_groups_01 %>%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %>%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 <- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_rejection_01_t_ordered <- as.data.frame(table_rejection_01_t)
+  table_rejection_01_t_ordered <- table_rejection_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_rejection_01_t_ordered<- as.matrix(table_rejection_01_t_ordered)
+
+#Convert back to numeric
+  table_rejection_01_t_ordered <- matrix(
+    as.numeric(trimws(table_rejection_01_t_ordered)),
+    nrow = nrow(table_rejection_01_t_ordered),
+    dimnames = dimnames(table_rejection_01_t_ordered))
+  
+# Log Transform 
+  table_rejection_01_t_ordered<- log2(table_rejection_01_t_ordered)
+  
+# Scale 
+  table_rejection_01_t_ordered<- t(apply(table_rejection_01_t_ordered, 1, scale))
+
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors <- list(
+    Phase = c(
+      "Convalescence" = "lightgreen",
+      "Rejection" = "red3"),
+  Grouping = c(
+    "Cytokine" = "darkseagreen",
+    "Chemokine" = "lightblue", 
+    "Growth factor/Tissue Cytokine" = "mediumpurple3",
+    "Activation Marker" =  "lightpink"))
+
+# Column Annotation
+  col_anno <- HeatmapAnnotation(df = list_rejection, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno <- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_rejection <- Heatmap(table_rejection_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_rejection)
+  
+```
+
+
+```{r volcano plot of Convalescence vs Rejection, fig.width=4.5, fig.height=6}
+table_rejection <- table_lum_CarTrans_overall %>%filter(Visit == "Month 1-3" | ISHLT_2004 %in% c("ACR 2R", "ACR 3R")) %>%
+  droplevels()
+
+# Rename Convalescence vs Rejection and clean
+  table_rejection$ISHLT_2004 <- ifelse(table_rejection$ISHLT_2004 %in% c("ACR 2R", "ACR 3R"), "Rejection", "Convalescence")
+  table_rejection <- table_rejection %>% select(-Visit)
+
+# Calculate p-values between Healthy and Month 1-3
+     # Create the loop.vector (all the parameter columns)
+    names(which(sapply(table_rejection, is.numeric) == TRUE)) -> parameters 
+
+  # Create table for stats
+    table_rejection_stat <- data.table (Parameter = numeric(), group1 = character(), 
+                                              group2 = character(), n1 = numeric(),
+                                              n2 = numeric(), statistic = numeric (),
+                                              p = numeric (), p.signif = character(), FDR = numeric()) #FDR False Discovery Rate
+   
+  # Create loop for calculation of stat test by parameter between Healthy and Month 1-3
+    for (i in parameters)
+      
+    { 
+      # Formula to insert parameter in loop 
+        formula = as.formula( paste(i, "ISHLT_2004", sep="~") )
+          
+        stat_parameter <- table_rejection %>% 
+                          wilcox_test(formula = formula) %>%
+                          add_significance() %>%
+                          mutate(FDR = p.adjust(p, method = "BH")) %>% #Benjamini-Hochberg correction
+                          rename(Parameter = .y.)
+        
+      # Combine currently calculated stats with previous calculations
+        table_rejection_stat <- rbind(table_rejection_stat, stat_parameter)
+    }
+
+# Calculate FC between different Visits
+    
+      # Calculate Mean of parameters per group
+        table_rejection_log2  <- table_rejection %>% 
+                                       group_by(ISHLT_2004) %>%
+                                       summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE)))
+      
+      # Transverse Data Table and set rownames
+        table_rejection_log2_t  <- table_rejection_log2  %>% 
+                                         t %>% 
+                                         as.data.frame() %>% 
+                                         row_to_names(1)
+     
+     # Convert whole data table to numeric
+       table_rejection_log2_t  <- mutate_all(table_rejection_log2_t, 
+                                                   function(x) as.numeric(as.character(x)))
+       
+     # Calculate FC between Healthy and Month 1-3
+       table_rejection_log2_t$log2_fc <- log2(table_rejection_log2_t$Rejection/
+                                                    table_rejection_log2_t$Convalescence)
+       
+     # Add p-values to data table
+        # Extract only Parameters and p-values
+           stat.test_p <- table_rejection_stat %>% 
+                          dplyr::select(Parameter, FDR)
+
+        # Merge data tables (log2, FC, p val)
+          table_rejection_log2_t$Parameter <- rownames(table_rejection_log2_t)
+          table_rejection_volcano <- merge(table_rejection_log2_t, stat.test_p, by = "Parameter")
+ 
+  # Create Volcano Plot
+          
+     # Mark parameters if FC < -1.5 = downregulated and > 1.5 = upregulated
+       table_rejection_volcano$diff_expression <- ifelse(table_rejection_volcano$log2_fc < -1.5, "down",
+                                                            ifelse(table_rejection_volcano$log2_fc > 1.5, "up", "no"))
+     
+     # Add new column to relabel parameters FC of <-1.5
+      table_rejection_volcano$label_para <- ifelse(table_rejection_volcano$log2_fc < -1.5 |
+                                                        table_rejection_volcano$log2_fc > 1.5,
+                                                      table_rejection_volcano$Parameter, "")   
+    
+      volcano_rejection <- EnhancedVolcano(table_rejection_volcano, 
+                                      lab = table_rejection_volcano$label_para,
+                                      x = 'log2_fc', y = 'FDR', 
+                                      FCcutoff = 1.5, pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                                      boxedLabels = TRUE, col = c("grey", "grey", "grey", "darkred"),   
+                                      xlab = bquote(~Log[2]~ "fold change"), ylab = bquote("FDR-adjusted p-value (0.05)"),
+                                      xlim = c(0, 4), ylim = c(0, 10), pCutoff = 0.05,
+                                      title = "Log2 fold change Rejection vs Convalescence", subtitle = NULL, border = 'full',
+                                      drawConnectors = TRUE,widthConnectors = 0.5, colConnectors = "darkred") +
+                                      theme_classic() +
+                                      theme(panel.grid = element_blank(),
+                                            panel.border = element_rect(colour = "black", fill = NA,),
+                                            legend.position = "none")
+      
+      print( volcano_rejection)
+```

@@ -1,0 +1,471 @@
+---
+title: "Kinetics CarTrans"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment, echo=FALSE}
+rm(list = ls())
+```
+
+```{r setup, echo=FALSE, warning=FALSE , message =FALSE}
+# Set options for knitting
+knitr::opts_chunk$set(echo = TRUE, # html file with code
+                      warning = FALSE, # html file without warnings 
+                      message = FALSE)
+
+#Captions for tables and figures
+kableone <- function(x, ...) {
+  capture.output(x <- print(x))
+  knitr::kable(x, ...)
+}
+
+options(knitr.table.format = 'markdown')
+```
+
+```{r load libraries, echo=FALSE, warning=FALSE, message=FALSE}
+library(readxl)
+library(writexl)
+library (data.table)
+library(table1)
+library(tableone)
+library(flextable)
+library(magrittr)
+library(stringr)
+library(tidyr)
+library(dplyr)
+library(sjPlot)
+library(sjlabelled)
+library(data.table) 
+library(ggplot2)
+library(gplots)
+library(ggbeeswarm)
+library(pheatmap)
+library(RColorBrewer)
+library(here)
+library(officer)
+library(boot)
+library(purrr)
+library(patchwork)
+```
+
+```{r define path}
+#herre::here() #check folder path
+basedir <- here()
+```
+
+```{r import excel}
+# Import only lab data sheet from excel file
+table_lab_overall <- readxl::read_xlsx(
+  here("data", "RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"),
+  sheet = "Lab Data",
+  col_names = TRUE
+)
+```
+
+```{r clean table_lab}
+#Previous labeling of EMB3 still gets imported, although it`s not visible in original excel
+# Remove double EMB 3 entries
+table_lab <- table_lab_overall %>%
+  dplyr::select(
+    -`Trop T EMB 3`,
+    -`CK total EMB 3`,
+    -`NT-proBNP EMB 3`,
+    -`CRP EMB 3`,
+    -`Leukozyten EMB 3`
+  )
+
+# -`Date of lab EMB 3` is not found
+```
+
+```{r clean rejection biopsies}
+# Clean the rejection episodes with following definition: exclude all values with biopsies indicating non-relevant rejection, ISHLT (2004) ≤ACR2R
+
+#Clean EMBX1
+table_lab <- table_lab %>%
+  mutate(across(contains("EMBX1"), function(col) { 
+                col[.data$ID%in% c("CarTrans-Long-001",
+                                   "CarTrans-Long-002",
+                                   "CarTrans-Long-003",
+                                   "CarTrans-Long-005",
+                                   "CarTrans-Long-008",
+                                   "CarTrans-Long-010",
+                                   "CarTrans-Long-014",
+                                   "CarTrans-Long-016",
+                                   "CarTrans-Long-017",
+                                   "CarTrans-Long-018",
+                                   "CarTrans-Long-019",
+                                   "CarTrans-Long-020",
+                                   "CarTrans-Long-023",
+                                   "CarTrans-Long-024",
+                                   "CarTrans-Long-036",
+                                   "CarTrans-Long-037")] <-NA
+                col}))
+
+#Clean EMBX2
+table_lab <- table_lab %>%
+  mutate(across(contains("EMBX2"), function(col) { 
+                col[.data$ID%in% c("CarTrans-Long-001",
+                                   "CarTrans-Long-002",
+                                   "CarTrans-Long-004",
+                                   "CarTrans-Long-005",
+                                   "CarTrans-Long-006",
+                                   "CarTrans-Long-014",
+                                   "CarTrans-Long-018")] <-NA
+                col}))
+
+#Clean EMBX3
+table_lab <- table_lab %>%
+  mutate(across(contains("EMBX3"), function(col) { 
+                col[.data$ID%in% c("CarTrans-Long-002",
+                                   "CarTrans-Long-004",
+                                   "CarTrans-Long-008")] <-NA
+                col}))
+
+#Clean EMBX4
+table_lab <- table_lab %>%
+  mutate(across(contains("EMBX3"), function(col) { 
+                col[.data$ID%in%"CarTrans-Long-006"] <-NA
+                col}))
+```
+
+
+
+# 1. NTproBNP Kinetics
+```{r reshape NTproBNP}
+# Remove NTproBNP_EMB6
+table_lab_NTproBNP <- table_lab %>% dplyr::select(-NTproBNP_EMB6)
+
+ntpro_cols <- grep("^NTproBNP", colnames(table_lab_NTproBNP), value = TRUE)
+#Set NAs to numeric
+table_lab_NTproBNP <- table_lab_NTproBNP %>%mutate(across(all_of(ntpro_cols),~ as.numeric(str_replace_all(as.character(.), "[^0-9.]", ""))
+                                        ))
+
+#Prep dataframe
+df_long_NTproBNP <- table_lab_NTproBNP %>%
+  pivot_longer(
+    cols = starts_with("NTproBNP"),
+    names_to = "Timepoint",
+    values_to = "NTproBNP"
+  )%>%
+  dplyr::select(ID, Timepoint, NTproBNP)  # only keep patient + measurement
+
+#Relabel timepoints
+df_long_NTproBNP <- df_long_NTproBNP %>%
+  mutate(
+    Timepoint = str_remove(Timepoint, "NTproBNP_"),
+    Timepoint = recode(Timepoint,
+      "BL" = "Baseline",
+      "EMB1" = "Week 1",
+      "EMB2" = "Week 2",
+      "EMB3" = "Month 1–3",
+      "EMB4" = "Month 4–6",
+      "EMB5" = "12 Months",
+      "EMBX1" = "Rejection",
+      "EMBX2" = "Rejection",
+      "EMBX3" = "Rejection",
+      "EMBX4" = "Rejection"
+    )
+  )
+
+#Set order
+df_long_NTproBNP$Timepoint <- factor(
+  df_long_NTproBNP$Timepoint,
+  levels = c(
+    "Baseline",
+    "Week 1",
+    "Week 2",
+    "Month 1–3",
+    "Month 4–6",
+    "12 Months",
+    "Rejection"
+  )
+)
+```
+
+```{r boxplot NTproBNP kinetics color per patient, fig.width=6, fig.height=7, out.width="100%"}
+ggplot(df_long_NTproBNP, aes(x = Timepoint, y = NTproBNP)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "NT-proBNP kinetics post transplantation per patient",
+    x = "",
+    y = "NT-proBNP (log, ng/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+```{r boxplot NTproBNP kinetics, out.width="100%"}
+p_NTproBNP<- ggplot(df_long_NTproBNP, aes(x = Timepoint, y = NTproBNP)) +
+  geom_boxplot(outlier.shape = NA, fill="lightblue") +
+  geom_jitter(width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "NT-proBNP kinetics post transplantation",
+    x = "",
+    y = "NT-proBNP (log, ng/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+
+print(p_NTproBNP)
+```
+
+# 2. Troponin Kinetics
+```{r reshape TropT}
+# Remove TropT_EMB6
+table_lab_TropT <- table_lab %>% dplyr::select(-TropT_EMB6)
+
+tropt_cols <- grep("^TropT", colnames(table_lab_TropT), value = TRUE)
+#Set NAs to numeric
+table_lab_TropT <- table_lab_TropT %>%mutate(across(all_of(tropt_cols),~ as.numeric(str_replace_all(as.character(.), "[^0-9.]", ""))
+                                        ))
+
+#Prep dataframe
+df_long_TropT <- table_lab_TropT %>%
+  pivot_longer(
+    cols = starts_with("TropT"),
+    names_to = "Timepoint",
+    values_to = "TropT"
+  )%>%
+  dplyr::select(ID, Timepoint, TropT)  # only keep patient + measurement
+
+#Relabel timepoints
+df_long_TropT <- df_long_TropT %>%
+  mutate(
+    Timepoint = str_remove(Timepoint, "TropT_"),
+    Timepoint = recode(Timepoint,
+      "BL" = "Baseline",
+      "EMB1" = "Week 1",
+      "EMB2" = "Week 2",
+      "EMB3" = "Month 1–3",
+      "EMB4" = "Month 4–6",
+      "EMB5" = "12 Months",
+      "EMBX1" = "Rejection",
+      "EMBX2" = "Rejection",
+      "EMBX3" = "Rejection",
+      "EMBX4" = "Rejection"
+    )
+  )
+
+#Set order
+df_long_TropT$Timepoint <- factor(
+  df_long_TropT$Timepoint,
+  levels = c(
+    "Baseline",
+    "Week 1",
+    "Week 2",
+    "Month 1–3",
+    "Month 4–6",
+    "12 Months",
+    "Rejection"
+  )
+)
+```
+
+```{r boxplot TropT kinetics color per patient, fig.width=6, fig.height=7, out.width="100%"}
+ggplot(df_long_TropT, aes(x = Timepoint, y = TropT)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "Troponin T kinetics post transplantation per patient",
+    x = "",
+    y = "TropT (log, ng/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+
+```{r boxplot TropT kinetics, out.width="100%"}
+p_TropT <- ggplot(df_long_TropT, aes(x = Timepoint, y = TropT)) +
+  geom_boxplot(outlier.shape = NA, fill="#de2d26") +
+  geom_jitter(width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "Troponin T kinetics post transplantation",
+    x = "",
+    y = "TropT (log, ng/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+
+print(p_TropT)
+```
+
+# 3. CRP kinetics
+```{r reshape CRP}
+# Remove CRP_EMB6
+table_lab_CRP <- table_lab %>% dplyr::select(-CRP_EMB6)
+
+crp_cols <- grep("^CRP", colnames(table_lab_CRP), value = TRUE)
+#Set NAs to numeric
+table_lab_CRP <- table_lab_CRP %>%mutate(across(all_of(crp_cols),~ as.numeric(str_replace_all(as.character(.), "[^0-9.]", ""))
+                                        ))
+
+#Prep dataframe
+df_long_CRP <- table_lab_CRP %>%
+  pivot_longer(
+    cols = starts_with("CRP"),
+    names_to = "Timepoint",
+    values_to = "CRP"
+  )%>%
+  dplyr::select(ID, Timepoint, CRP)  # only keep patient + measurement
+
+#Relabel timepoints
+df_long_CRP <- df_long_CRP %>%
+  mutate(
+    Timepoint = str_remove(Timepoint, "CRP_"),
+    Timepoint = recode(Timepoint,
+      "BL" = "Baseline",
+      "EMB1" = "Week 1",
+      "EMB2" = "Week 2",
+      "EMB3" = "Month 1–3",
+      "EMB4" = "Month 4–6",
+      "EMB5" = "12 Months",
+      "EMBX1" = "Rejection",
+      "EMBX2" = "Rejection",
+      "EMBX3" = "Rejection",
+      "EMBX4" = "Rejection"
+    )
+  )
+
+#Set order
+df_long_CRP$Timepoint <- factor(
+  df_long_CRP$Timepoint,
+  levels = c(
+    "Baseline",
+    "Week 1",
+    "Week 2",
+    "Month 1–3",
+    "Month 4–6",
+    "12 Months",
+    "Rejection"
+  )
+)
+```
+
+```{r boxplot CRP kinetics color per patient, fig.width=6, fig.height=7,out.width="100%"}
+ggplot(df_long_CRP, aes(x = Timepoint, y = CRP)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "CRP kinetics post transplantation per patient",
+    x = "",
+    y = "CRP (log, mg/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+
+```{r boxplot CRP kinetics, out.width="100%"}
+p_CRP <- ggplot(df_long_CRP, aes(x = Timepoint, y = CRP)) +
+  geom_boxplot(outlier.shape = NA, fill="#fec44f") +
+  geom_jitter(width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "CRP kinetics post transplantation",
+    x = "",
+    y = "CRP (log, mg/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+
+print(p_CRP)
+```
+
+# 4. Leukocytes kinetics
+```{r reshape Leukocytes}
+# Remove Leucocytes_EMB6
+table_lab_Leuc <- table_lab %>% dplyr::select(-Leukocytes_EMB6)
+
+leuc_cols <- grep("^Leukocytes", colnames(table_lab_Leuc), value = TRUE)
+#Set NAs to numeric
+table_lab_Leuc <- table_lab_Leuc %>%mutate(across(all_of(leuc_cols),~ as.numeric(str_replace_all(as.character(.), "[^0-9.]", ""))
+                                        ))
+
+#Prep dataframe
+df_long_Leuc <- table_lab_Leuc %>%
+  pivot_longer(
+    cols = starts_with("Leukocytes"),
+    names_to = "Timepoint",
+    values_to = "Leukocytes"
+  )%>%
+  dplyr::select(ID, Timepoint, Leukocytes)  # only keep patient + measurement
+
+#Relabel timepoints
+df_long_Leuc <- df_long_Leuc %>%
+  mutate(
+    Timepoint = str_remove(Timepoint, "Leukocytes_"),
+    Timepoint = recode(Timepoint,
+      "BL" = "Baseline",
+      "EMB1" = "Week 1",
+      "EMB2" = "Week 2",
+      "EMB3" = "Month 1–3",
+      "EMB4" = "Month 4–6",
+      "EMB5" = "12 Months",
+      "EMBX1" = "Rejection",
+      "EMBX2" = "Rejection",
+      "EMBX3" = "Rejection",
+      "EMBX4" = "Rejection"
+    )
+  )
+
+#Set order
+df_long_Leuc$Timepoint <- factor(
+  df_long_Leuc$Timepoint,
+  levels = c(
+    "Baseline",
+    "Week 1",
+    "Week 2",
+    "Month 1–3",
+    "Month 4–6",
+    "12 Months",
+    "Rejection"
+  )
+)
+```
+
+```{r boxplot leukocytes kinetics color per patient, fig.width=6, fig.height=7, out.width="100%"}
+ggplot(df_long_Leuc, aes(x = Timepoint, y = Leukocytes)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=ID), width = 0.2, alpha = 0.4) +
+  theme_minimal() +
+  labs(
+    title = "Leukocytes kinetics post transplantation per patient",
+    x = "",
+    y = "Leukocytes (10e9/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+
+```
+
+```{r boxplot leukocytes kinetics, out.width="100%"}
+p_Leuc <- ggplot(df_long_Leuc, aes(x = Timepoint, y = Leukocytes)) +
+  geom_boxplot(outlier.shape = NA, fill="#fee0d2") +
+  geom_jitter(width = 0.2, alpha = 0.4) +
+  theme_minimal() +
+  labs(
+    title = "Leukocytes kinetics post transplantation",
+    x = "",
+    y = "Leukocytes (10e9/L)"
+  ) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+
+print(p_Leuc)
+```
+#Combined plot
+```{r combined plot, fig.width=18, fig.height=14, out.width="100%"}
+(p_NTproBNP | p_CRP) /
+(p_TropT | p_Leuc) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+

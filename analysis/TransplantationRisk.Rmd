@@ -1,0 +1,367 @@
+---
+title: "TransplantationRisk"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+    # Statistics
+  library (ordinal)
+  library(lme4)
+  library(lmerTest)
+  library(emmeans)
+})
+
+```
+
+```{r define filepath}
+basedir <- here ()
+```
+
+
+```{r import datasets, include=FALSE}
+# Import Luminex Data
+
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup, Transplantation_risk), ~{
+        x <- as.numeric(as.character(.))  
+        x[is.na(x)] <- 0                  # replace NA (for now!! later:Imputation)
+        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
+      })) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004)
+```
+
+```{r prep metadata}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+
+# Combine X timepoints to one rejection bin
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
+```
+
+```{r create dataframe}
+df <- table_lum_CarTrans_overall %>%
+  filter(Timepoint != "Healthy") %>%
+  mutate(
+    Timepoint = factor(Timepoint,
+                        levels = c("Baseline", "Week 1", "Week 2", "Month 1-3", "Month 4-6", "Month 12", "Rejection Context")),
+    Class_Sup = factor(Class_Sup, levels = 1:6, ordered = TRUE),  # ordinal outcome
+    Transplantation_risk = as.numeric(Transplantation_risk),      # continuous predictor
+    Study_ID = factor(Study_ID)
+  ) %>%
+  filter(!is.na(Timepoint), !is.na(Class_Sup), !is.na(Transplantation_risk))
+```
+
+```{r create color annotation}
+ann_colors <- list(
+  Transplantation_risk = c(
+    "0" = "white",
+    "1" = "#74c476",
+    "2" = "#a1d99b",
+    "3" = "#fee391",
+    "4" = "#db6a4a",
+    "5" = "red"
+  ),
+  
+  Class_Sup =c(
+  "Baseline" = "#E0F7FA",
+  "Healthy" = "grey",
+  "1" = "#66bd63",
+  "2" = "#a6d96a",
+  "3"  = "#ffffbf",
+  "4" = "#fdae61",
+  "5" = "#f46d43",
+  "6" = "#d73027"
+  )
+  
+)
+```
+
+
+```{r visualize distribution for ordinal ordering, fig.height=10, fig.width=15}
+# Boxplot by risk tertile
+df_plot <- df %>%
+  mutate(risk_tertile = ntile(Transplantation_risk, 3),
+         risk_tertile = factor(risk_tertile, labels = c("Low", "Mid", "High")))
+ 
+ggplot(df_plot, aes(x = risk_tertile, y = as.numeric(as.character(Class_Sup)),
+                     fill = risk_tertile)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +          # outliers off - raw points show them
+  geom_jitter(width = 0.15, height = 0.15, alpha = 0.5, size = 1.8, color = "black") +
+  facet_wrap(~ Timepoint, nrow = 2) +
+  labs(x = "Transplantation risk tertile", y = "Immunosuppression class (1-6)",
+       title = "Immunosuppression severity by risk tertile and timepoint") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+```{r visualize distribution for continous ordering, fig.height=8, fig.width=10}
+# Continous ordering of Risk score
+ggplot(df, aes(x = Transplantation_risk, y = as.numeric(as.character(Class_Sup)))) +
+  geom_jitter(width = 0.1, height = 0.15, alpha = 0.3) +
+  geom_smooth(method = "lm", se = TRUE, color = "firebrick") +
+  facet_wrap(~ Timepoint, nrow = 2) +
+  labs(x = "Transplantation risk (0-5)", y = "Immunosuppression class (1-6)",
+       title = "Immunosuppression severity vs. transplantation risk by timepoint") +
+  theme_minimal()
+```
+```{r patient trajectories}
+# Patient trajectoris colored by risk score
+ggplot(df, aes(x = Timepoint, y = as.numeric(as.character(Class_Sup)),
+               group = Study_ID, color = factor(Transplantation_risk))) +
+  geom_line(alpha = 0.6, linewidth = 0.7) +
+  scale_color_manual(values = ann_colors$Transplantation_risk) +
+  labs(x = "Timepoint", y = "Immunosuppression class (1-6)", color = "Risk score",
+       title = "Individual immunosuppression trajectories, colored by risk score") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+```
+
+## Primary model: cumulative link mixed model (ordinal outcome)
+Mixed cumulative link model (clmm): random intercept at 1|Study_ID) to account for repeated measurement per patients
+
+```{r}
+## Full model with Transplantation_risk x Timepoint interaction
+mod_full <- clmm(Class_Sup ~ Transplantation_risk * Timepoint + (1 | Study_ID),
+                  data = df, link = "logit")
+summary(mod_full)
+```
+
+```{r} 
+## Reduced model without interaction: overall effect of risk score-
+## assuming its effect is stable across timepoints
+mod_main <- clmm(Class_Sup ~ Transplantation_risk + Timepoint + (1 | Study_ID),
+                  data = df, link = "logit")
+
+summary(mod_main)
+
+# Random effects
+## Shows between-patient variance in baseline immunosuppresion tendency: large variance = quite heterogeneous at the same risk score and timepoint (no p-value)
+
+# Coefficients (fixed effects)
+## Transplantation_risk: log odds; positive value means higher risk score is associated with higher odds of being in a higher immunosuppression class, holding timepoint constant
+## Timepoint: each timepoint compared to reference level (Baseline)
+## Pr(>|z|): p-value for each coefficient indiviually (Wald test)
+```
+```{r}
+# Estimated marginal means / effect sizes at each timepoint
+emmeans(mod_main, ~ Transplantation_risk | Timepoint, at = list(Transplantation_risk = c(0, 2.5, 5)))
+ 
+```
+
+
+```{r}
+## Likelihood ratio test: is the interaction actually needed?
+anova(mod_main, mod_full)
+
+# Pr(>Chisq) < 0.05: risk scores effect on immunosuppression genuinely differs by timepoint
+```
+
+```{r}
+## Turns mod_main Transplantation_risk coefficient into Odds ratio:
+##   exp(coef) = odds ratio for being in a higher immunosuppression class
+##   per 1-point increase in risk score, adjusted for timepoint.
+exp(coef(mod_main)["Transplantation_risk"])
+confint(mod_main)  # insert Confidence Interval
+```
+ 
+## Sensitivity check: linear mixed model (treat Class_Sup as continuous) 
+Direction and significance should roughly agree between mod_main/mod_full (CLMM) and mod_lmer
+
+```{r}
+mod_lmer <- lmer(as.numeric(as.character(Class_Sup)) ~
+                    Transplantation_risk * Timepoint + (1 | Study_ID), data = df)
+summary(mod_lmer)
+
+# Random effects
+## Residuals: leftover within-patient variability accross timepoints/risk not explained by the fixed effects
+# Fixed effects
+## Transplantation_risk: direct slope (not log-odds), holding timepoint constant
+## df and p-value come from the Satterhwaite approximation
+```
+
+```{r}
+anova(mod_lmer)   # Type III test, Satterthwaite df
+
+# Tests term as a whole (Timepoint across all its levels jointly)
+```
+
+## Risk score prediction on immunosuppression in rejection context
+```{r}
+# Mixed cumulative link model
+df_rejection <- df %>% filter(Timepoint == "Rejection Context")
+ 
+mod_rejection <- clmm(Class_Sup ~ Transplantation_risk + (1 | Study_ID), data = df_rejection)
+summary(mod_rejection)
+ 
+```
+# Transplantation risk on overall analytes (z-score)
+
+```{r compute z score}
+#Define analytes
+analyte_cols <- setdiff(colnames(table_lum_CarTrans_overall), c("Study_ID", "Timepoint", "Sample_ID", "ISHLT_2004", "Visit", "Transplantation_risk", "Class_Sup"))
+
+# Log transform input values
+table_lum_CarTrans_overall_z <- table_lum_CarTrans_overall %>%
+  mutate(across(all_of(analyte_cols), ~ log2(pmax(., 1))))
+
+# Calculate healthy mean and SD as reference
+healthy_ref <- table_lum_CarTrans_overall_z %>%
+  filter(Visit == "Healthy") %>%
+  summarise(across(all_of(analyte_cols),
+                   list(mean = ~mean(., na.rm = TRUE),
+                        sd   = ~sd(., na.rm = TRUE))))
+
+# Calculate Z score
+z_data <- table_lum_CarTrans_overall_z
+
+for (col in analyte_cols) {
+  mu <- healthy_ref[[paste0(col, "_mean")]]
+  sd <- healthy_ref[[paste0(col, "_sd")]]
+  
+  if (is.na(sd) || sd == 0) {
+    z_data[[col]] <- NA
+  } else {
+    z_data[[col]] <- (z_data[[col]] - mu) / sd
+  }
+}
+
+# Set global score per sample
+z_data <- z_data %>%mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))
+```
+
+```{r global Z score pooled accross timepoints}
+z_data_plot <- z_data %>%
+  filter(!Timepoint %in% c("Healthy", "Baseline")) %>%
+  mutate(
+    Transplantation_risk = factor(Transplantation_risk),
+    Timepoint = factor(Timepoint,
+                        levels = c("Baseline", "Week 1", "Week 2",
+                                   "Month 1-3", "Month 4-6", "Month 12",
+                                   "Rejection Context"))
+  )
+ 
+
+# Visulization pooled timepoints
+ggplot(z_data_plot, aes(x = Transplantation_risk, y = global_z,
+                         fill = Transplantation_risk)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.4, size = 1.5, color = "black") +
+  scale_fill_manual(values = ann_colors$Transplantation_risk) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "none") +
+  labs(title = "Global Z-score by Transplantation Risk Class",
+       x = "Transplantation risk", y = "Global Z-score (vs Healthy)",
+       caption = "*Global Z-score: mean Z-score across all analytes")
+```
+```{r global z score Trans_risk per timepoint, fig.height=6, fig.width=8}
+ggplot(z_data_plot, aes(x = Timepoint, y = global_z, group = Study_ID,
+                         color = Transplantation_risk)) +
+  geom_line(alpha = 0.15) +
+  geom_point(alpha = 0.15) +
+  stat_summary(aes(group = Transplantation_risk), fun = mean, geom = "line",
+               linewidth = 1.3) +
+  stat_summary(aes(group = Transplantation_risk), fun = mean, geom = "point",
+               size = 2.5) +
+  scale_color_manual(values = ann_colors$Transplantation_risk) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0),
+        plot.caption.position = "plot",
+        axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(title = "Longitudinal Immune Profiling by Transplantation Risk Class",
+       y = "Global Z-score (vs Healthy)", color = "Risk score",
+       caption = "*Global Z-score: mean Z-score across all analytes")
+```
+

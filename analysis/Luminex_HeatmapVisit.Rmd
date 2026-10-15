@@ -1,0 +1,371 @@
+---
+title: "Luminex_analysis_HeatmapVisit"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+
+```
+
+```{r define filepath}
+basedir <- here ()
+```
+
+
+```{r import datasets, include=FALSE}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup), ~{
+        x <- as.numeric(as.character(.))  
+        x[is.na(x)] <- 0                  # replace NA (for now!! later:Imputation)
+        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
+      })) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)
+```
+
+```{r prep metadata}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+```
+
+```{r r heatmap, fig.height=10, fig.width=13}
+# Create annotation table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
+
+list_Timepoint <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, Visit, Timepoint)
+
+ list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+
+rownames(list_Timepoint) <- list_Timepoint$Sample_ID
+list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE]  #,"Visit" add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
+
+# Remove metadata columns
+table_lum_CarTrans_overall_01 <- table_lum_CarTrans_overall %>%
+  dplyr::select(-Study_ID, -Visit, -Sample_ID)
+
+# Convert Data Table to Data Frame
+  table_lum_CarTrans_overall_01 <- as.data.frame(table_lum_CarTrans_overall_01)
+  
+# Select preserved cytokines
+#  table_lum_CarTrans_overall_01 <- table_lum_CarTrans_overall_01 %>%
+#                              dplyr::select(HGF, IL2R, CXCL9, CXCL10, CXCL8, IL6, CCL3, CCL4)
+
+# Transpose Data Table
+  table_lum_CarTrans_overall_01_t <- t(table_lum_CarTrans_overall_01)
+
+## Column Annotations
+  colnames(table_lum_CarTrans_overall_01_t) <- table_lum_CarTrans_overall$Sample_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups <- openxlsx::read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+
+  # Create list with Columns of data table
+    list_parameter_datatable <- as.data.frame(rownames(table_lum_CarTrans_overall_01_t))
+                                colnames(list_parameter_datatable) <- "Parameter"
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 <- merge(list_parameter_groups, list_parameter_datatable, by.y = "Parameter")
+
+# Define the predefined order for Group
+  group_order <- c("Cytokine", "Chemokine", "Growth factor/Tissue Cytokine", "Activation Marker")
+
+# Order list based on predefined order
+#  selected_markers <- c("HGF","IL2R", "CXCL9", "CXCL10", "IL6", "CCL3", "CCL4")
+  
+# Filter and order
+  list_parameter_groups_02 <- list_parameter_groups_01 %>%
+#                              filter(Parameter %in% selected_markers) %>%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %>%
+#                              Parameter = factor(Parameter, levels = selected_markers)) %>%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 <- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_lum_CarTrans_overall_01_t_ordered <- as.data.frame(table_lum_CarTrans_overall_01_t)
+  table_lum_CarTrans_overall_01_t_ordered <- table_lum_CarTrans_overall_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_lum_CarTrans_overall_01_t_ordered <- as.matrix(table_lum_CarTrans_overall_01_t_ordered)
+
+#Convert back to numeric
+  table_lum_CarTrans_overall_01_t_ordered <- matrix(
+    as.numeric(trimws(table_lum_CarTrans_overall_01_t_ordered)),
+    nrow = nrow(table_lum_CarTrans_overall_01_t_ordered),
+    dimnames = dimnames(table_lum_CarTrans_overall_01_t_ordered))
+  
+# Log Transform 
+  table_lum_CarTrans_overall_01_t_ordered <- log2(table_lum_CarTrans_overall_01_t_ordered)
+  
+# Scale 
+  table_lum_CarTrans_overall_01_t_ordered <- t(apply(table_lum_CarTrans_overall_01_t_ordered, 1, scale))
+
+  
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors <- list(
+    #Visit = c(
+    #"Baseline" = "#E0F7FA",
+    #"Week 1" = "#B2EBF2",
+    #"Week 2" = "#A8C7FF",
+    #"Month 1-3" = "#4DD0E1",
+    #"Month 4-6" = "#0097A7",
+    #"Month 12" = "#1E3FA3",
+    #"Rejection" = "#FF6B6B",
+    #"Healthy" = "grey",
+    #"VX1" = "#FFCCCC",
+    #"VX2" = "#FF9999",
+    #"VX3" = "#FF6666"
+  #),
+  Timepoint = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Rejection Context" = "#FF6B6B",
+    "Healthy" = "grey",
+    "VX1" = "#FFCCCC",
+    "VX2" = "#FF9999",
+    "VX3" = "#FF6666"),
+  Grouping = c(
+    "Cytokine" = "darkseagreen",
+    "Chemokine" = "lightblue", 
+    "Growth factor/Tissue Cytokine" = "mediumpurple3",
+    "Activation Marker" =  "lightpink"))
+
+# Column Annotation
+  col_anno <- HeatmapAnnotation(df = list_Timepoint, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno <- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_lum <- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_lum)
+  
+```
+
+
+```{r split by different visits, fig.height=9, fig.width=14}
+# Reorder grouped visits
+list_Timepoint$Visit <- factor(list_Timepoint$Timepoint,levels = c("Healthy", "Baseline", "Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context"))
+
+
+# Create Heatmap split by visits
+  heatmap_lum_split <- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = FALSE,
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(23, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno,
+                         column_split = list_Timepoint$Timepoint,
+                         column_gap = unit(4, "mm") 
+                          )
+
+
+# Draw Heatmap
+  show(heatmap_lum_split)
+```
+# Visualization with Z score
+
+```{r compute z score}
+#Define analytes
+analyte_cols <- setdiff(colnames(table_lum_CarTrans_overall), c("Study_ID", "Timepoint", "Sample_ID", "ISHLT_2004", "Visit"))
+
+# Log transform input values
+table_lum_CarTrans_overall_z <- table_lum_CarTrans_overall %>%
+  mutate(across(all_of(analyte_cols), ~ log2(pmax(., 1))))
+
+# Calculate healthy mean and SD as reference
+healthy_ref <- table_lum_CarTrans_overall_z %>%
+  filter(Visit == "Healthy") %>%
+  summarise(across(all_of(analyte_cols),
+                   list(mean = ~mean(., na.rm = TRUE),
+                        sd   = ~sd(., na.rm = TRUE))))
+
+# Calculate Z score
+z_data <- table_lum_CarTrans_overall_z
+
+for (col in analyte_cols) {
+  mu <- healthy_ref[[paste0(col, "_mean")]]
+  sd <- healthy_ref[[paste0(col, "_sd")]]
+  
+  if (is.na(sd) || sd == 0) {
+    z_data[[col]] <- NA
+  } else {
+    z_data[[col]] <- (z_data[[col]] - mu) / sd
+  }
+}
+
+# Set global score per sample
+z_data <- z_data %>%mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))
+```
+
+```{r visualize timeline per patient}
+z_data <- z_data %>%
+  mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
+
+ggplot(z_data %>% filter(Visit != "Healthy"),
+       aes(x = Timepoint, y = global_z, group = Study_ID)) +
+  geom_line(alpha = 0.3) +
+  geom_point(alpha = 0.3) +
+  stat_summary(aes(group = 1), fun = mean, geom = "line", size = 1.5, color = "red") +
+  stat_summary(aes(group = 1), fun = mean, geom = "point", size = 3, color = "red") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), plot.caption = element_text(hjust = 0), plot.caption.position = "plot") +
+  labs(title = "Longitudinal Immune Profiling",
+       y = "Global Z-score (vs Healthy)",
+    caption = "*Global Z-score: mean Z-score across all analytes")
+  
+```
+```{r plot heatmap z score, fig.width=5, fig.height=11}
+# Average z-score per Timepoint
+heatmap_data <- z_data %>%
+  group_by(Timepoint) %>%
+  summarise(across(all_of(analyte_cols), mean, na.rm = TRUE)) %>%
+  as.data.frame()
+
+# Put Timepoint as column names
+rownames(heatmap_data) <- heatmap_data$Timepoint
+heatmap_data <- heatmap_data %>%
+  select(-Timepoint)
+
+# Transpose:
+# rows = analytes
+# columns = Timepoint
+heatmap_mat <- t(as.matrix(heatmap_data))
+
+
+# Plot
+Heatmap(heatmap_mat,
+  name = "Z-score",
+  col = colorRamp2(c(-3, 0, 3),c("blue", "white", "red")),
+  cluster_rows = TRUE,
+  cluster_columns = FALSE,
+  row_names_side = "right",
+  column_names_side = "top",
+  clustering_method_columns = "ward.D",
+  show_column_names = TRUE,
+  show_row_names = TRUE
+)
+```
+

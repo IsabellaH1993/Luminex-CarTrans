@@ -1,0 +1,507 @@
+---
+title: "TableOverall"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(readxl)
+library (data.table)
+library(writexl)
+library(table1)
+library(tableone)
+library(flextable)
+library(magrittr)
+library(dplyr)
+library (sjPlot)
+library (sjlabelled)
+library(data.table) 
+library(ggplot2)
+library("gplots")
+library(pheatmap)
+library(ComplexHeatmap)
+library(here)
+library(officer)
+library(boot)
+library(purrr)
+library(tibble)
+```
+
+```{r read in excel on combine all sheets to one file, include=FALSE}
+file <- "~/Desktop/Isabella/Clinical Data/RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"
+
+# Map together different sheets
+sheets <- excel_sheets(file)
+
+data_list <- map(sheets,
+  ~ read_excel(file, sheet = .x)
+)
+
+names(data_list) <- sheets
+
+# Convert them into individual data frames
+purrr::map(names(data_list),
+~assign(.x, data_list[[.x]], envir = .GlobalEnv)
+)
+
+str(data_list)
+
+data <- data_list
+```
+
+
+```{r mutate data}
+
+# Mutate factors and define different levels
+
+## Clinical Data
+data$`Clinical Data` <- data$`Clinical Data` |>
+  dplyr::mutate(
+
+    ### Short-term MCS
+    Shortterm_MCS = dplyr::case_when(
+      Shortterm_MCS %in% c("No", "NA.") ~ "No",
+      Shortterm_MCS %in% c("VA-ECMO, Impella") ~ "Impella",
+      Shortterm_MCS %in% c("VA-ECMO", "postoperative VA-ECMO") ~ "ECMO",
+      TRUE ~ NA_character_
+    ),
+
+    ### Long-term MCS
+    Longterm_MCS = dplyr::case_when(
+      Longterm_MCS %in% c("No", "NA") ~ "No",
+      Longterm_MCS == "LVAD" ~ "LVAD",
+      TRUE ~ NA_character_
+    ),
+
+    ### Sex
+    Sex = dplyr::case_when(
+      Sex == "M" ~ "Male",
+      Sex == "F" ~ "Female",
+      TRUE ~ NA_character_
+    ),
+    
+    ### Diabetes
+    Diabetes = dplyr::case_when(
+      Diabetes %in% c("No", "prediabetes") ~ "No",
+      Diabetes %in% c("DM type 2") ~ "Yes",
+      TRUE ~ NA_character_
+    ),
+
+    ### Device
+    Device = dplyr::case_when(
+      Device %in% c("No", "NA") ~ "No", 
+      Device %in% c( "CRT-D", "CRT-D, VSD Patch Plastic, aortic valve mechanic prosthetic",
+                    "St.n CRT-D") ~ "CRT-D",
+      Device %in% c("ICD", "S-ICD", "ICD-D") ~ "ICD",
+      Device == "life vest" ~ "Life Vest",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  dplyr::mutate(
+    Shortterm_MCS = factor(Shortterm_MCS, levels = c("No", "Impella", "ECMO")),
+    Longterm_MCS  = factor(Longterm_MCS,  levels = c("No", "LVAD")),
+    Sex           = factor(Sex,           levels = c("Female", "Male")),
+    Device        = factor(Device,        levels = c("No", "ICD", "CRT-D", "Life Vest"))
+  )
+
+## Immunological Data
+data$`Immunologic Data` <- data$`Immunologic Data` |>
+  dplyr::mutate(
+
+    ### Pirche Classification
+    PIRCHE = dplyr::case_when(
+      PIRCHE == "high risk" ~ "High risk",
+      PIRCHE == "intermediate risk" ~ "Intermediate risk",
+      PIRCHE == "low risk" ~ "Low risk",
+      PIRCHE %in% c("NA", NA) ~ NA_character_,
+      TRUE ~ PIRCHE
+    ),
+
+  ) |>
+  dplyr::mutate(
+    PIRCHE = factor(PIRCHE, levels = c("Low risk", "Intermediate risk", "High risk"))
+  )
+
+## Immunological Data
+data$`Transplantation` <- data$`Transplantation` |>
+  dplyr::mutate(
+
+    ### Donor transplant status
+    HTx_status = dplyr::case_when(
+      HTx_status == "DCD III" ~ "DCD",
+      HTx_status == "DBD" ~ "DBD",
+      HTx_status %in% c("NA", NA) ~ NA_character_,
+      TRUE ~ HTx_status
+    )
+)
+
+# Mutate class 
+data$`Clinical Data`$BMI <- as.numeric(data$`Clinical Data`$BMI)
+data$`Lab Data`$NTproBNP_BL <- as.numeric(data$`Lab Data`$NTproBNP_BL)
+data$`Lab Data`$CRP_BL <- as.numeric(data$`Lab Data`$CRP_BL)
+data$`Lab Data`$TropT_BL <- as.numeric(data$`Lab Data`$TropT_BL)
+
+```
+
+```{r rename columns}
+data$`Clinical Data` <- data$`Clinical Data` |>
+  dplyr::rename(
+    "Shortterm Mechanical Support" = Shortterm_MCS,
+    "Longterm Mechanical Support" = Longterm_MCS,
+    "Pulmonary hypertension" = PH
+  )
+
+data$`Lab Data` <- data$`Lab Data` |>
+  dplyr::rename(
+    "NTproBNP at Baseline (ng/L)" = NTproBNP_BL,
+    "CRP at Baseline (mg/L)" = CRP_BL,
+    "Troponin T at Baseline (ng/L)" = TropT_BL
+  )
+
+data$`Immunologic Data` <- data$`Immunologic Data` |>
+  dplyr::rename(
+  "CMV Status" = CMV,
+  "Pirche Score Overall" = total_PircheScore,
+  "Pirche Classification" = PIRCHE
+  )    
+
+data$`Transplantation` <- data$`Transplantation` |>
+  dplyr::rename(
+  "AB0 mismatch" = AB0_mismatch,
+  "Organ Care System" = OCS,
+  "Donor Transplant status" = HTx_status,
+  "Waiting time (d)" = waiting_time
+  ) 
+
+data$`Immunosuppression` <- data$`Immunosuppression` |>
+  dplyr::rename(
+  "Transplantation risk score" = Transplantation_risk)
+    
+```
+
+```{r merge different lists into one dataframe}
+clin <- as.data.frame(data$`Clinical Data`)
+lab <- as.data.frame(data$`Lab Data`)
+trans <- as.data.frame(data$`Transplantation`)
+sup <- as.data.frame(data$`Immunosuppression`)
+im <- as.data.frame(data$`Immunologic Data`)
+echo <- as.data.frame(data$`Echo Results`)
+
+# Avoid duplicates by removing overlapping columns before merging
+lab  <- lab[ , !names(lab) %in% c("Sex", "Age", "DOB",  "Date_Transplantation")]
+trans  <- trans[ , !names(trans) %in% c("Sex", "Age", "DOB",  "Date_Transplantation")]
+sup  <- sup[ , !names(sup) %in% c("Sex", "Age", "DOB",  "Date_Transplantation")]
+im  <- im[ , !names(im) %in% c("Sex", "Age", "DOB",  "Date_Transplantation")]
+echo <- echo[ , !names(echo) %in% c("Sex", "Age", "DOB", "Date_Transplantation")]
+
+
+# With merge only to dataframes can be merged, merging every dataframe sequentially
+df <- merge(clin, lab, by = "ID", all.x = TRUE)
+df <- merge (df, trans, by="ID", all.x=TRUE)
+df <- merge (df, sup, by="ID", all.x=TRUE)
+df <- merge (df, im, by="ID", all.x=TRUE)
+df <- merge (df, echo, by="ID", all.x=TRUE)
+
+# Sanity check
+any(duplicated(names(df)))
+
+# Remove duplicated CarTrans-Long-051
+df <- df[!duplicated(df$ID), ]
+```
+
+
+```{r table1 for overall}
+#Order by frequency
+df$Diagnosis <- factor(df$Diagnosis, levels = names(sort(table(df$Diagnosis), decreasing = TRUE)))
+df$Aetiology <- factor(df$Aetiology, levels = names(sort(table(df$Aetiology), decreasing = TRUE)))
+
+caption  <- "Clinical characteristics CarTrans cohort overall"
+footnote <- "* Hereditary: definite detection of gene mutation or congenital defect"
+
+
+table1(~ Diagnosis + Aetiology + Age + Sex,
+  data = df,
+  overall = c(left = "Overall"),
+  caption = caption,
+  footnote = footnote
+)
+
+t1 <- table1(~ Diagnosis + Aetiology + Age + Sex,
+  data = df,
+  overall = c(left = "Overall"),
+  caption = caption,
+  footnote = footnote
+)
+```
+
+```{r export in word, include=FALSE, eval=FALSE}
+# Convert to data frame
+t1_df <- as.data.frame(t1)
+
+# Convert to flextable
+ft <- flextable(t1_df)
+
+# Create Word document
+doc <- read_docx()
+doc <- body_add_flextable(doc, ft)
+
+# Save
+print(doc, target = "table1_overall_short.docx")
+```
+
+
+```{r}
+df <- df %>%
+  mutate(
+    Diagnosis = case_when(
+      Diagnosis %in% c("DCM","HCM","Ischemic CM","NDLVC","RCM") ~ Diagnosis,
+      TRUE ~ "Other"
+    )
+  )
+```
+
+
+```{r use library table1, fig.width=15, fig.height=15}
+caption  <- "Clinical characteristics CarTrans cohort by diagnosis"
+footnote <- "* Hereditary: definite detection of gene mutation or congenital defect"
+
+
+table1(~ Aetiology + Age + Sex + `Shortterm Mechanical Support` + `Longterm Mechanical Support` + Device + `Diabetes` + `CKD` + `Pulmonary hypertension` +`Pirche Classification` + `Pirche Score Overall` + `CMV Status` + `Donor Transplant status` + `Organ Care System` + `AB0 mismatch` + `Sex mismatch`+ + `Waiting time (d)` + `NTproBNP at Baseline (ng/L)` + `CRP at Baseline (mg/L)` + `Troponin T at Baseline (ng/L)`|Diagnosis,
+  data = df,
+  overall = c(left = "Total"),
+  caption = caption,
+  footnote = footnote
+)
+
+t2 <- table1(~ Aetiology + Age + Sex + `Shortterm Mechanical Support` + `Longterm Mechanical Support` + Device + `Diabetes` + `CKD` + `Pulmonary hypertension` +`Pirche Classification` + `Pirche Score Overall` + `CMV Status` + `Donor Transplant status` + `Organ Care System` + `AB0 mismatch` + `Sex mismatch`+ + `Waiting time (d)` + `NTproBNP at Baseline (ng/L)` + `CRP at Baseline (mg/L)` + `Troponin T at Baseline (ng/L)`|Diagnosis,
+  data = df,
+  overall = c(left = "Total"),
+  caption = caption,
+  footnote = footnote
+)
+```
+
+```{r export in word 2, include=FALSE, eval=FALSE}
+# Convert to data frame
+t2_df <- as.data.frame(t2)
+
+# Convert to flextable
+ft2 <- flextable(t2_df)
+
+# Create Word document
+doc2 <- read_docx()
+doc2 <- body_add_flextable(doc2, ft2)
+
+# Save
+print(doc2, target = "table1_overall_full.docx")
+```
+
+
+# Complex Heatmap visual overview
+```{r Prep data for heatmap}
+## Clinical Data
+df <- df %>%
+  mutate(
+    Aetiology = case_when(
+      Aetiology %in% c("Idiopathic","Hereditary","CAD","Immunologic") ~ Aetiology,
+      TRUE ~ "Other")
+    )
+```
+
+```{r choose annotation colours}
+col_anno <- list(
+
+  Diagnosis = c(
+        "DCM"= "#08306b",  
+        "HCM"= "#2171b5",  
+        "Ischemic CM"= "#6a51a3",  
+        "NDLVC"= "#4292c6",  
+        "RCM"= "#9ecae1",  
+        "Other"= "#7b9eb0"  
+  ),
+  Aetiology=c(
+    "Idiopathic" = "#c7e9c0",
+    "Hereditary"= "#74c476",
+    "CAD"= "#31a354",
+    "Immunologic"= "#238b45",
+    "Other"= "#bdbdbd"
+  ),
+
+  Sex = c(
+    "Female" = "#ca0020",
+    "Male" = "#92c5de"
+  ),
+
+#  `Shortterm Mechanical Support` = c(
+#    "No" = "white",
+#    "Impella" = "#fdd49e",
+#    "ECMO" = "#f16913"
+#  ),
+
+#  Device = c(
+#    "No" = "white",
+#    "ICD" = "#edf8b1",
+#    "CRT-D" = "#7fcdbb",
+#    "Life Vest" = "#2c7fb8"
+#  ),
+
+#  Diabetes = c(
+#    "No" = "white",
+#    "Yes" = "lightyellow"
+#  ),
+  
+  
+#   CKD = c(
+#    "Yes" = "#bbba10",
+#    "No" = "white"
+#  ),
+  
+#  `Pulmonary hypertension` = c(
+#    "Yes" = "#cc9966",
+#    "No" = "white",
+#    "na" ="white"
+#  ),
+
+  `Transplantation risk score` = c(
+    "0" = "white",
+    "No" = "white",
+    "1" = "#74c476",
+    "2" = "#a1d99b",
+    "3" = "#fee391",
+    "4" = "#db6a4a",
+    "5" = "red"
+    ),
+  
+    `Pirche Classification` = c(
+    "No" = "white",
+    "Low risk" = "#32c890",
+    "Intermediate risk" = "#ffd39b",
+    "High risk" = "#a52a2a"
+    ),
+  
+  `Organ Care System` = c(
+   "Yes" = "#ac1966",
+    "No" = "white",
+    "na" ="white"
+  ), 
+  
+  `CMV Status`= c(
+  "R-/D+"= "#a41a1c",
+  "R+/D+" = "#377eb8",
+   "R+/D-" ="#409eb2",
+   "R-/D-" ="#484ea3"
+  ), 
+  
+  `Donor Transplant status` = c(
+   "DBD" = "#ff7f00",
+   "DCD" = "#a54528",
+   "na" ="white"
+  ),  
+
+  `Sex mismatch`  = c(
+  "Yes" = "#d73027",
+   "No" = "white",
+    "na" ="white"
+  )
+  
+#  `AB0 mismatch`  = c(
+#   "Yes" = "#b01000",
+#    "No" = "white",
+#    "na" ="white"
+#  )
+  )
+```
+
+
+```{r visual overview heatmap, fig.height =7, fig.width=10, out.width="100%"}
+df <- dplyr::filter(df, !ID == "CarTrans-Long-009")
+
+# Choose variables for the annotations
+annotation_df <- df %>%
+  select(
+    ID,
+    `Transplantation risk score`,
+    `Pirche Classification`,
+    `CMV Status`,
+    `Sex mismatch`,
+    Diagnosis,
+    Aetiology,
+    Sex,
+    #`Shortterm Mechanical Support`,
+    #Device,
+    #Diabetes,
+    #`Pulmonary hypertension`,
+    #CKD,
+    `Donor Transplant status`,
+    `Organ Care System`,
+    #`AB0 mismatch`
+  ) %>%
+  mutate(across(-ID, as.character)) %>% 
+  column_to_rownames("ID")
+annotation_df[is.na(annotation_df)] <- "No"
+
+# Biuld heatmap matrix (ComplexHeatmap requires a matrix)
+heatmap_mat <- matrix(1, nrow = 1, ncol = nrow(annotation_df))
+colnames(heatmap_mat) <- rownames(annotation_df)
+rownames(heatmap_mat) <- "Cohort"
+
+#Create annotation legend list
+top_ha <- HeatmapAnnotation(df = annotation_df,col = col_anno,
+  
+  annotation_legend_param = list(
+    
+    Diagnosis = list(title = "Diagnosis"),
+    Sex = list(title = "Sex"),
+    #`Shortterm Mechanical Support` = list(title = "Short-term MCS", at = c("Impella", "ECMO"), labels = c("Impella", "ECMO")),
+    #Device = list(title = "Device", at = c("CRT-D", "ICD", "Life Vest"), labels = c("CRT-D", "ICD", "Life Vest")),
+    `Pirche Classification` = list(title = "Pirche Classification", at = c("High risk", "Intermediate risk", "Low risk"), labels = c("High risk", "Intermediate risk", "Low risk")),
+   # Diabetes = list(title = "Diabetes",at = c("Yes"),labels = c("Yes")),
+  #  `Pulmonary hypertension` = list(title = "Pulmonary hypertension", at = c("Yes"), labels = c("Yes")),
+  #  CKD = list(title = "CKD",at = c("Yes"),labels = c("Yes")),
+    `Organ Care System` = list(title = "Organ Care System",at = c("Yes"),labels = c("Yes")),
+    #`AB0 mismatch` = list(title = "AB0 mismatch",at = c("Yes"),labels = c("Yes")),
+    `Sex mismatch` = list(title = "Sex mismatch",at = c("Yes"),labels = c("Yes")),
+    `CMV Status` = list(title = "CMV Status",at = c("R+/D-", "R+/D+", "R-/D+","R-/D-"),labels = c("R+/D-", "R+/D+", "R-/D+","R-/D-")),
+    `Transplantation risk score` = list(title = "Transplantation risk score",at = c("1", "2", "3", "4", "5"),labels = c("1", "2", "3", "4", "5"))
+  )
+)
+
+  
+
+#Create color mapping
+# Create named color lists per variable
+row_col_list <- list(
+  Diagnosis = col_anno$Diagnosis,
+  Sex = col_anno$Sex,
+  `Shortterm Mechanical Support` = col_anno$`Shortterm Mechanical Support`,
+  Device = col_anno$Device,
+  Diabetes = col_anno$Diabetes,
+  `Pirche Classification` = col_anno$`Pirche Classification`
+)
+
+
+# Plot Heatmap
+ht <- Heatmap(heatmap_mat,name = "CarTrans", col = "white",
+  
+  top_annotation = top_ha,
+  cluster_columns = TRUE,
+  cluster_rows = FALSE,
+  clustering_method_columns = "ward.D",
+  
+  show_row_names = TRUE,
+  show_column_names = FALSE,
+  
+  width = unit(18, "cm"),height = unit(4, "cm")
+)
+
+draw(ht,heatmap_legend_side = "right",annotation_legend_side = "bottom"
+)
+
+```
+
