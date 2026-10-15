@@ -16,7 +16,7 @@ editor_options:
 
 # Clinical characterisation
 #### Table 1 and Heatmap [link](TableOverall.html)
-#### Donor characteristics [link](Donor-Characteristics.html)
+#### Donor characteristics [link](Donor_Characteristics.html)
 #### Kinetics standard laboratory parameters [link](Kinetics.html)
 
 
@@ -34,9 +34,9 @@ editor_options:
 
 
 # Vs Baseline
-#### Overview CarTrans Overall vs Baseline [link](Luminex_Overview.html)
 #### CarTrans Longitudinal per Visit vs Baseline [link](Luminex_HeatmapVisit_vsBaseline.html)
 #### Immunsuppression vs Baseline [link](Immunsupression_Luminex_vsBaseline.html)
+#### Transplantation Risk [link](TransplantationRisk_vsBaseline.html)
 
 # Analytes of interest
 #### L
