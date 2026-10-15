@@ -308,7 +308,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -319,8 +319,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -333,9 +333,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Luminex_CarTrans/</code> <span
@@ -358,21 +358,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -463,15 +460,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree427a81f0458dc75ce4ee7ba34c9daf7b0a0be91btargetblank427a81fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreef20822f2f4b68c6cf64fead0b4751a537c842004targetblankf20822fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/427a81f0458dc75ce4ee7ba34c9daf7b0a0be91b" target="_blank">427a81f</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/f20822f2f4b68c6cf64fead0b4751a537c842004" target="_blank">f20822f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree427a81f0458dc75ce4ee7ba34c9daf7b0a0be91btargetblank427a81fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreef20822f2f4b68c6cf64fead0b4751a537c842004targetblankf20822fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +478,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/427a81f0458dc75ce4ee7ba34c9daf7b0a0be91b" target="_blank">427a81f</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/f20822f2f4b68c6cf64fead0b4751a537c842004" target="_blank">f20822f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -503,12 +500,6 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    data/
     Ignored:    html/
-
-Unstaged changes:
-    Modified:   analysis/Kinetics.Rmd
-    Modified:   analysis/Luminex_HeatmapVisit.Rmd
-    Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
-    Modified:   analysis/Quality_Control.Rmd
 
 </code></pre>
 <p>
@@ -553,6 +544,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/be8c9fd3c564946092783c74b501e74e7e111f00/analysis/Quality_Control.Rmd" target="_blank">be8c9fd</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+15.10.2026_drölf
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/be8c9fd3c564946092783c74b501e74e7e111f00/docs/Quality_Control.html" target="_blank">be8c9fd</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+15.10.2026_drölf
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -719,6 +744,43 @@ plot_limits &lt;- function(data, lims, log = FALSE) {
 }</code></pre>
 <pre class="r"><code>plot_limits(lum_long, c(&quot;LLOQ&quot;, &quot;ULOQ&quot;))</code></pre>
 <p><img src="figure/Quality_Control.Rmd/plot_both-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot_both-1">
+Past versions of plot_both-1.png
+</button>
+</p>
+<div id="fig-plot_both-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/be8c9fd3c564946092783c74b501e74e7e111f00/docs/figure/Quality_Control.Rmd/plot_both-1.png" target="_blank">be8c9fd</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>plot_limits(lum_long, &quot;LLOQ&quot;)</code></pre>
 <p><img src="figure/Quality_Control.Rmd/lloq-plot-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
 <p>
