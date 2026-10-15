@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="I. Hanka" />
+
+<meta name="date" content="2026-10-15" />
+
+<title>Quality Control</title>
+
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Quality Control</h1>
+<h4 class="author">I. Hanka</h4>
+<h4 class="date">2026-10-15</h4>
+
+</div>
+
+
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code>basedir &lt;- here::here ()</code></pre>
+<div id="quality-control-of-high-cnt" class="section level1">
+<h1>Quality Control of high Cnt</h1>
+<p>CarTrans Healthy 05 was run as positive control with every Grem2
+ELISA plate. Plotting of measured values for high control for every
+run:</p>
+<pre class="r"><code>colnames(table_Grem2) &lt;- c(&quot;date_raw&quot;, &quot;grem2&quot;)
+
+table_Grem2 &lt;- table_Grem2 %&gt;%
+  mutate(
+    date_raw = as.character(date_raw),
+    # numeric-only entries = Excel serial dates
+    date_clean = if_else(
+      str_detect(date_raw, &quot;^[0-9]+$&quot;),
+      format(as.Date(as.numeric(date_raw), origin = &quot;1899-12-30&quot;), &quot;%d.%m.%Y&quot;),
+      date_raw
+    ),
+    # split off the plate suffix (_1, _2, ...)
+    plate = str_extract(date_clean, &quot;(?&lt;=_)\\d+$&quot;),
+    date  = as.Date(str_remove(date_clean, &quot;_\\d+$&quot;), format = &quot;%d.%m.%Y&quot;)
+  ) %&gt;%
+  arrange(date, plate)</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `date_clean = if_else(...)`.
+## Caused by warning in `as.Date()`:
+## ! NAs introduced by coercion</code></pre>
+<pre class="r"><code># Grem2 in every run high Cnt
+table_Grem2 &lt;- table_Grem2 %&gt;%
+  mutate(label = factor(date_clean, levels = unique(date_clean)))
+
+ggplot(table_Grem2, aes(x = label, y = grem2)) +
+  geom_point(size=4, col=&quot;red&quot;) +
+  labs(x = &quot;Date&quot;, y = &quot;Grem2&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="Quality-Control_files/figure-html/dotplot-1.png" alt="" width="672" />
+# Quality control Luminex analytes</p>
+<pre class="r"><code>table_lum_overall &lt;- table_lum_overall %&gt;%
+  mutate(
+    Runs = as.character(Runs),
+    # numeric-only entries = Excel serial dates
+    Runs_clean = if_else(
+      str_detect(Runs, &quot;^[0-9]+$&quot;),
+      format(as.Date(as.numeric(Runs), origin = &quot;1899-12-30&quot;), &quot;%d.%m.%Y&quot;),
+      Runs
+    ),
+    # split off the plate suffix (_1, _2, ...)
+    plate = str_extract(Runs_clean, &quot;(?&lt;=_)\\d+$&quot;),
+    Runs  = as.Date(str_remove(Runs_clean, &quot;_\\d+$&quot;), format = &quot;%d.%m.%Y&quot;)
+  ) %&gt;%
+  arrange(Runs, plate)</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `Runs_clean = if_else(...)`.
+## Caused by warning in `as.Date()`:
+## ! NAs introduced by coercion</code></pre>
+<pre class="r"><code>lum_long &lt;- table_lum_overall %&gt;%
+  mutate(Runs_label = factor(Runs_clean, levels = unique(Runs_clean))) %&gt;%   # keeps plates _1/_2 as separate x positions
+  pivot_longer(
+    cols = matches(&quot;_(LLOQ|ULOQ)$&quot;),
+    names_to = c(&quot;analyte&quot;, &quot;limit&quot;),
+    names_pattern = &quot;^(.*)_(LLOQ|ULOQ)$&quot;,
+    values_to = &quot;value&quot;
+  ) %&gt;%
+  mutate(
+    value = as.numeric(value),
+    limit = factor(limit, levels = c(&quot;LLOQ&quot;, &quot;ULOQ&quot;))
+  )</code></pre>
+<pre class="r"><code>lim_colors &lt;- c(LLOQ = &quot;#1f77b4&quot;, ULOQ = &quot;#d62728&quot;)
+
+plot_limits &lt;- function(data, lims, log = FALSE) {
+    data %&gt;%
+    filter(limit %in% lims) %&gt;%
+    ggplot(aes(x = Runs_label, y = value, color = limit, group = limit)) +
+    geom_line(linewidth = 0.4) +
+    geom_point(size = 1.5) +
+    facet_wrap(~ analyte, ncol = 5, scales = &quot;free_y&quot;) +
+    scale_color_manual(values = lim_colors, name = NULL) +
+    labs(x = &quot;Run&quot;, y = &quot;Concentration&quot;) +
+    theme_bw(base_size = 11) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+          strip.text = element_text(face = &quot;bold&quot;),
+          legend.position = &quot;top&quot;)
+}</code></pre>
+<pre class="r"><code>plot_limits(lum_long, c(&quot;LLOQ&quot;, &quot;ULOQ&quot;))</code></pre>
+<p><img src="Quality-Control_files/figure-html/plot%20both-1.png" alt="" width="100%" /></p>
+<pre class="r"><code>plot_limits(lum_long, &quot;LLOQ&quot;)</code></pre>
+<p><img src="Quality-Control_files/figure-html/lloq-plot-1.png" alt="" width="100%" /></p>
+<pre class="r"><code>plot_limits(lum_long, &quot;ULOQ&quot;)</code></pre>
+<p><img src="Quality-Control_files/figure-html/uloq-plot-1.png" alt="" width="100%" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
