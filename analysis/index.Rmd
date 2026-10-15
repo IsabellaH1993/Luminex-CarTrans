@@ -12,12 +12,12 @@ editor_options:
 ---
 
 # Quality Control
-#### Quality Control ELISA + Luminex [Quality Control](Quality-Control.html)
+#### Quality Control ELISA + Luminex [link](Quality-Control.html)
 
 # Clinical characterisation
-#### Table 1 and Heatmap [TableOverall](TableOverall.html)
-#### Donor characteristics [Donor Characteristics](Donor-Characteristics.html)
-#### Kinetics standard laboratory parameters [Kinetics](Kinetics.html)
+#### Table 1 and Heatmap [link](TableOverall.html)
+#### Donor characteristics [link](Donor-Characteristics.html)
+#### Kinetics standard laboratory parameters [link](Kinetics.html)
 
 
 # ELISA Grem2 
