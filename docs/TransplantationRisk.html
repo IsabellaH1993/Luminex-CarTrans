@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="I. Hanka" />
+
+<meta name="date" content="2026-10-15" />
+
+<title>TransplantationRisk</title>
+
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Luminex CarTrans</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Quality-Control.html">Quality Control</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Clinical
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="TableOverall.html">Table 1 and Heatmap</a>
+    </li>
+    <li>
+      <a href="Donor-Characteristics.html">Donor characteristics</a>
+    </li>
+    <li>
+      <a href="Kinetics.html">Kinetics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/IsabellaH1993/Luminex-CarTrans">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">TransplantationRisk</h1>
+<h4 class="author">I. Hanka</h4>
+<h4 class="date">2026-10-15</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-10-15
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Luminex/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20261015code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20261015)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20261015code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20261015)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    Quality-Control_files/
+    Ignored:    analysis/.DS_Store
+    Ignored:    html/
+
+Unstaged changes:
+    Modified:   .gitignore
+    Deleted:    analysis/Quality Control.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/TransplantationRisk.Rmd</code>)
+and HTML (<code>docs/TransplantationRisk.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/e483de74fbd81f7dde11079bc2e887054ed66247/analysis/TransplantationRisk.Rmd" target="_blank">e483de7</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+Update Pages 15.10.2026
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code>suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+    # Statistics
+  library (ordinal)
+  library(lme4)
+  library(lmerTest)
+  library(emmeans)
+})</code></pre>
+<pre class="r"><code>basedir &lt;- here ()</code></pre>
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%filter(
+    !(Study_ID %in% c(&quot;CarTrans-Long-16&quot;, &quot;CarTrans-Long-23&quot;, &quot;CarTrans-Long-36&quot;) &amp;
+      str_detect(Visit, &quot;^VX&quot;)))%&gt;%
+  select(-ISHLT_1990, -ISHLT_2004)</code></pre>
+<pre class="r"><code># Rename visits in overall table
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == &quot;Healthy&quot; ~ &quot;Healthy&quot;,
+    Visit == &quot;V0&quot; ~ &quot;Baseline&quot;,
+    Visit == &quot;V1&quot; ~ &quot;Week 1&quot;,
+    Visit == &quot;V2&quot; ~ &quot;Week 2&quot;,
+    Visit == &quot;V3&quot; ~ &quot;Month 1-3&quot;,
+    Visit == &quot;V4&quot; ~ &quot;Month 4-6&quot;,
+    Visit == &quot;V5&quot; ~ &quot;Month 12&quot;,
+    grepl(&quot;^VX&quot;, Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;VX1&quot;, &quot;VX2&quot;, &quot;VX3&quot;, &quot;VX4&quot;)) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = &quot;_&quot;))
+
+# Combine X timepoints to one rejection bin
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Timepoint= case_when(grepl(&quot;^VX&quot;, Visit) ~ &quot;Rejection Context&quot;,TRUE ~ Visit))</code></pre>
+<pre class="r"><code>df &lt;- table_lum_CarTrans_overall %&gt;%
+  filter(Timepoint != &quot;Healthy&quot;) %&gt;%
+  mutate(
+    Timepoint = factor(Timepoint,
+                        levels = c(&quot;Baseline&quot;, &quot;Week 1&quot;, &quot;Week 2&quot;, &quot;Month 1-3&quot;, &quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;Rejection Context&quot;)),
+    Class_Sup = factor(Class_Sup, levels = 1:6, ordered = TRUE),  # ordinal outcome
+    Transplantation_risk = as.numeric(Transplantation_risk),      # continuous predictor
+    Study_ID = factor(Study_ID)
+  ) %&gt;%
+  filter(!is.na(Timepoint), !is.na(Class_Sup), !is.na(Transplantation_risk))</code></pre>
+<pre class="r"><code>ann_colors &lt;- list(
+  Transplantation_risk = c(
+    &quot;0&quot; = &quot;white&quot;,
+    &quot;1&quot; = &quot;#74c476&quot;,
+    &quot;2&quot; = &quot;#a1d99b&quot;,
+    &quot;3&quot; = &quot;#fee391&quot;,
+    &quot;4&quot; = &quot;#db6a4a&quot;,
+    &quot;5&quot; = &quot;red&quot;
+  ),
+  
+  Class_Sup =c(
+  &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+  &quot;Healthy&quot; = &quot;grey&quot;,
+  &quot;1&quot; = &quot;#66bd63&quot;,
+  &quot;2&quot; = &quot;#a6d96a&quot;,
+  &quot;3&quot;  = &quot;#ffffbf&quot;,
+  &quot;4&quot; = &quot;#fdae61&quot;,
+  &quot;5&quot; = &quot;#f46d43&quot;,
+  &quot;6&quot; = &quot;#d73027&quot;
+  )
+  
+)</code></pre>
+<pre class="r"><code># Boxplot by risk tertile
+df_plot &lt;- df %&gt;%
+  mutate(risk_tertile = ntile(Transplantation_risk, 3),
+         risk_tertile = factor(risk_tertile, labels = c(&quot;Low&quot;, &quot;Mid&quot;, &quot;High&quot;)))
+ 
+ggplot(df_plot, aes(x = risk_tertile, y = as.numeric(as.character(Class_Sup)),
+                     fill = risk_tertile)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +          # outliers off - raw points show them
+  geom_jitter(width = 0.15, height = 0.15, alpha = 0.5, size = 1.8, color = &quot;black&quot;) +
+  facet_wrap(~ Timepoint, nrow = 2) +
+  labs(x = &quot;Transplantation risk tertile&quot;, y = &quot;Immunosuppression class (1-6)&quot;,
+       title = &quot;Immunosuppression severity by risk tertile and timepoint&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="figure/TransplantationRisk.Rmd/visualize%20distribution%20for%20ordinal%20ordering-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Continous ordering of Risk score
+ggplot(df, aes(x = Transplantation_risk, y = as.numeric(as.character(Class_Sup)))) +
+  geom_jitter(width = 0.1, height = 0.15, alpha = 0.3) +
+  geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;firebrick&quot;) +
+  facet_wrap(~ Timepoint, nrow = 2) +
+  labs(x = &quot;Transplantation risk (0-5)&quot;, y = &quot;Immunosuppression class (1-6)&quot;,
+       title = &quot;Immunosuppression severity vs. transplantation risk by timepoint&quot;) +
+  theme_minimal()</code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/TransplantationRisk.Rmd/visualize%20distribution%20for%20continous%20ordering-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Patient trajectoris colored by risk score
+ggplot(df, aes(x = Timepoint, y = as.numeric(as.character(Class_Sup)),
+               group = Study_ID, color = factor(Transplantation_risk))) +
+  geom_line(alpha = 0.6, linewidth = 0.7) +
+  scale_color_manual(values = ann_colors$Transplantation_risk) +
+  labs(x = &quot;Timepoint&quot;, y = &quot;Immunosuppression class (1-6)&quot;, color = &quot;Risk score&quot;,
+       title = &quot;Individual immunosuppression trajectories, colored by risk score&quot;) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))</code></pre>
+<p><img src="figure/TransplantationRisk.Rmd/patient%20trajectories-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<div id="primary-model-cumulative-link-mixed-model-ordinal-outcome"
+class="section level2">
+<h2>Primary model: cumulative link mixed model (ordinal outcome)</h2>
+<p>Mixed cumulative link model (clmm): random intercept at 1|Study_ID)
+to account for repeated measurement per patients</p>
+<pre class="r"><code>## Full model with Transplantation_risk x Timepoint interaction
+mod_full &lt;- clmm(Class_Sup ~ Transplantation_risk * Timepoint + (1 | Study_ID),
+                  data = df, link = &quot;logit&quot;)
+summary(mod_full)</code></pre>
+<pre><code>Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: Class_Sup ~ Transplantation_risk * Timepoint + (1 | Study_ID)
+data:    df
+
+ link  threshold nobs logLik  AIC    niter      max.grad cond.H 
+ logit flexible  187  -170.48 372.97 1539(3132) 5.98e-06 5.1e+03
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Study_ID (Intercept) 0.2346   0.4844  
+Number of groups:  Study_ID 33 
+
+Coefficients:
+                                                Estimate Std. Error z value
+Transplantation_risk                            -0.36512    0.38064  -0.959
+TimepointWeek 2                                 -2.56812    1.63673  -1.569
+TimepointMonth 1-3                              -2.81454    1.73055  -1.626
+TimepointMonth 4-6                              -6.13793    1.64679  -3.727
+TimepointMonth 12                               -8.41590    1.83559  -4.585
+TimepointRejection Context                      -4.87509    2.01733  -2.417
+Transplantation_risk:TimepointWeek 2             0.12447    0.54146   0.230
+Transplantation_risk:TimepointMonth 1-3         -0.05355    0.56466  -0.095
+Transplantation_risk:TimepointMonth 4-6          0.27459    0.52349   0.525
+Transplantation_risk:TimepointMonth 12           0.93517    0.57610   1.623
+Transplantation_risk:TimepointRejection Context  0.19363    0.62142   0.312
+                                                Pr(&gt;|z|)    
+Transplantation_risk                            0.337443    
+TimepointWeek 2                                 0.116635    
+TimepointMonth 1-3                              0.103867    
+TimepointMonth 4-6                              0.000194 ***
+TimepointMonth 12                               4.54e-06 ***
+TimepointRejection Context                      0.015666 *  
+Transplantation_risk:TimepointWeek 2            0.818183    
+Transplantation_risk:TimepointMonth 1-3         0.924444    
+Transplantation_risk:TimepointMonth 4-6         0.599908    
+Transplantation_risk:TimepointMonth 12          0.104529    
+Transplantation_risk:TimepointRejection Context 0.755353    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Threshold coefficients:
+    Estimate Std. Error z value
+2|3  -9.0132     1.3610  -6.623
+3|4  -5.4526     1.2608  -4.325
+4|5  -1.5316     1.1654  -1.314
+5|6  -0.8847     1.1542  -0.767</code></pre>
+<pre class="r"><code>## Reduced model without interaction: overall effect of risk score-
+## assuming its effect is stable across timepoints
+mod_main &lt;- clmm(Class_Sup ~ Transplantation_risk + Timepoint + (1 | Study_ID),
+                  data = df, link = &quot;logit&quot;)
+
+summary(mod_main)</code></pre>
+<pre><code>Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: Class_Sup ~ Transplantation_risk + Timepoint + (1 | Study_ID)
+data:    df
+
+ link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+ logit flexible  187  -172.22 366.43 611(1237) 1.69e-04 9.3e+02
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Study_ID (Intercept) 0.2288   0.4784  
+Number of groups:  Study_ID 33 
+
+Coefficients:
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+Transplantation_risk        -0.1409     0.1885  -0.747    0.455    
+TimepointWeek 2             -2.1849     0.5519  -3.959 7.52e-05 ***
+TimepointMonth 1-3          -2.9452     0.6062  -4.858 1.19e-06 ***
+TimepointMonth 4-6          -5.2923     0.6857  -7.718 1.18e-14 ***
+TimepointMonth 12           -5.6904     0.7251  -7.847 4.25e-15 ***
+TimepointRejection Context  -4.2803     0.6515  -6.570 5.02e-11 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Threshold coefficients:
+    Estimate Std. Error z value
+2|3  -8.2487     0.9524  -8.661
+3|4  -4.7629     0.8125  -5.862
+4|5  -0.8825     0.6565  -1.344
+5|6  -0.2443     0.6485  -0.377</code></pre>
+<pre class="r"><code># Random effects
+## Shows between-patient variance in baseline immunosuppresion tendency: large variance = quite heterogeneous at the same risk score and timepoint (no p-value)
+
+# Coefficients (fixed effects)
+## Transplantation_risk: log odds; positive value means higher risk score is associated with higher odds of being in a higher immunosuppression class, holding timepoint constant
+## Timepoint: each timepoint compared to reference level (Baseline)
+## Pr(&gt;|z|): p-value for each coefficient indiviually (Wald test)</code></pre>
+<pre class="r"><code># Estimated marginal means / effect sizes at each timepoint
+emmeans(mod_main, ~ Transplantation_risk | Timepoint, at = list(Transplantation_risk = c(0, 2.5, 5)))</code></pre>
+<pre><code>Timepoint = Week 1:
+ Transplantation_risk emmean    SE  df asymp.LCL asymp.UCL
+                  0.0  3.535 0.711 Inf    2.1410     4.928
+                  2.5  3.182 0.446 Inf    2.3088     4.056
+                  5.0  2.830 0.580 Inf    1.6938     3.966
+
+Timepoint = Week 2:
+ Transplantation_risk emmean    SE  df asymp.LCL asymp.UCL
+                  0.0  1.350 0.676 Inf    0.0254     2.674
+                  2.5  0.997 0.415 Inf    0.1848     1.810
+                  5.0  0.645 0.576 Inf   -0.4835     1.774
+
+Timepoint = Month 1-3:
+ Transplantation_risk emmean    SE  df asymp.LCL asymp.UCL
+                  0.0  0.589 0.684 Inf   -0.7514     1.930
+                  2.5  0.237 0.427 Inf   -0.5994     1.074
+                  5.0 -0.115 0.584 Inf   -1.2593     1.029
+
+Timepoint = Month 4-6:
+ Transplantation_risk emmean    SE  df asymp.LCL asymp.UCL
+                  0.0 -1.758 0.669 Inf   -3.0689    -0.446
+                  2.5 -2.110 0.436 Inf   -2.9651    -1.255
+                  5.0 -2.462 0.614 Inf   -3.6665    -1.258
+
+Timepoint = Month 12:
+ Transplantation_risk emmean    SE  df asymp.LCL asymp.UCL
+                  0.0 -2.156 0.701 Inf   -3.5303    -0.781
+                  2.5 -2.508 0.480 Inf   -3.4498    -1.566
+                  5.0 -2.860 0.644 Inf   -4.1218    -1.599
+
+Timepoint = Rejection Context:
+ Transplantation_risk emmean    SE  df asymp.LCL asymp.UCL
+                  0.0 -0.746 0.719 Inf   -2.1544     0.663
+                  2.5 -1.098 0.447 Inf   -1.9732    -0.223
+                  5.0 -1.450 0.571 Inf   -2.5704    -0.330
+
+Confidence level used: 0.95 </code></pre>
+<pre class="r"><code>## Likelihood ratio test: is the interaction actually needed?
+anova(mod_main, mod_full)</code></pre>
+<pre><code>Likelihood ratio tests of cumulative link models:
+ 
+         formula:                                                      link:
+mod_main Class_Sup ~ Transplantation_risk + Timepoint + (1 | Study_ID) logit
+mod_full Class_Sup ~ Transplantation_risk * Timepoint + (1 | Study_ID) logit
+         threshold:
+mod_main flexible  
+mod_full flexible  
+
+         no.par    AIC  logLik LR.stat df Pr(&gt;Chisq)
+mod_main     11 366.43 -172.22                      
+mod_full     16 372.97 -170.48  3.4646  5     0.6287</code></pre>
+<pre class="r"><code># Pr(&gt;Chisq) &lt; 0.05: risk scores effect on immunosuppression genuinely differs by timepoint</code></pre>
+<pre class="r"><code>## Turns mod_main Transplantation_risk coefficient into Odds ratio:
+##   exp(coef) = odds ratio for being in a higher immunosuppression class
+##   per 1-point increase in risk score, adjusted for timepoint.
+exp(coef(mod_main)[&quot;Transplantation_risk&quot;])</code></pre>
+<pre><code>Transplantation_risk 
+           0.8685562 </code></pre>
+<pre class="r"><code>confint(mod_main)  # insert Confidence Interval</code></pre>
+<pre><code>                                 2.5 %     97.5 %
+2|3                        -10.1153919 -6.3820359
+3|4                         -6.3554491 -3.1703244
+4|5                         -2.1692158  0.4043099
+5|6                         -1.5153194  1.0266489
+Transplantation_risk        -0.5104715  0.2286254
+TimepointWeek 2             -3.2664860 -1.1032544
+TimepointMonth 1-3          -4.1334102 -1.7569736
+TimepointMonth 4-6          -6.6362599 -3.9482564
+TimepointMonth 12           -7.1116316 -4.2691521
+TimepointRejection Context  -5.5571117 -3.0034284</code></pre>
+</div>
+<div
+id="sensitivity-check-linear-mixed-model-treat-class_sup-as-continuous"
+class="section level2">
+<h2>Sensitivity check: linear mixed model (treat Class_Sup as
+continuous)</h2>
+<p>Direction and significance should roughly agree between
+mod_main/mod_full (CLMM) and mod_lmer</p>
+<pre class="r"><code>mod_lmer &lt;- lmer(as.numeric(as.character(Class_Sup)) ~
+                    Transplantation_risk * Timepoint + (1 | Study_ID), data = df)
+summary(mod_lmer)</code></pre>
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+lmerModLmerTest]
+Formula: as.numeric(as.character(Class_Sup)) ~ Transplantation_risk *  
+    Timepoint + (1 | Study_ID)
+   Data: df
+
+REML criterion at convergence: 426.3
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.60241 -0.49530 -0.07359  0.50115  3.01393 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Study_ID (Intercept) 0.04562  0.2136  
+ Residual             0.49385  0.7027  
+Number of obs: 187, groups:  Study_ID, 33
+
+Fixed effects:
+                                                 Estimate Std. Error        df
+(Intercept)                                       5.51901    0.40143 169.66326
+Transplantation_risk                             -0.15900    0.13359 169.50403
+TimepointWeek 2                                  -1.18326    0.54412 151.02280
+TimepointMonth 1-3                               -1.18422    0.53852 150.24324
+TimepointMonth 4-6                               -2.21524    0.54656 149.72044
+TimepointMonth 12                                -2.82687    0.57492 152.87334
+TimepointRejection Context                       -1.93234    0.64632 174.96147
+Transplantation_risk:TimepointWeek 2              0.07428    0.18095 150.27415
+Transplantation_risk:TimepointMonth 1-3           0.01677    0.17991 149.82302
+Transplantation_risk:TimepointMonth 4-6           0.13476    0.18316 150.26480
+Transplantation_risk:TimepointMonth 12            0.30583    0.19263 153.27411
+Transplantation_risk:TimepointRejection Context   0.14847    0.20436 174.64602
+                                                t value Pr(&gt;|t|)    
+(Intercept)                                      13.748  &lt; 2e-16 ***
+Transplantation_risk                             -1.190  0.23563    
+TimepointWeek 2                                  -2.175  0.03122 *  
+TimepointMonth 1-3                               -2.199  0.02941 *  
+TimepointMonth 4-6                               -4.053 8.10e-05 ***
+TimepointMonth 12                                -4.917 2.25e-06 ***
+TimepointRejection Context                       -2.990  0.00319 ** 
+Transplantation_risk:TimepointWeek 2              0.411  0.68201    
+Transplantation_risk:TimepointMonth 1-3           0.093  0.92586    
+Transplantation_risk:TimepointMonth 4-6           0.736  0.46302    
+Transplantation_risk:TimepointMonth 12            1.588  0.11443    
+Transplantation_risk:TimepointRejection Context   0.727  0.46850    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Correlation of Fixed Effects:
+            (Intr) Trnsp_ TmpnW2 TmM1-3 TmM4-6 TmpM12 TmpnRC T_:TW2 T_:TM1-
+Trnsplnttn_ -0.946                                                         
+TimepontWk2 -0.678  0.641                                                  
+TmpntMnt1-3 -0.685  0.648  0.505                                           
+TmpntMnt4-6 -0.673  0.636  0.496  0.501                                    
+TmpntMnth12 -0.640  0.605  0.472  0.477  0.470                             
+TmpntRjctnC -0.569  0.538  0.421  0.424  0.418  0.402                      
+Trnspl_:TW2  0.641 -0.677 -0.946 -0.478 -0.470 -0.447 -0.398               
+Trns_:TM1-3  0.645 -0.681 -0.476 -0.945 -0.473 -0.449 -0.400  0.503        
+Trns_:TM4-6  0.632 -0.668 -0.466 -0.471 -0.945 -0.442 -0.394  0.493  0.496 
+Trnsp_:TM12  0.601 -0.635 -0.443 -0.448 -0.442 -0.948 -0.378  0.469  0.472 
+Trnspl_:TRC  0.567 -0.599 -0.419 -0.422 -0.417 -0.401 -0.960  0.443  0.445 
+            T_:TM4 T_:TM12
+Trnsplnttn_               
+TimepontWk2               
+TmpntMnt1-3               
+TmpntMnt4-6               
+TmpntMnth12               
+TmpntRjctnC               
+Trnspl_:TW2               
+Trns_:TM1-3               
+Trns_:TM4-6               
+Trnsp_:TM12  0.465        
+Trnspl_:TRC  0.438  0.421 </code></pre>
+<pre class="r"><code># Random effects
+## Residuals: leftover within-patient variability accross timepoints/risk not explained by the fixed effects
+# Fixed effects
+## Transplantation_risk: direct slope (not log-odds), holding timepoint constant
+## df and p-value come from the Satterhwaite approximation</code></pre>
+<pre class="r"><code>anova(mod_lmer)   # Type III test, Satterthwaite df</code></pre>
+<pre><code>Type III Analysis of Variance Table with Satterthwaite&#39;s method
+                                Sum Sq Mean Sq NumDF   DenDF F value    Pr(&gt;F)
+Transplantation_risk            0.2227 0.22267     1  35.289  0.4509    0.5063
+Timepoint                      14.9271 2.98541     5 156.836  6.0452 3.807e-05
+Transplantation_risk:Timepoint  1.6171 0.32341     5 156.887  0.6549    0.6582
+                                  
+Transplantation_risk              
+Timepoint                      ***
+Transplantation_risk:Timepoint    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code># Tests term as a whole (Timepoint across all its levels jointly)</code></pre>
+</div>
+<div
+id="risk-score-prediction-on-immunosuppression-in-rejection-context"
+class="section level2">
+<h2>Risk score prediction on immunosuppression in rejection context</h2>
+<pre class="r"><code># Mixed cumulative link model
+df_rejection &lt;- df %&gt;% filter(Timepoint == &quot;Rejection Context&quot;)
+ 
+mod_rejection &lt;- clmm(Class_Sup ~ Transplantation_risk + (1 | Study_ID), data = df_rejection)
+summary(mod_rejection)</code></pre>
+<pre><code>Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: Class_Sup ~ Transplantation_risk + (1 | Study_ID)
+data:    df_rejection
+
+ link  threshold nobs logLik AIC   niter    max.grad cond.H 
+ logit flexible  33   -36.52 85.04 247(955) 3.87e-06 8.1e+02
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Study_ID (Intercept) 3.349    1.83    
+Number of groups:  Study_ID 15 
+
+Coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)
+Transplantation_risk -0.02589    0.77618  -0.033    0.973
+
+Threshold coefficients:
+    Estimate Std. Error z value
+2|3  -3.9285     2.6780  -1.467
+3|4   0.1922     2.5503   0.075
+4|5   3.3358     2.7318   1.221
+5|6   5.3180     3.0075   1.768</code></pre>
+</div>
+<div id="transplantation-risk-on-overall-analytes-z-score"
+class="section level1">
+<h1>Transplantation risk on overall analytes (z-score)</h1>
+<pre class="r"><code>#Define analytes
+analyte_cols &lt;- setdiff(colnames(table_lum_CarTrans_overall), c(&quot;Study_ID&quot;, &quot;Timepoint&quot;, &quot;Sample_ID&quot;, &quot;ISHLT_2004&quot;, &quot;Visit&quot;, &quot;Transplantation_risk&quot;, &quot;Class_Sup&quot;))
+
+# Log transform input values
+table_lum_CarTrans_overall_z &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(across(all_of(analyte_cols), ~ log2(pmax(., 1))))
+
+# Calculate healthy mean and SD as reference
+healthy_ref &lt;- table_lum_CarTrans_overall_z %&gt;%
+  filter(Visit == &quot;Healthy&quot;) %&gt;%
+  summarise(across(all_of(analyte_cols),
+                   list(mean = ~mean(., na.rm = TRUE),
+                        sd   = ~sd(., na.rm = TRUE))))
+
+# Calculate Z score
+z_data &lt;- table_lum_CarTrans_overall_z
+
+for (col in analyte_cols) {
+  mu &lt;- healthy_ref[[paste0(col, &quot;_mean&quot;)]]
+  sd &lt;- healthy_ref[[paste0(col, &quot;_sd&quot;)]]
+  
+  if (is.na(sd) || sd == 0) {
+    z_data[[col]] &lt;- NA
+  } else {
+    z_data[[col]] &lt;- (z_data[[col]] - mu) / sd
+  }
+}
+
+# Set global score per sample
+z_data &lt;- z_data %&gt;%mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))</code></pre>
+<pre class="r"><code>z_data_plot &lt;- z_data %&gt;%
+  filter(!Timepoint %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;)) %&gt;%
+  mutate(
+    Transplantation_risk = factor(Transplantation_risk),
+    Timepoint = factor(Timepoint,
+                        levels = c(&quot;Baseline&quot;, &quot;Week 1&quot;, &quot;Week 2&quot;,
+                                   &quot;Month 1-3&quot;, &quot;Month 4-6&quot;, &quot;Month 12&quot;,
+                                   &quot;Rejection Context&quot;))
+  )
+ 
+
+# Visulization pooled timepoints
+ggplot(z_data_plot, aes(x = Transplantation_risk, y = global_z,
+                         fill = Transplantation_risk)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.4, size = 1.5, color = &quot;black&quot;) +
+  scale_fill_manual(values = ann_colors$Transplantation_risk) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = &quot;none&quot;) +
+  labs(title = &quot;Global Z-score by Transplantation Risk Class&quot;,
+       x = &quot;Transplantation risk&quot;, y = &quot;Global Z-score (vs Healthy)&quot;,
+       caption = &quot;*Global Z-score: mean Z-score across all analytes&quot;)</code></pre>
+<p><img src="figure/TransplantationRisk.Rmd/global%20Z%20score%20pooled%20accross%20timepoints-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(z_data_plot, aes(x = Timepoint, y = global_z, group = Study_ID,
+                         color = Transplantation_risk)) +
+  geom_line(alpha = 0.15) +
+  geom_point(alpha = 0.15) +
+  stat_summary(aes(group = Transplantation_risk), fun = mean, geom = &quot;line&quot;,
+               linewidth = 1.3) +
+  stat_summary(aes(group = Transplantation_risk), fun = mean, geom = &quot;point&quot;,
+               size = 2.5) +
+  scale_color_manual(values = ann_colors$Transplantation_risk) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0),
+        plot.caption.position = &quot;plot&quot;,
+        axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(title = &quot;Longitudinal Immune Profiling by Transplantation Risk Class&quot;,
+       y = &quot;Global Z-score (vs Healthy)&quot;, color = &quot;Risk score&quot;,
+       caption = &quot;*Global Z-score: mean Z-score across all analytes&quot;)</code></pre>
+<p><img src="figure/TransplantationRisk.Rmd/global%20z%20score%20Trans_risk%20per%20timepoint-1.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Sequoia 15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Europe/Zurich
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] emmeans_2.0.4          lmerTest_3.2-1         lme4_2.0-6            
+ [4] Matrix_1.7-6           ordinal_2026.7-26      ggpattern_1.3.1       
+ [7] gridExtra_2.3.1        cowplot_1.2.0          patchwork_1.3.2       
+[10] plotly_4.12.1          EnhancedVolcano_1.30.0 RColorBrewer_1.1-3    
+[13] circlize_0.4.18        ComplexHeatmap_2.28.0  pheatmap_1.0.13       
+[16] corrplot_0.95          ggcorrplot_0.3.0       ggbeeswarm_0.7.3      
+[19] ggrepel_0.9.8          ggpubr_1.0.0           rstatix_1.1.0         
+[22] readxl_1.5.0.1         writexl_2.0.1          openxlsx_4.2.9        
+[25] gtsummary_2.6.1        flextable_0.10.1       tableone_0.13.2       
+[28] table1_1.5.1           scales_1.4.0           here_1.0.2            
+[31] janitor_2.2.1          magrittr_2.0.5         data.table_1.18.6.1   
+[34] lubridate_1.9.5        forcats_1.0.1          stringr_1.6.0         
+[37] dplyr_1.2.1            purrr_1.2.2            readr_2.2.0           
+[40] tidyr_1.3.2            tibble_3.3.1           ggplot2_4.0.3         
+[43] tidyverse_2.0.0        workflowr_1.7.2       
+
+loaded via a namespace (and not attached):
+  [1] splines_4.6.1           later_1.4.8             cellranger_1.1.0       
+  [4] lifecycle_1.0.5         Rdpack_2.6.6            doParallel_1.0.17      
+  [7] rprojroot_2.1.1         processx_3.9.0          lattice_0.23-1         
+ [10] MASS_7.3-66             backports_1.5.1         survey_4.5             
+ [13] sass_0.4.10             rmarkdown_2.32          jquerylib_0.1.4        
+ [16] yaml_2.3.12             httpuv_1.6.17           otel_0.2.0             
+ [19] zip_3.0.2               askpass_1.2.1           DBI_1.3.0              
+ [22] minqa_1.2.8             abind_1.4-8             BiocGenerics_0.58.1    
+ [25] git2r_0.36.2            gdtools_0.5.1           IRanges_2.46.0         
+ [28] S4Vectors_0.50.3        codetools_0.2-20        xml2_1.6.0             
+ [31] tidyselect_1.2.1        shape_1.4.6.1           farver_2.1.2           
+ [34] matrixStats_1.5.0       stats4_4.6.1            jsonlite_2.0.0         
+ [37] GetoptLong_1.1.1        Formula_1.2-6           survival_3.8-12        
+ [40] iterators_1.0.14        systemfonts_1.3.2       foreach_1.5.2          
+ [43] tools_4.6.1             ragg_1.5.2              Rcpp_1.1.2             
+ [46] glue_1.8.1              mgcv_1.9-4              xfun_0.61              
+ [49] withr_3.0.3             numDeriv_2016.8-1.1     fastmap_1.2.0          
+ [52] mitools_2.7             boot_1.3-32             openssl_2.4.2          
+ [55] callr_3.8.0             digest_0.6.39           timechange_0.4.0       
+ [58] R6_2.6.1                estimability_2.0.0      textshaping_1.0.5      
+ [61] colorspace_2.1-4        generics_0.1.4          fontLiberation_0.1.0   
+ [64] httr_1.4.9              htmlwidgets_1.6.4       whisker_0.4.1          
+ [67] pkgconfig_2.0.3         gtable_0.3.6            S7_0.2.2               
+ [70] htmltools_0.5.9         fontBitstreamVera_0.1.1 carData_3.0-6          
+ [73] clue_0.3-68             png_0.1-9               reformulas_0.4.4       
+ [76] snakecase_0.11.1        knitr_1.52              rstudioapi_0.19.0      
+ [79] tzdb_0.5.0              rjson_0.2.23            uuid_1.2-2             
+ [82] coda_0.19-4.1           nlme_3.1-171            nloptr_2.2.1           
+ [85] cachem_1.1.0            GlobalOptions_0.1.4     parallel_4.6.1         
+ [88] vipor_0.4.7             pillar_1.11.1           vctrs_0.7.3            
+ [91] promises_1.5.0          car_3.1-5               ucminf_1.2.3           
+ [94] xtable_1.8-8            cluster_2.1.8.3         beeswarm_0.4.0         
+ [97] evaluate_1.0.5          mvtnorm_1.4-2           cli_3.6.6              
+[100] compiler_4.6.1          rlang_1.3.0             crayon_1.5.3           
+[103] ggsignif_0.6.4          labeling_0.4.3          getPass_0.2-4          
+[106] fs_2.1.0                stringi_1.8.9           viridisLite_0.4.3      
+[109] fontquiver_0.2.1        hms_1.1.4               rbibutils_2.4.1        
+[112] broom_1.0.13            bslib_0.12.0            officer_0.7.6          </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

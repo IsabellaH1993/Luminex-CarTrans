@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="I. Hanka" />
+
+<meta name="date" content="2026-10-15" />
+
+<title>TableOverall</title>
+
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Luminex CarTrans</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Quality-Control.html">Quality Control</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Clinical
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="TableOverall.html">Table 1 and Heatmap</a>
+    </li>
+    <li>
+      <a href="Donor-Characteristics.html">Donor characteristics</a>
+    </li>
+    <li>
+      <a href="Kinetics.html">Kinetics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/IsabellaH1993/Luminex-CarTrans">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">TableOverall</h1>
+<h4 class="author">I. Hanka</h4>
+<h4 class="date">2026-10-15</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-10-15
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Luminex/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20261015code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20261015)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20261015code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20261015)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    Quality-Control_files/
+    Ignored:    analysis/.DS_Store
+    Ignored:    html/
+
+Unstaged changes:
+    Modified:   .gitignore
+    Deleted:    analysis/Quality Control.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/TableOverall.Rmd</code>) and HTML
+(<code>docs/TableOverall.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/e483de74fbd81f7dde11079bc2e887054ed66247/analysis/TableOverall.Rmd" target="_blank">e483de7</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+Update Pages 15.10.2026
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code>library(readxl)
+library (data.table)
+library(writexl)
+library(table1)
+library(tableone)
+library(flextable)
+library(magrittr)
+library(dplyr)
+library (sjPlot)
+library (sjlabelled)
+library(data.table) 
+library(ggplot2)
+library(&quot;gplots&quot;)
+library(pheatmap)
+library(ComplexHeatmap)
+library(here)
+library(officer)
+library(boot)
+library(purrr)
+library(tibble)</code></pre>
+<pre class="r"><code># Mutate factors and define different levels
+
+## Clinical Data
+data$`Clinical Data` &lt;- data$`Clinical Data` |&gt;
+  dplyr::mutate(
+
+    ### Short-term MCS
+    Shortterm_MCS = dplyr::case_when(
+      Shortterm_MCS %in% c(&quot;No&quot;, &quot;NA.&quot;) ~ &quot;No&quot;,
+      Shortterm_MCS %in% c(&quot;VA-ECMO, Impella&quot;) ~ &quot;Impella&quot;,
+      Shortterm_MCS %in% c(&quot;VA-ECMO&quot;, &quot;postoperative VA-ECMO&quot;) ~ &quot;ECMO&quot;,
+      TRUE ~ NA_character_
+    ),
+
+    ### Long-term MCS
+    Longterm_MCS = dplyr::case_when(
+      Longterm_MCS %in% c(&quot;No&quot;, &quot;NA&quot;) ~ &quot;No&quot;,
+      Longterm_MCS == &quot;LVAD&quot; ~ &quot;LVAD&quot;,
+      TRUE ~ NA_character_
+    ),
+
+    ### Sex
+    Sex = dplyr::case_when(
+      Sex == &quot;M&quot; ~ &quot;Male&quot;,
+      Sex == &quot;F&quot; ~ &quot;Female&quot;,
+      TRUE ~ NA_character_
+    ),
+    
+    ### Diabetes
+    Diabetes = dplyr::case_when(
+      Diabetes %in% c(&quot;No&quot;, &quot;prediabetes&quot;) ~ &quot;No&quot;,
+      Diabetes %in% c(&quot;DM type 2&quot;) ~ &quot;Yes&quot;,
+      TRUE ~ NA_character_
+    ),
+
+    ### Device
+    Device = dplyr::case_when(
+      Device %in% c(&quot;No&quot;, &quot;NA&quot;) ~ &quot;No&quot;, 
+      Device %in% c( &quot;CRT-D&quot;, &quot;CRT-D, VSD Patch Plastic, aortic valve mechanic prosthetic&quot;,
+                    &quot;St.n CRT-D&quot;) ~ &quot;CRT-D&quot;,
+      Device %in% c(&quot;ICD&quot;, &quot;S-ICD&quot;, &quot;ICD-D&quot;) ~ &quot;ICD&quot;,
+      Device == &quot;life vest&quot; ~ &quot;Life Vest&quot;,
+      TRUE ~ NA_character_
+    )
+  ) |&gt;
+  dplyr::mutate(
+    Shortterm_MCS = factor(Shortterm_MCS, levels = c(&quot;No&quot;, &quot;Impella&quot;, &quot;ECMO&quot;)),
+    Longterm_MCS  = factor(Longterm_MCS,  levels = c(&quot;No&quot;, &quot;LVAD&quot;)),
+    Sex           = factor(Sex,           levels = c(&quot;Female&quot;, &quot;Male&quot;)),
+    Device        = factor(Device,        levels = c(&quot;No&quot;, &quot;ICD&quot;, &quot;CRT-D&quot;, &quot;Life Vest&quot;))
+  )
+
+## Immunological Data
+data$`Immunologic Data` &lt;- data$`Immunologic Data` |&gt;
+  dplyr::mutate(
+
+    ### Pirche Classification
+    PIRCHE = dplyr::case_when(
+      PIRCHE == &quot;high risk&quot; ~ &quot;High risk&quot;,
+      PIRCHE == &quot;intermediate risk&quot; ~ &quot;Intermediate risk&quot;,
+      PIRCHE == &quot;low risk&quot; ~ &quot;Low risk&quot;,
+      PIRCHE %in% c(&quot;NA&quot;, NA) ~ NA_character_,
+      TRUE ~ PIRCHE
+    ),
+
+  ) |&gt;
+  dplyr::mutate(
+    PIRCHE = factor(PIRCHE, levels = c(&quot;Low risk&quot;, &quot;Intermediate risk&quot;, &quot;High risk&quot;))
+  )
+
+## Immunological Data
+data$`Transplantation` &lt;- data$`Transplantation` |&gt;
+  dplyr::mutate(
+
+    ### Donor transplant status
+    HTx_status = dplyr::case_when(
+      HTx_status == &quot;DCD III&quot; ~ &quot;DCD&quot;,
+      HTx_status == &quot;DBD&quot; ~ &quot;DBD&quot;,
+      HTx_status %in% c(&quot;NA&quot;, NA) ~ NA_character_,
+      TRUE ~ HTx_status
+    )
+)
+
+# Mutate class 
+data$`Clinical Data`$BMI &lt;- as.numeric(data$`Clinical Data`$BMI)</code></pre>
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>data$`Lab Data`$NTproBNP_BL &lt;- as.numeric(data$`Lab Data`$NTproBNP_BL)</code></pre>
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>data$`Lab Data`$CRP_BL &lt;- as.numeric(data$`Lab Data`$CRP_BL)
+data$`Lab Data`$TropT_BL &lt;- as.numeric(data$`Lab Data`$TropT_BL)</code></pre>
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>data$`Clinical Data` &lt;- data$`Clinical Data` |&gt;
+  dplyr::rename(
+    &quot;Shortterm Mechanical Support&quot; = Shortterm_MCS,
+    &quot;Longterm Mechanical Support&quot; = Longterm_MCS,
+    &quot;Pulmonary hypertension&quot; = PH
+  )
+
+data$`Lab Data` &lt;- data$`Lab Data` |&gt;
+  dplyr::rename(
+    &quot;NTproBNP at Baseline (ng/L)&quot; = NTproBNP_BL,
+    &quot;CRP at Baseline (mg/L)&quot; = CRP_BL,
+    &quot;Troponin T at Baseline (ng/L)&quot; = TropT_BL
+  )
+
+data$`Immunologic Data` &lt;- data$`Immunologic Data` |&gt;
+  dplyr::rename(
+  &quot;CMV Status&quot; = CMV,
+  &quot;Pirche Score Overall&quot; = total_PircheScore,
+  &quot;Pirche Classification&quot; = PIRCHE
+  )    
+
+data$`Transplantation` &lt;- data$`Transplantation` |&gt;
+  dplyr::rename(
+  &quot;AB0 mismatch&quot; = AB0_mismatch,
+  &quot;Organ Care System&quot; = OCS,
+  &quot;Donor Transplant status&quot; = HTx_status,
+  &quot;Waiting time (d)&quot; = waiting_time
+  ) 
+
+data$`Immunosuppression` &lt;- data$`Immunosuppression` |&gt;
+  dplyr::rename(
+  &quot;Transplantation risk score&quot; = Transplantation_risk)</code></pre>
+<pre class="r"><code>clin &lt;- as.data.frame(data$`Clinical Data`)
+lab &lt;- as.data.frame(data$`Lab Data`)
+trans &lt;- as.data.frame(data$`Transplantation`)
+sup &lt;- as.data.frame(data$`Immunosuppression`)
+im &lt;- as.data.frame(data$`Immunologic Data`)
+echo &lt;- as.data.frame(data$`Echo Results`)
+
+# Avoid duplicates by removing overlapping columns before merging
+lab  &lt;- lab[ , !names(lab) %in% c(&quot;Sex&quot;, &quot;Age&quot;, &quot;DOB&quot;,  &quot;Date_Transplantation&quot;)]
+trans  &lt;- trans[ , !names(trans) %in% c(&quot;Sex&quot;, &quot;Age&quot;, &quot;DOB&quot;,  &quot;Date_Transplantation&quot;)]
+sup  &lt;- sup[ , !names(sup) %in% c(&quot;Sex&quot;, &quot;Age&quot;, &quot;DOB&quot;,  &quot;Date_Transplantation&quot;)]
+im  &lt;- im[ , !names(im) %in% c(&quot;Sex&quot;, &quot;Age&quot;, &quot;DOB&quot;,  &quot;Date_Transplantation&quot;)]
+echo &lt;- echo[ , !names(echo) %in% c(&quot;Sex&quot;, &quot;Age&quot;, &quot;DOB&quot;, &quot;Date_Transplantation&quot;)]
+
+
+# With merge only to dataframes can be merged, merging every dataframe sequentially
+df &lt;- merge(clin, lab, by = &quot;ID&quot;, all.x = TRUE)
+df &lt;- merge (df, trans, by=&quot;ID&quot;, all.x=TRUE)
+df &lt;- merge (df, sup, by=&quot;ID&quot;, all.x=TRUE)
+df &lt;- merge (df, im, by=&quot;ID&quot;, all.x=TRUE)
+df &lt;- merge (df, echo, by=&quot;ID&quot;, all.x=TRUE)
+
+# Sanity check
+any(duplicated(names(df)))</code></pre>
+<pre><code>[1] FALSE</code></pre>
+<pre class="r"><code># Remove duplicated CarTrans-Long-051
+df &lt;- df[!duplicated(df$ID), ]</code></pre>
+<pre class="r"><code>#Order by frequency
+df$Diagnosis &lt;- factor(df$Diagnosis, levels = names(sort(table(df$Diagnosis), decreasing = TRUE)))
+df$Aetiology &lt;- factor(df$Aetiology, levels = names(sort(table(df$Aetiology), decreasing = TRUE)))
+
+caption  &lt;- &quot;Clinical characteristics CarTrans cohort overall&quot;
+footnote &lt;- &quot;* Hereditary: definite detection of gene mutation or congenital defect&quot;
+
+
+table1(~ Diagnosis + Aetiology + Age + Sex,
+  data = df,
+  overall = c(left = &quot;Overall&quot;),
+  caption = caption,
+  footnote = footnote
+)</code></pre>
+<div class="Rtable1"><table class="Rtable1"><caption>Clinical characteristics CarTrans cohort overall</caption>
+
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Overall<br/><span class='stratn'>(N=50)</span></span></th>
+</tr>
+<tfoot><tr><td colspan="2" class="Rtable1-footnote"><p>* Hereditary: definite detection of gene mutation or congenital defect</p>
+</td></tr></tfoot>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Diagnosis</span></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>DCM</td>
+<td>26 (52.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Ischemic CM</td>
+<td>11 (22.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>HCM</td>
+<td>2 (4.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>NDLVC</td>
+<td>2 (4.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Anthracycline-induced CM</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Double inlet left ventricle</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Endocarditis</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Failing Fontan</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Giant cell myocarditis</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Ischemic/valvular CM</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Postoperative heart failure</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>RCM</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Transposition of great arteries</td>
+<td class='lastrow'>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Aetiology</span></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Idiopathic</td>
+<td>17 (34.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Hereditary</td>
+<td>15 (30.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>CAD</td>
+<td>11 (22.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Immunologic</td>
+<td>2 (4.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Infectious</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Postoperative</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Retransplantation (valvular/toxic)</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Toxic</td>
+<td>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Valvular/CAD</td>
+<td class='lastrow'>1 (2.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Age</span></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>50.4 (11.5)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>53.5 [23.0, 67.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Sex</span></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Female</td>
+<td>12 (24.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Male</td>
+<td class='lastrow'>38 (76.0%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>t1 &lt;- table1(~ Diagnosis + Aetiology + Age + Sex,
+  data = df,
+  overall = c(left = &quot;Overall&quot;),
+  caption = caption,
+  footnote = footnote
+)</code></pre>
+<pre class="r"><code>df &lt;- df %&gt;%
+  mutate(
+    Diagnosis = case_when(
+      Diagnosis %in% c(&quot;DCM&quot;,&quot;HCM&quot;,&quot;Ischemic CM&quot;,&quot;NDLVC&quot;,&quot;RCM&quot;) ~ Diagnosis,
+      TRUE ~ &quot;Other&quot;
+    )
+  )</code></pre>
+<pre class="r"><code>caption  &lt;- &quot;Clinical characteristics CarTrans cohort by diagnosis&quot;
+footnote &lt;- &quot;* Hereditary: definite detection of gene mutation or congenital defect&quot;
+
+
+table1(~ Aetiology + Age + Sex + `Shortterm Mechanical Support` + `Longterm Mechanical Support` + Device + `Diabetes` + `CKD` + `Pulmonary hypertension` +`Pirche Classification` + `Pirche Score Overall` + `CMV Status` + `Donor Transplant status` + `Organ Care System` + `AB0 mismatch` + `Sex mismatch`+ + `Waiting time (d)` + `NTproBNP at Baseline (ng/L)` + `CRP at Baseline (mg/L)` + `Troponin T at Baseline (ng/L)`|Diagnosis,
+  data = df,
+  overall = c(left = &quot;Total&quot;),
+  caption = caption,
+  footnote = footnote
+)</code></pre>
+<div class="Rtable1"><table class="Rtable1"><caption>Clinical characteristics CarTrans cohort by diagnosis</caption>
+
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Total<br/><span class='stratn'>(N=50)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>DCM<br/><span class='stratn'>(N=26)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>HCM<br/><span class='stratn'>(N=2)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Ischemic CM<br/><span class='stratn'>(N=11)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>NDLVC<br/><span class='stratn'>(N=2)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Other<br/><span class='stratn'>(N=8)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>RCM<br/><span class='stratn'>(N=1)</span></span></th>
+</tr>
+<tfoot><tr><td colspan="8" class="Rtable1-footnote"><p>* Hereditary: definite detection of gene mutation or congenital defect</p>
+</td></tr></tfoot>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Aetiology</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Idiopathic</td>
+<td>17 (34.0%)</td>
+<td>16 (61.5%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Hereditary</td>
+<td>15 (30.0%)</td>
+<td>8 (30.8%)</td>
+<td>2 (100%)</td>
+<td>0 (0%)</td>
+<td>2 (100%)</td>
+<td>3 (37.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>CAD</td>
+<td>11 (22.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>11 (100%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Immunologic</td>
+<td>2 (4.0%)</td>
+<td>1 (3.8%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Infectious</td>
+<td>1 (2.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Postoperative</td>
+<td>1 (2.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Retransplantation (valvular/toxic)</td>
+<td>1 (2.0%)</td>
+<td>1 (3.8%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Toxic</td>
+<td>1 (2.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Valvular/CAD</td>
+<td class='lastrow'>1 (2.0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (12.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Age</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>50.4 (11.5)</td>
+<td>46.7 (12.8)</td>
+<td>58.5 (7.78)</td>
+<td>57.2 (4.71)</td>
+<td>55.0 (1.41)</td>
+<td>50.4 (12.3)</td>
+<td>49.0 (NA)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>53.5 [23.0, 67.0]</td>
+<td class='lastrow'>48.5 [23.0, 67.0]</td>
+<td class='lastrow'>58.5 [53.0, 64.0]</td>
+<td class='lastrow'>58.0 [48.0, 67.0]</td>
+<td class='lastrow'>55.0 [54.0, 56.0]</td>
+<td class='lastrow'>52.0 [24.0, 63.0]</td>
+<td class='lastrow'>49.0 [49.0, 49.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Sex</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Female</td>
+<td>12 (24.0%)</td>
+<td>7 (26.9%)</td>
+<td>1 (50.0%)</td>
+<td>1 (9.1%)</td>
+<td>1 (50.0%)</td>
+<td>2 (25.0%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Male</td>
+<td class='lastrow'>38 (76.0%)</td>
+<td class='lastrow'>19 (73.1%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>10 (90.9%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>6 (75.0%)</td>
+<td class='lastrow'>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Shortterm Mechanical Support</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>45 (90.0%)</td>
+<td>25 (96.2%)</td>
+<td>2 (100%)</td>
+<td>9 (81.8%)</td>
+<td>2 (100%)</td>
+<td>6 (75.0%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Impella</td>
+<td>2 (4.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (9.1%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>ECMO</td>
+<td class='lastrow'>3 (6.0%)</td>
+<td class='lastrow'>1 (3.8%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (9.1%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (12.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Longterm Mechanical Support</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>37 (74.0%)</td>
+<td>18 (69.2%)</td>
+<td>2 (100%)</td>
+<td>7 (63.6%)</td>
+<td>2 (100%)</td>
+<td>7 (87.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>LVAD</td>
+<td>12 (24.0%)</td>
+<td>7 (26.9%)</td>
+<td>0 (0%)</td>
+<td>4 (36.4%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Missing</td>
+<td class='lastrow'>1 (2.0%)</td>
+<td class='lastrow'>1 (3.8%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Device</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>10 (20.0%)</td>
+<td>1 (3.8%)</td>
+<td>0 (0%)</td>
+<td>5 (45.5%)</td>
+<td>0 (0%)</td>
+<td>3 (37.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>ICD</td>
+<td>20 (40.0%)</td>
+<td>11 (42.3%)</td>
+<td>2 (100%)</td>
+<td>4 (36.4%)</td>
+<td>0 (0%)</td>
+<td>3 (37.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>CRT-D</td>
+<td>18 (36.0%)</td>
+<td>14 (53.8%)</td>
+<td>0 (0%)</td>
+<td>1 (9.1%)</td>
+<td>2 (100%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Life Vest</td>
+<td>1 (2.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Missing</td>
+<td class='lastrow'>1 (2.0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (9.1%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Diabetes</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>44 (88.0%)</td>
+<td>22 (84.6%)</td>
+<td>2 (100%)</td>
+<td>10 (90.9%)</td>
+<td>2 (100%)</td>
+<td>7 (87.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>6 (12.0%)</td>
+<td class='lastrow'>4 (15.4%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (9.1%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (12.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>CKD</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>9 (18.0%)</td>
+<td>6 (23.1%)</td>
+<td>0 (0%)</td>
+<td>2 (18.2%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>41 (82.0%)</td>
+<td class='lastrow'>20 (76.9%)</td>
+<td class='lastrow'>2 (100%)</td>
+<td class='lastrow'>9 (81.8%)</td>
+<td class='lastrow'>2 (100%)</td>
+<td class='lastrow'>7 (87.5%)</td>
+<td class='lastrow'>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Pulmonary hypertension</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>na</td>
+<td>2 (4.0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>2 (18.2%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>23 (46.0%)</td>
+<td>15 (57.7%)</td>
+<td>0 (0%)</td>
+<td>4 (36.4%)</td>
+<td>0 (0%)</td>
+<td>3 (37.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>25 (50.0%)</td>
+<td class='lastrow'>11 (42.3%)</td>
+<td class='lastrow'>2 (100%)</td>
+<td class='lastrow'>5 (45.5%)</td>
+<td class='lastrow'>2 (100%)</td>
+<td class='lastrow'>5 (62.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Pirche Classification</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Low risk</td>
+<td>1 (2.0%)</td>
+<td>1 (3.8%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Intermediate risk</td>
+<td>27 (54.0%)</td>
+<td>12 (46.2%)</td>
+<td>2 (100%)</td>
+<td>7 (63.6%)</td>
+<td>1 (50.0%)</td>
+<td>4 (50.0%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>High risk</td>
+<td>21 (42.0%)</td>
+<td>12 (46.2%)</td>
+<td>0 (0%)</td>
+<td>4 (36.4%)</td>
+<td>1 (50.0%)</td>
+<td>4 (50.0%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Missing</td>
+<td class='lastrow'>1 (2.0%)</td>
+<td class='lastrow'>1 (3.8%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Pirche Score Overall</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>96.7 (54.8)</td>
+<td>100 (62.5)</td>
+<td>82.6 (8.36)</td>
+<td>91.6 (38.6)</td>
+<td>73.6 (26.1)</td>
+<td>102 (68.1)</td>
+<td>90.0 (NA)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Median [Min, Max]</td>
+<td>88.0 [24.6, 322]</td>
+<td>97.2 [24.6, 322]</td>
+<td>82.6 [76.7, 88.5]</td>
+<td>71.7 [57.7, 163]</td>
+<td>73.6 [55.2, 92.1]</td>
+<td>80.0 [43.8, 248]</td>
+<td>90.0 [90.0, 90.0]</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Missing</td>
+<td class='lastrow'>1 (2.0%)</td>
+<td class='lastrow'>1 (3.8%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>CMV Status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>R-/D-</td>
+<td>9 (18.0%)</td>
+<td>4 (15.4%)</td>
+<td>1 (50.0%)</td>
+<td>3 (27.3%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>R-/D+</td>
+<td>16 (32.0%)</td>
+<td>7 (26.9%)</td>
+<td>1 (50.0%)</td>
+<td>3 (27.3%)</td>
+<td>1 (50.0%)</td>
+<td>3 (37.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>R+/D-</td>
+<td>9 (18.0%)</td>
+<td>6 (23.1%)</td>
+<td>0 (0%)</td>
+<td>2 (18.2%)</td>
+<td>0 (0%)</td>
+<td>1 (12.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>R+/D+</td>
+<td class='lastrow'>16 (32.0%)</td>
+<td class='lastrow'>9 (34.6%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>3 (27.3%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>3 (37.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Donor Transplant status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>DBD</td>
+<td>37 (74.0%)</td>
+<td>21 (80.8%)</td>
+<td>1 (50.0%)</td>
+<td>9 (81.8%)</td>
+<td>2 (100%)</td>
+<td>3 (37.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>DCD</td>
+<td class='lastrow'>13 (26.0%)</td>
+<td class='lastrow'>5 (19.2%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>2 (18.2%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>5 (62.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Organ Care System</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>29 (58.0%)</td>
+<td>18 (69.2%)</td>
+<td>0 (0%)</td>
+<td>7 (63.6%)</td>
+<td>1 (50.0%)</td>
+<td>3 (37.5%)</td>
+<td>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>21 (42.0%)</td>
+<td class='lastrow'>8 (30.8%)</td>
+<td class='lastrow'>2 (100%)</td>
+<td class='lastrow'>4 (36.4%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>5 (62.5%)</td>
+<td class='lastrow'>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>AB0 mismatch</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>45 (90.0%)</td>
+<td>23 (88.5%)</td>
+<td>2 (100%)</td>
+<td>10 (90.9%)</td>
+<td>2 (100%)</td>
+<td>7 (87.5%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>5 (10.0%)</td>
+<td class='lastrow'>3 (11.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (9.1%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (12.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Sex mismatch</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>38 (76.0%)</td>
+<td>20 (76.9%)</td>
+<td>2 (100%)</td>
+<td>8 (72.7%)</td>
+<td>1 (50.0%)</td>
+<td>6 (75.0%)</td>
+<td>1 (100%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>12 (24.0%)</td>
+<td class='lastrow'>6 (23.1%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>3 (27.3%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>2 (25.0%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Waiting time (d)</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>407 (576)</td>
+<td>311 (484)</td>
+<td>449 (559)</td>
+<td>672 (819)</td>
+<td>192 (252)</td>
+<td>410 (562)</td>
+<td>306 (NA)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>110 [1.00, 2320]</td>
+<td class='lastrow'>89.0 [3.00, 1990]</td>
+<td class='lastrow'>449 [53.0, 844]</td>
+<td class='lastrow'>123 [6.00, 2320]</td>
+<td class='lastrow'>192 [13.0, 370]</td>
+<td class='lastrow'>125 [1.00, 1600]</td>
+<td class='lastrow'>306 [306, 306]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>NTproBNP at Baseline (ng/L)</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>4360 (4480)</td>
+<td>4150 (4120)</td>
+<td>3580 (863)</td>
+<td>4640 (5920)</td>
+<td>8520 (1780)</td>
+<td>4130 (4780)</td>
+<td>1330 (NA)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Median [Min, Max]</td>
+<td>2830 [101, 21000]</td>
+<td>2790 [101, 14700]</td>
+<td>3580 [2970, 4190]</td>
+<td>3390 [624, 21000]</td>
+<td>8520 [7260, 9780]</td>
+<td>2630 [1010, 14700]</td>
+<td>1330 [1330, 1330]</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Missing</td>
+<td class='lastrow'>1 (2.0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>1 (12.5%)</td>
+<td class='lastrow'>0 (0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>CRP at Baseline (mg/L)</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>19.2 (28.4)</td>
+<td>14.3 (14.4)</td>
+<td>14.6 (14.8)</td>
+<td>35.0 (49.9)</td>
+<td>8.40 (5.09)</td>
+<td>19.5 (27.2)</td>
+<td>1.20 (NA)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>11.5 [0, 163]</td>
+<td class='lastrow'>11.5 [0.700, 56.0]</td>
+<td class='lastrow'>14.6 [4.10, 25.0]</td>
+<td class='lastrow'>17.0 [0, 163]</td>
+<td class='lastrow'>8.40 [4.80, 12.0]</td>
+<td class='lastrow'>13.2 [1.00, 83.0]</td>
+<td class='lastrow'>1.20 [1.20, 1.20]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Troponin T at Baseline (ng/L)</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>2970 (9110)</td>
+<td>295 (622)</td>
+<td>63.5 (34.6)</td>
+<td>5180 (8560)</td>
+<td>77.0 (NA)</td>
+<td>7200 (17600)</td>
+<td>NA (NA)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Median [Min, Max]</td>
+<td>51.5 [10.0, 43100]</td>
+<td>37.0 [12.0, 2040]</td>
+<td>63.5 [39.0, 88.0]</td>
+<td>248 [23.0, 20000]</td>
+<td>77.0 [77.0, 77.0]</td>
+<td>23.0 [10.0, 43100]</td>
+<td>NA [NA, NA]</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Missing</td>
+<td class='lastrow'>22 (44.0%)</td>
+<td class='lastrow'>14 (53.8%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>4 (36.4%)</td>
+<td class='lastrow'>1 (50.0%)</td>
+<td class='lastrow'>2 (25.0%)</td>
+<td class='lastrow'>1 (100%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>t2 &lt;- table1(~ Aetiology + Age + Sex + `Shortterm Mechanical Support` + `Longterm Mechanical Support` + Device + `Diabetes` + `CKD` + `Pulmonary hypertension` +`Pirche Classification` + `Pirche Score Overall` + `CMV Status` + `Donor Transplant status` + `Organ Care System` + `AB0 mismatch` + `Sex mismatch`+ + `Waiting time (d)` + `NTproBNP at Baseline (ng/L)` + `CRP at Baseline (mg/L)` + `Troponin T at Baseline (ng/L)`|Diagnosis,
+  data = df,
+  overall = c(left = &quot;Total&quot;),
+  caption = caption,
+  footnote = footnote
+)</code></pre>
+<div id="complex-heatmap-visual-overview" class="section level1">
+<h1>Complex Heatmap visual overview</h1>
+<pre class="r"><code>## Clinical Data
+df &lt;- df %&gt;%
+  mutate(
+    Aetiology = case_when(
+      Aetiology %in% c(&quot;Idiopathic&quot;,&quot;Hereditary&quot;,&quot;CAD&quot;,&quot;Immunologic&quot;) ~ Aetiology,
+      TRUE ~ &quot;Other&quot;)
+    )</code></pre>
+<pre class="r"><code>col_anno &lt;- list(
+
+  Diagnosis = c(
+        &quot;DCM&quot;= &quot;#08306b&quot;,  
+        &quot;HCM&quot;= &quot;#2171b5&quot;,  
+        &quot;Ischemic CM&quot;= &quot;#6a51a3&quot;,  
+        &quot;NDLVC&quot;= &quot;#4292c6&quot;,  
+        &quot;RCM&quot;= &quot;#9ecae1&quot;,  
+        &quot;Other&quot;= &quot;#7b9eb0&quot;  
+  ),
+  Aetiology=c(
+    &quot;Idiopathic&quot; = &quot;#c7e9c0&quot;,
+    &quot;Hereditary&quot;= &quot;#74c476&quot;,
+    &quot;CAD&quot;= &quot;#31a354&quot;,
+    &quot;Immunologic&quot;= &quot;#238b45&quot;,
+    &quot;Other&quot;= &quot;#bdbdbd&quot;
+  ),
+
+  Sex = c(
+    &quot;Female&quot; = &quot;#ca0020&quot;,
+    &quot;Male&quot; = &quot;#92c5de&quot;
+  ),
+
+#  `Shortterm Mechanical Support` = c(
+#    &quot;No&quot; = &quot;white&quot;,
+#    &quot;Impella&quot; = &quot;#fdd49e&quot;,
+#    &quot;ECMO&quot; = &quot;#f16913&quot;
+#  ),
+
+#  Device = c(
+#    &quot;No&quot; = &quot;white&quot;,
+#    &quot;ICD&quot; = &quot;#edf8b1&quot;,
+#    &quot;CRT-D&quot; = &quot;#7fcdbb&quot;,
+#    &quot;Life Vest&quot; = &quot;#2c7fb8&quot;
+#  ),
+
+#  Diabetes = c(
+#    &quot;No&quot; = &quot;white&quot;,
+#    &quot;Yes&quot; = &quot;lightyellow&quot;
+#  ),
+  
+  
+#   CKD = c(
+#    &quot;Yes&quot; = &quot;#bbba10&quot;,
+#    &quot;No&quot; = &quot;white&quot;
+#  ),
+  
+#  `Pulmonary hypertension` = c(
+#    &quot;Yes&quot; = &quot;#cc9966&quot;,
+#    &quot;No&quot; = &quot;white&quot;,
+#    &quot;na&quot; =&quot;white&quot;
+#  ),
+
+  `Transplantation risk score` = c(
+    &quot;0&quot; = &quot;white&quot;,
+    &quot;No&quot; = &quot;white&quot;,
+    &quot;1&quot; = &quot;#74c476&quot;,
+    &quot;2&quot; = &quot;#a1d99b&quot;,
+    &quot;3&quot; = &quot;#fee391&quot;,
+    &quot;4&quot; = &quot;#db6a4a&quot;,
+    &quot;5&quot; = &quot;red&quot;
+    ),
+  
+    `Pirche Classification` = c(
+    &quot;No&quot; = &quot;white&quot;,
+    &quot;Low risk&quot; = &quot;#32c890&quot;,
+    &quot;Intermediate risk&quot; = &quot;#ffd39b&quot;,
+    &quot;High risk&quot; = &quot;#a52a2a&quot;
+    ),
+  
+  `Organ Care System` = c(
+   &quot;Yes&quot; = &quot;#ac1966&quot;,
+    &quot;No&quot; = &quot;white&quot;,
+    &quot;na&quot; =&quot;white&quot;
+  ), 
+  
+  `CMV Status`= c(
+  &quot;R-/D+&quot;= &quot;#a41a1c&quot;,
+  &quot;R+/D+&quot; = &quot;#377eb8&quot;,
+   &quot;R+/D-&quot; =&quot;#409eb2&quot;,
+   &quot;R-/D-&quot; =&quot;#484ea3&quot;
+  ), 
+  
+  `Donor Transplant status` = c(
+   &quot;DBD&quot; = &quot;#ff7f00&quot;,
+   &quot;DCD&quot; = &quot;#a54528&quot;,
+   &quot;na&quot; =&quot;white&quot;
+  ),  
+
+  `Sex mismatch`  = c(
+  &quot;Yes&quot; = &quot;#d73027&quot;,
+   &quot;No&quot; = &quot;white&quot;,
+    &quot;na&quot; =&quot;white&quot;
+  )
+  
+#  `AB0 mismatch`  = c(
+#   &quot;Yes&quot; = &quot;#b01000&quot;,
+#    &quot;No&quot; = &quot;white&quot;,
+#    &quot;na&quot; =&quot;white&quot;
+#  )
+  )</code></pre>
+<pre class="r"><code>df &lt;- dplyr::filter(df, !ID == &quot;CarTrans-Long-009&quot;)
+
+# Choose variables for the annotations
+annotation_df &lt;- df %&gt;%
+  select(
+    ID,
+    `Transplantation risk score`,
+    `Pirche Classification`,
+    `CMV Status`,
+    `Sex mismatch`,
+    Diagnosis,
+    Aetiology,
+    Sex,
+    #`Shortterm Mechanical Support`,
+    #Device,
+    #Diabetes,
+    #`Pulmonary hypertension`,
+    #CKD,
+    `Donor Transplant status`,
+    `Organ Care System`,
+    #`AB0 mismatch`
+  ) %&gt;%
+  mutate(across(-ID, as.character)) %&gt;% 
+  column_to_rownames(&quot;ID&quot;)
+annotation_df[is.na(annotation_df)] &lt;- &quot;No&quot;
+
+# Biuld heatmap matrix (ComplexHeatmap requires a matrix)
+heatmap_mat &lt;- matrix(1, nrow = 1, ncol = nrow(annotation_df))
+colnames(heatmap_mat) &lt;- rownames(annotation_df)
+rownames(heatmap_mat) &lt;- &quot;Cohort&quot;
+
+#Create annotation legend list
+top_ha &lt;- HeatmapAnnotation(df = annotation_df,col = col_anno,
+  
+  annotation_legend_param = list(
+    
+    Diagnosis = list(title = &quot;Diagnosis&quot;),
+    Sex = list(title = &quot;Sex&quot;),
+    #`Shortterm Mechanical Support` = list(title = &quot;Short-term MCS&quot;, at = c(&quot;Impella&quot;, &quot;ECMO&quot;), labels = c(&quot;Impella&quot;, &quot;ECMO&quot;)),
+    #Device = list(title = &quot;Device&quot;, at = c(&quot;CRT-D&quot;, &quot;ICD&quot;, &quot;Life Vest&quot;), labels = c(&quot;CRT-D&quot;, &quot;ICD&quot;, &quot;Life Vest&quot;)),
+    `Pirche Classification` = list(title = &quot;Pirche Classification&quot;, at = c(&quot;High risk&quot;, &quot;Intermediate risk&quot;, &quot;Low risk&quot;), labels = c(&quot;High risk&quot;, &quot;Intermediate risk&quot;, &quot;Low risk&quot;)),
+   # Diabetes = list(title = &quot;Diabetes&quot;,at = c(&quot;Yes&quot;),labels = c(&quot;Yes&quot;)),
+  #  `Pulmonary hypertension` = list(title = &quot;Pulmonary hypertension&quot;, at = c(&quot;Yes&quot;), labels = c(&quot;Yes&quot;)),
+  #  CKD = list(title = &quot;CKD&quot;,at = c(&quot;Yes&quot;),labels = c(&quot;Yes&quot;)),
+    `Organ Care System` = list(title = &quot;Organ Care System&quot;,at = c(&quot;Yes&quot;),labels = c(&quot;Yes&quot;)),
+    #`AB0 mismatch` = list(title = &quot;AB0 mismatch&quot;,at = c(&quot;Yes&quot;),labels = c(&quot;Yes&quot;)),
+    `Sex mismatch` = list(title = &quot;Sex mismatch&quot;,at = c(&quot;Yes&quot;),labels = c(&quot;Yes&quot;)),
+    `CMV Status` = list(title = &quot;CMV Status&quot;,at = c(&quot;R+/D-&quot;, &quot;R+/D+&quot;, &quot;R-/D+&quot;,&quot;R-/D-&quot;),labels = c(&quot;R+/D-&quot;, &quot;R+/D+&quot;, &quot;R-/D+&quot;,&quot;R-/D-&quot;)),
+    `Transplantation risk score` = list(title = &quot;Transplantation risk score&quot;,at = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;),labels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;))
+  )
+)
+
+  
+
+#Create color mapping
+# Create named color lists per variable
+row_col_list &lt;- list(
+  Diagnosis = col_anno$Diagnosis,
+  Sex = col_anno$Sex,
+  `Shortterm Mechanical Support` = col_anno$`Shortterm Mechanical Support`,
+  Device = col_anno$Device,
+  Diabetes = col_anno$Diabetes,
+  `Pirche Classification` = col_anno$`Pirche Classification`
+)
+
+
+# Plot Heatmap
+ht &lt;- Heatmap(heatmap_mat,name = &quot;CarTrans&quot;, col = &quot;white&quot;,
+  
+  top_annotation = top_ha,
+  cluster_columns = TRUE,
+  cluster_rows = FALSE,
+  clustering_method_columns = &quot;ward.D&quot;,
+  
+  show_row_names = TRUE,
+  show_column_names = FALSE,
+  
+  width = unit(18, &quot;cm&quot;),height = unit(4, &quot;cm&quot;)
+)
+
+draw(ht,heatmap_legend_side = &quot;right&quot;,annotation_legend_side = &quot;bottom&quot;
+)</code></pre>
+<p><img src="figure/TableOverall.Rmd/visual%20overview%20heatmap-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Sequoia 15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Europe/Zurich
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] tibble_3.3.1          purrr_1.2.2           boot_1.3-32          
+ [4] officer_0.7.6         here_1.0.2            ComplexHeatmap_2.28.0
+ [7] pheatmap_1.0.13       gplots_3.3.0          ggplot2_4.0.3        
+[10] sjlabelled_1.2.0      sjPlot_2.9.0          dplyr_1.2.1          
+[13] magrittr_2.0.5        flextable_0.10.1      tableone_0.13.2      
+[16] table1_1.5.1          writexl_2.0.1         data.table_1.18.6.1  
+[19] readxl_1.5.0.1        workflowr_1.7.2      
+
+loaded via a namespace (and not attached):
+ [1] DBI_1.3.0               bitops_1.1-0            rlang_1.3.0            
+ [4] clue_0.3-68             GetoptLong_1.1.1        git2r_0.36.2           
+ [7] otel_0.2.0              matrixStats_1.5.0       compiler_4.6.1         
+[10] getPass_0.2-4           png_0.1-9               systemfonts_1.3.2      
+[13] callr_3.8.0             vctrs_0.7.3             stringr_1.6.0          
+[16] shape_1.4.6.1           pkgconfig_2.0.3         crayon_1.5.3           
+[19] fastmap_1.2.0           utf8_1.2.6              caTools_1.18.4         
+[22] promises_1.5.0          rmarkdown_2.32          ragg_1.5.2             
+[25] xfun_0.61               cachem_1.1.0            jsonlite_2.0.0         
+[28] later_1.4.8             uuid_1.2-2              cluster_2.1.8.3        
+[31] parallel_4.6.1          R6_2.6.1                bslib_0.12.0           
+[34] stringi_1.8.9           RColorBrewer_1.1-3      jquerylib_0.1.4        
+[37] cellranger_1.1.0        Rcpp_1.1.2              iterators_1.0.14       
+[40] knitr_1.52              IRanges_2.46.0          httpuv_1.6.17          
+[43] Matrix_1.7-6            splines_4.6.1           tidyselect_1.2.1       
+[46] rstudioapi_0.19.0       yaml_2.3.12             doParallel_1.0.17      
+[49] codetools_0.2-20        processx_3.9.0          lattice_0.23-1         
+[52] withr_3.0.3             S7_0.2.2                askpass_1.2.1          
+[55] evaluate_1.0.5          survival_3.8-12         survey_4.5             
+[58] zip_3.0.2               xml2_1.6.0              circlize_0.4.18        
+[61] pillar_1.11.1           whisker_0.4.1           KernSmooth_2.23-27     
+[64] foreach_1.5.2           stats4_4.6.1            insight_1.6.0          
+[67] generics_0.1.4          rprojroot_2.1.1         S4Vectors_0.50.3       
+[70] scales_1.4.0            gtools_3.9.5            glue_1.8.1             
+[73] gdtools_0.5.1           tools_4.6.1             fs_2.1.0               
+[76] tidyr_1.3.2             mitools_2.7             colorspace_2.1-4       
+[79] patchwork_1.3.2         Formula_1.2-6           cli_3.6.6              
+[82] textshaping_1.0.5       fontBitstreamVera_0.1.1 gtable_0.3.6           
+[85] sass_0.4.10             digest_0.6.39           fontquiver_0.2.1       
+[88] BiocGenerics_0.58.1     rjson_0.2.23            farver_2.1.2           
+[91] htmltools_0.5.9         lifecycle_1.0.5         httr_1.4.9             
+[94] GlobalOptions_0.1.4     fontLiberation_0.1.0    openssl_2.4.2          </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="I. Hanka" />
+
+<meta name="date" content="2026-10-15" />
+
+<title>Immunsuppression_Luminex</title>
+
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Luminex CarTrans</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Quality-Control.html">Quality Control</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Clinical
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="TableOverall.html">Table 1 and Heatmap</a>
+    </li>
+    <li>
+      <a href="Donor-Characteristics.html">Donor characteristics</a>
+    </li>
+    <li>
+      <a href="Kinetics.html">Kinetics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/IsabellaH1993/Luminex-CarTrans">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Immunsuppression_Luminex</h1>
+<h4 class="author">I. Hanka</h4>
+<h4 class="date">2026-10-15</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-10-15
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Luminex/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20261015code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20261015)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20261015code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20261015)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee483de74fbd81f7dde11079bc2e887054ed66247targetblanke483de7a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e483de74fbd81f7dde11079bc2e887054ed66247" target="_blank">e483de7</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    Quality-Control_files/
+    Ignored:    analysis/.DS_Store
+    Ignored:    html/
+
+Unstaged changes:
+    Modified:   .gitignore
+    Deleted:    analysis/Quality Control.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/Immunsuppression_Luminex.Rmd</code>) and HTML
+(<code>docs/Immunsuppression_Luminex.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/e483de74fbd81f7dde11079bc2e887054ed66247/analysis/Immunsuppression_Luminex.Rmd" target="_blank">e483de7</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+Update Pages 15.10.2026
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code>suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})</code></pre>
+<pre class="r"><code>basedir &lt;- here ()</code></pre>
+<div id="definition-of-the-immunosuppressed-host"
+class="section level1">
+<h1>Definition of the immunosuppressed host</h1>
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%filter(
+    !(Study_ID %in% c(&quot;CarTrans-Long-16&quot;, &quot;CarTrans-Long-23&quot;, &quot;CarTrans-Long-36&quot;) &amp;
+      str_detect(Visit, &quot;^VX&quot;)))%&gt;%
+  select(-ISHLT_1990, -ISHLT_2004)</code></pre>
+<pre class="r"><code># Rename visits in overall table
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == &quot;Healthy&quot; ~ &quot;Healthy&quot;,
+    Visit == &quot;V0&quot; ~ &quot;Baseline&quot;,
+    Visit == &quot;V1&quot; ~ &quot;Week 1&quot;,
+    Visit == &quot;V2&quot; ~ &quot;Week 2&quot;,
+    Visit == &quot;V3&quot; ~ &quot;Month 1-3&quot;,
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;)) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = &quot;_&quot;))</code></pre>
+<pre class="r"><code>list_ATG &lt;- table_lum_CarTrans_overall %&gt;%dplyr::select(Sample_ID, ATG_EMB1_3, Visit)
+
+rownames(list_ATG) &lt;- list_ATG$Sample_ID
+list_ATG&lt;- list_ATG[, c(&quot;ATG_EMB1_3&quot;, &quot;Visit&quot;), drop = FALSE]  #,&quot;Visit&quot; add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
+
+# Remove metadata columns
+table_lum_CarTrans_overall_01 &lt;- table_lum_CarTrans_overall %&gt;%
+  dplyr::select(-Study_ID, -Visit, -Sample_ID, -ATG_EMB1_3)
+
+# Convert Data Table to Data Frame
+  table_lum_CarTrans_overall_01 &lt;- as.data.frame(table_lum_CarTrans_overall_01)
+  
+# Transpose Data Table
+  table_lum_CarTrans_overall_01_t &lt;- t(table_lum_CarTrans_overall_01)
+
+## Column Annotations
+  colnames(table_lum_CarTrans_overall_01_t) &lt;- table_lum_CarTrans_overall$Sample_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Grouping of Luminex Marker.xlsx&quot;))
+
+  # Create list with Columns of data table
+    list_parameter_datatable &lt;- as.data.frame(rownames(table_lum_CarTrans_overall_01_t))
+                                colnames(list_parameter_datatable) &lt;- &quot;Parameter&quot;
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 &lt;- merge(list_parameter_groups, list_parameter_datatable, by.y = &quot;Parameter&quot;)
+
+# Define the predefined order for Group
+  group_order &lt;- c(&quot;Cytokine&quot;, &quot;Chemokine&quot;, &quot;Growth factor/Tissue Cytokine&quot;, &quot;Activation Marker&quot;)
+  
+# Filter and order
+  list_parameter_groups_02 &lt;- list_parameter_groups_01 %&gt;%
+#                              filter(Parameter %in% selected_markers) %&gt;%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %&gt;%
+#                              Parameter = factor(Parameter, levels = selected_markers)) %&gt;%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 &lt;- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_lum_CarTrans_overall_01_t_ordered &lt;- as.data.frame(table_lum_CarTrans_overall_01_t)
+  table_lum_CarTrans_overall_01_t_ordered &lt;- table_lum_CarTrans_overall_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_lum_CarTrans_overall_01_t_ordered &lt;- as.matrix(table_lum_CarTrans_overall_01_t_ordered)
+
+#Convert back to numeric
+  table_lum_CarTrans_overall_01_t_ordered &lt;- matrix(
+    as.numeric(trimws(table_lum_CarTrans_overall_01_t_ordered)),
+    nrow = nrow(table_lum_CarTrans_overall_01_t_ordered),
+    dimnames = dimnames(table_lum_CarTrans_overall_01_t_ordered))
+  
+# Log Transform 
+  table_lum_CarTrans_overall_01_t_ordered &lt;- log2(table_lum_CarTrans_overall_01_t_ordered)
+  
+# Scale 
+  table_lum_CarTrans_overall_01_t_ordered &lt;- t(apply(table_lum_CarTrans_overall_01_t_ordered, 1, scale))
+
+  
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors &lt;- list(
+  ATG_EMB1_3 = c(
+    &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+    &quot;Healthy&quot; = &quot;grey&quot;,
+    &quot;No&quot; = &quot;lightgreen&quot;,
+    &quot;Yes&quot; = &quot;#FF6666&quot;),
+    Visit = c(
+    &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+    &quot;Week 1&quot; = &quot;#B2EBF2&quot;,
+    &quot;Week 2&quot; = &quot;#A8C7FF&quot;,
+    &quot;Month 1-3&quot; = &quot;#4DD0E1&quot;,
+    &quot;Healthy&quot; = &quot;grey&quot;),
+  Grouping = c(
+    &quot;Cytokine&quot; = &quot;darkseagreen&quot;,
+    &quot;Chemokine&quot; = &quot;lightblue&quot;, 
+    &quot;Growth factor/Tissue Cytokine&quot; = &quot;mediumpurple3&quot;,
+    &quot;Activation Marker&quot; =  &quot;lightpink&quot;))
+
+# Column Annotation
+  col_anno &lt;- HeatmapAnnotation(df = list_ATG, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno &lt;- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_lum &lt;- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = &quot;Expression&quot;,  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;)),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                         clustering_method_columns = &quot;ward.D&quot;,  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, &quot;cm&quot;), height = unit(15, &quot;cm&quot;),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_lum)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/r%20heatmap-1.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Reorder grouped visits
+#list_ATG$ATG_EMB1_3 &lt;- factor(list_ATG$ATG_EMB1_3,levels = c(&quot;Healthy&quot;, &quot;Baseline&quot;, &quot;Yes&quot;, &quot;No&quot;))
+
+
+# Create Heatmap split by visits
+  heatmap_lum_split &lt;- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = &quot;Expression&quot;,  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;)),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = FALSE,
+                         clustering_method_columns = &quot;ward.D&quot;,  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(23, &quot;cm&quot;), height = unit(15, &quot;cm&quot;),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno,
+                         column_split = list_ATG$ATG_EMB1_3,
+                         column_gap = unit(4, &quot;mm&quot;) 
+                          )
+
+
+# Draw Heatmap
+  show(heatmap_lum_split)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/split%20by%20different%20conditions-1.png" alt="" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Exclude Healthy and Baseline Condition from the comparison
+table_ATG &lt;- table_lum_CarTrans_overall %&gt;%
+  dplyr::select(-Visit) %&gt;% 
+  dplyr::filter(!ATG_EMB1_3 %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;))
+
+# Calculate p-values between ATG groups
+     # Create the loop.vector (all the parameter columns)
+    names(which(sapply(table_ATG, is.numeric) == TRUE)) -&gt; parameters 
+
+  # Create table for stats
+    table_ATG_stat &lt;- data.table (Parameter = numeric(), group1 = character(), 
+                                              group2 = character(), n1 = numeric(),
+                                              n2 = numeric(), statistic = numeric (),
+                                              p = numeric (), p.signif = character(), FDR = numeric()) #FDR False Discovery Rate
+   
+  # Create loop for calculation of stat test by parameter between ATG Yes vs No
+    for (i in parameters)
+      
+    { 
+      # Formula to insert parameter in loop 
+        formula = as.formula( paste(i, &quot;ATG_EMB1_3&quot;, sep=&quot;~&quot;) )
+          
+        stat_parameter &lt;- table_ATG %&gt;% 
+                          wilcox_test(formula = formula) %&gt;%
+                          add_significance() %&gt;%
+                          mutate(FDR = p.adjust(p, method = &quot;BH&quot;)) %&gt;% #Benjamini-Hochberg correction
+                          rename(Parameter = .y.)
+        
+      # Combine currently calculated stats with previous calculations
+        table_ATG_stat &lt;- rbind(table_ATG_stat, stat_parameter)
+    }
+
+# Calculate FC between different Visits
+    
+      # Calculate Mean of parameters per group
+        table_ATG_log2  &lt;- table_ATG %&gt;% 
+                                       group_by(ATG_EMB1_3) %&gt;%
+                                       summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE)))
+      
+      # Transverse Data Table and set rownames
+        table_ATG_log2_t  &lt;- table_ATG_log2  %&gt;% 
+                                         t %&gt;% 
+                                         as.data.frame() %&gt;% 
+                                         row_to_names(1)
+     
+     # Convert whole data table to numeric
+       table_ATG_log2_t  &lt;- mutate_all(table_ATG_log2_t, 
+                                                   function(x) as.numeric(as.character(x)))
+       
+     # Calculate FC between Healthy and Month 1-3
+       table_ATG_log2_t$log2_fc &lt;- log2(table_ATG_log2_t$Yes /
+                                                    table_ATG_log2_t$No)
+       
+     # Add p-values to data table
+        # Extract only Parameters and p-values
+           stat.test_p &lt;- table_ATG_stat %&gt;% 
+                          dplyr::select(Parameter, FDR)
+
+        # Merge data tables (log2, FC, p val)
+          table_ATG_log2_t$Parameter &lt;- rownames(table_ATG_log2_t)
+          table_ATG_volcano &lt;- merge(table_ATG_log2_t, stat.test_p, by = &quot;Parameter&quot;)
+ 
+  # Create Volcano Plot
+          
+     # Mark parameters if FC &lt; -1 = downregulated
+       table_ATG_volcano$diff_expression &lt;- ifelse(table_ATG_volcano$log2_fc &lt; -1.5, &quot;down&quot;,
+                                                            ifelse(table_ATG_volcano$log2_fc &gt; 1.5, &quot;up&quot;, &quot;no&quot;))
+     
+     # Add new column to relabel parameters FC of &lt;-1
+      table_ATG_volcano$label_para &lt;- ifelse(table_ATG_volcano$log2_fc &lt; -1.5 |
+                                                        table_ATG_volcano$log2_fc &gt; 1.5,
+                                                      table_ATG_volcano$Parameter, &quot;&quot;)   
+    
+      volcano_ATG &lt;- EnhancedVolcano(table_ATG_volcano, 
+                                      lab = table_ATG_volcano$label_para,
+                                      x = &#39;log2_fc&#39;, y = &#39;FDR&#39;, 
+                                      FCcutoff = -1.5, pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                                      boxedLabels = TRUE, col = c(&quot;grey&quot;, &quot;grey&quot;, &quot;grey&quot;, &quot;darkred&quot;),   
+                                      xlab = bquote(~Log[2]~ &quot;fold change&quot;), ylab = bquote(&quot;FDR-adjusted p-value (0.05)&quot;),
+                                      xlim = c(-3, 3), ylim = c(0, 5), pCutoff = 0.05,
+                                      title = &quot;Log2 fold change ATG Yes vs No&quot;, subtitle = NULL, border = &#39;full&#39;,
+                                      drawConnectors = TRUE,widthConnectors = 0.5, colConnectors = &quot;darkred&quot;) +
+                                      theme_classic() +
+                                      theme(panel.grid = element_blank(),
+                                            panel.border = element_rect(colour = &quot;black&quot;, fill = NA,),
+                                            legend.position = &quot;none&quot;)</code></pre>
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+ℹ The deprecated feature was likely used in the EnhancedVolcano package.
+  Please report the issue to the authors.
+This warning is displayed once per session.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<pre><code>Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+ℹ The deprecated feature was likely used in the EnhancedVolcano package.
+  Please report the issue to the authors.
+This warning is displayed once per session.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<pre class="r"><code>      print( volcano_ATG)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/volcano%20plot%20ATG-1.png" alt="" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%filter(
+    !(Study_ID %in% c(&quot;CarTrans-Long-16&quot;, &quot;CarTrans-Long-23&quot;, &quot;CarTrans-Long-36&quot;) &amp;
+      str_detect(Visit, &quot;^VX&quot;)))%&gt;%
+  select(-ISHLT_1990, -ISHLT_2004)</code></pre>
+<pre class="r"><code># Rename visits in overall table
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == &quot;Healthy&quot; ~ &quot;Healthy&quot;,
+    Visit == &quot;V0&quot; ~ &quot;Baseline&quot;,
+    Visit == &quot;V1&quot; ~ &quot;Week 1&quot;,
+    Visit == &quot;V2&quot; ~ &quot;Week 2&quot;,
+    Visit == &quot;V3&quot; ~ &quot;Month 1-3&quot;,
+    Visit == &quot;V4&quot; ~ &quot;Month 4-6&quot;,
+    Visit == &quot;V5&quot; ~ &quot;Month 12&quot;,
+    grepl(&quot;^VX&quot;, Visit) ~ &quot;Rejection Context&quot;, 
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;Rejection Context&quot;)) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = &quot;_&quot;))
+
+# Rename Class_Sup
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+                            rename(`Class Immunosuppression` = Class_Sup)</code></pre>
+<pre class="r"><code>#Prep table
+df_Sup &lt;- table_lum_CarTrans_overall %&gt;%
+  select(`Class Immunosuppression`, Visit) %&gt;%
+  filter(!Visit %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;)) #Filter out Healthy and Baseline for plotting
+
+#Set order
+df_Sup$Visit &lt;- factor(
+  df_Sup$Visit,
+  levels = c(
+    &quot;Week 1&quot;,
+    &quot;Week 2&quot;,
+    &quot;Month 1-3&quot;,
+    &quot;Month 4-6&quot;,
+    &quot;Month 12&quot;,
+    &quot;Rejection Context&quot;
+  )
+)
+
+#Set colors for different gradings
+grade_colors_Sup &lt;- c(  
+  &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+  &quot;Healthy&quot; = &quot;grey&quot;,
+  &quot;1&quot; = &quot;#66bd63&quot;,
+  &quot;2&quot; = &quot;#a6d96a&quot;,
+  &quot;3&quot;  = &quot;#ffffbf&quot;,
+  &quot;4&quot; = &quot;#fdae61&quot;,
+  &quot;5&quot; = &quot;#f46d43&quot;,
+  &quot;6&quot; = &quot;#d73027&quot;
+)</code></pre>
+<pre class="r"><code>ggplot(df_Sup, aes(x = Visit, fill = `Class Immunosuppression`)) +
+  geom_bar(position = &quot;dodge&quot;) +
+  scale_fill_manual(values = grade_colors_Sup) +
+  labs(
+    title = &quot;Immunosuppression Across Timepoints&quot;,
+    x = &quot;Timepoint&quot;,
+    y = &quot;Count&quot;
+  ) +
+  theme_classic()</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/count%20plot%20immunosuppression-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Create summary table with counts
+df_counts &lt;- df_Sup %&gt;%
+  count(Visit, `Class Immunosuppression`)
+
+ggplot(df_counts, aes(x = Visit, y=n, fill = `Class Immunosuppression`)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;fill&quot;) +
+  geom_text(
+    aes(label = n),
+    position = position_fill(vjust = 0.5),
+    size = 3
+  ) +
+  scale_fill_manual(values = grade_colors_Sup) +
+  labs(
+    title = &quot;Immunosuppression Across Timepoints&quot;,
+    x = &quot;Timepoint&quot;,
+    y = &quot;Proportion&quot;
+  ) +
+  theme_classic()</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/distribution%20immunosuppression-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># define analyte columns
+analyte_cols &lt;- setdiff(colnames(table_lum_CarTrans_overall),
+                        c(&quot;Study_ID&quot;, &quot;Visit&quot;, &quot;Sample_ID&quot;, &quot;Class Immunosuppression&quot;))
+
+# Log transform input values
+table_lum_CarTrans_overall_z &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(across(all_of(analyte_cols), ~ log2(pmax(., 1))))
+
+# Statistical test for normality using Shapiro-Wilk test (p&gt;0.05 no evidence against normality)
+shapiro_results &lt;- table_lum_CarTrans_overall_z %&gt;%
+  summarise(across(all_of(analyte_cols),
+                   ~ list(shapiro.test(.)))) %&gt;%
+  pivot_longer(everything(),
+               names_to = &quot;analyte&quot;,
+               values_to = &quot;test&quot;) %&gt;%
+  mutate(
+    statistic = map_dbl(test, &quot;statistic&quot;),
+    p_value   = map_dbl(test, &quot;p.value&quot;)
+  ) %&gt;%
+  select(-test)
+
+print(shapiro_results)</code></pre>
+<pre><code># A tibble: 51 × 3
+   analyte statistic  p_value
+   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+ 1 CCL11       0.990 1.01e- 1
+ 2 CCL19       0.990 1.13e- 1
+ 3 CCL2        0.986 2.63e- 2
+ 4 CCL20       0.905 7.33e-11
+ 5 PD_L1       0.997 9.65e- 1
+ 6 CCL3        0.860 1.36e-13
+ 7 CCL4        0.985 1.89e- 2
+ 8 CD40L       0.939 4.03e- 8
+ 9 CXCL1       0.965 2.19e- 5
+10 CXCL10      0.987 3.70e- 2
+# ℹ 41 more rows</code></pre>
+<pre class="r"><code># Visualize distribution
+plot_qq_all &lt;- function(data, cols) {
+  for (col in cols) {
+    x &lt;- data[[col]]
+    
+    qqnorm(x, main = col)
+    qqline(x, col = &quot;red&quot;)
+  }
+}
+
+# Run it
+plot_qq_all(table_lum_CarTrans_overall_z, analyte_cols)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-1.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-2.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-3.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-4.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-5.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-6.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-7.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-8.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-9.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-10.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-11.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-12.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-13.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-14.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-15.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-16.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-17.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-18.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-19.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-20.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-21.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-22.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-23.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-24.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-25.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-26.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-27.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-28.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-29.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-30.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-31.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-32.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-33.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-34.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-35.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-36.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-37.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-38.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-39.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-40.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-41.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-42.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-43.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-44.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-45.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-46.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-47.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-48.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-49.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-50.png" alt="" width="672" style="display: block; margin: auto;" /><img src="figure/Immunsuppression_Luminex.Rmd/prep%20data%20for%20z%20score%20and%20statistical%20testing-51.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Calculate healthy mean and SD as reference
+healthy_stats &lt;- table_lum_CarTrans_overall_z %&gt;%
+  filter(Visit == &quot;Healthy&quot;) %&gt;%
+  summarise(across(all_of(analyte_cols),
+                   list(mean = ~mean(., na.rm = TRUE),
+                        sd   = ~sd(., na.rm = TRUE))))
+
+# compute z-scores + summarize (sample value - mean reference / sd reference)
+df_z &lt;- table_lum_CarTrans_overall_z %&gt;%
+  mutate(across(
+    all_of(analyte_cols),
+    ~ {
+      m &lt;- healthy_stats[[paste0(cur_column(), &quot;_mean&quot;)]]
+      s &lt;- healthy_stats[[paste0(cur_column(), &quot;_sd&quot;)]]
+      
+       if (is.na(s) || s == 0) {
+        NA_real_
+      } else {
+        (.x - m) / s
+      }
+    }
+  ))%&gt;% 
+  filter(`Class Immunosuppression` != &quot;Baseline&quot;)
+
+#Summarize without healthy
+df_summary &lt;- df_z %&gt;%
+  filter(Visit != &quot;Healthy&quot;) %&gt;%
+  group_by(`Class Immunosuppression`, Study_ID) %&gt;%
+  summarise(across(all_of(analyte_cols), ~ mean(.x, na.rm = TRUE)),
+            .groups = &quot;drop&quot;)
+
+# Set global score per group
+df_summary &lt;- df_summary %&gt;%mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))</code></pre>
+<pre class="r"><code># Test on sample level
+df_sample &lt;- df_z %&gt;% mutate(global_z = rowMeans(across(all_of(analyte_cols)), na.rm = TRUE))
+
+# Test samples vs Healthy using Wilcox (not normaly distributed data)
+vs_healthy &lt;- df_sample %&gt;%
+  filter(Visit != &quot;Healthy&quot;) %&gt;%
+  group_by(`Class Immunosuppression`) %&gt;%
+  summarise(
+    mean_z = mean(global_z, na.rm = TRUE),
+    p_value = wilcox.test(global_z, mu = 0)$p.value,
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  mutate(p_adj = p.adjust(p_value, method = &quot;BH&quot;))
+
+print(vs_healthy)</code></pre>
+<pre><code># A tibble: 5 × 4
+  `Class Immunosuppression` mean_z      p_value       p_adj
+  &lt;chr&gt;                      &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+1 2                          0.381 0.0156       0.0195     
+2 3                          0.288 0.00000443   0.0000111  
+3 4                          0.284 0.0000000544 0.000000272
+4 5                          0.586 0.0273       0.0273     
+5 6                          0.354 0.000586     0.000976   </code></pre>
+<pre class="r"><code># Kruskal Wallis for non normal distribution overall (any Class different from healthy)
+kruskal.test(global_z ~ `Class Immunosuppression`, data = df_sample)</code></pre>
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  global_z by Class Immunosuppression
+Kruskal-Wallis chi-squared = 17.745, df = 5, p-value = 0.003284</code></pre>
+<pre class="r"><code># Pairwise comparison
+pairwise.wilcox.test(df_sample$global_z,df_sample$`Class Immunosuppression`,p.adjust.method = &quot;BH&quot;)</code></pre>
+<pre><code>
+    Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  df_sample$global_z and df_sample$`Class Immunosuppression` 
+
+        2     3     4     5     6    
+3       0.398 -     -     -     -    
+4       0.495 0.964 -     -     -    
+5       0.398 0.190 0.186 -     -    
+6       1.000 0.398 0.398 0.373 -    
+Healthy 0.017 0.017 0.017 0.017 0.015
+
+P value adjustment method: BH </code></pre>
+<pre class="r"><code>ggplot(df_summary,
+       aes(x = `Class Immunosuppression`, y = global_z, group = Study_ID)) +
+  geom_line(alpha = 0.3) +
+  geom_point(alpha = 0.3) +
+  stat_summary(aes(group = 1), fun = mean, geom = &quot;line&quot;, size = 1.5, color = &quot;red&quot;) +
+  stat_summary(aes(group = 1), fun = mean, geom = &quot;point&quot;, size = 3, color = &quot;red&quot;) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), plot.caption = element_text(hjust = 0), plot.caption.position = &quot;plot&quot;) +
+  labs(title = &quot;Longitudinal Immune Profiling&quot;,
+       y = &quot;Global Z-score (vs Healthy)&quot;,
+    caption = &quot;*Global Z-score: mean Z-score across all analytes&quot;)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_sample,
+       aes(x = `Class Immunosuppression`, y = global_z)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.3) +
+  
+  stat_compare_means(method = &quot;kruskal.test&quot;, label.y = max(df_sample$global_z, na.rm = TRUE) + 1) +  # global test
+  
+  stat_compare_means(
+    method = &quot;wilcox.test&quot;,
+    comparisons = combn(unique(df_sample$`Class Immunosuppression`), 2, simplify = FALSE),
+    label = &quot;p.signif&quot;
+  ) +
+  
+  theme_minimal() +
+  labs(
+    title = &quot;Global Z-score across Immunosuppression Classes&quot;,
+    y = &quot;Global Z-score (vs Healthy)&quot;
+  )</code></pre>
+<pre><code>`stat_compare_means()` with `comparisons` displays *unadjusted* p-values (no correction for multiple comparisons).
+ℹ For p-values adjusted for multiple comparisons, use `geom_pwc()`, or `stat_pvalue_manual()` together with `compare_means(..., p.adjust.method = )`.
+This message is displayed once per session.</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/plot%20test%20on%20sample%20level-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Remove FGFbasic from analyte list (includes NAs)
+analyte_cols &lt;- analyte_cols[analyte_cols != &quot;FGFbasic&quot;]
+
+# Order Suppression Groups
+df_summary$`Class Immunosuppression` &lt;- factor(df_summary$`Class Immunosuppression`, levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;))
+
+# Average z-score per Class_Sup
+heatmap_data &lt;- df_summary %&gt;%
+  group_by(`Class Immunosuppression`) %&gt;%
+  summarise(across(all_of(analyte_cols), mean, na.rm = TRUE)) %&gt;%
+  as.data.frame()</code></pre>
+<pre><code>Warning: There was 1 warning in `summarise()`.
+ℹ In argument: `across(all_of(analyte_cols), mean, na.rm = TRUE)`.
+ℹ In group 1: `Class Immunosuppression = 2`.
+Caused by warning:
+! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+Supply arguments directly to `.fns` through an anonymous function instead.
+
+  # Previously
+  across(a:b, mean, na.rm = TRUE)
+
+  # Now
+  across(a:b, \(x) mean(x, na.rm = TRUE))</code></pre>
+<pre class="r"><code># Put Class_Sup as column names
+rownames(heatmap_data) &lt;- heatmap_data$`Class Immunosuppression`
+heatmap_data &lt;- heatmap_data %&gt;%
+  select(-`Class Immunosuppression`)
+
+# Transpose:
+# rows = analytes
+# columns = Class_Sup
+heatmap_mat &lt;- t(as.matrix(heatmap_data))
+
+
+# Plot
+Heatmap(heatmap_mat,
+  name = &quot;Z-score&quot;,
+  col = colorRamp2(c(-3, 0, 3),c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;)),
+  cluster_rows = TRUE,
+  cluster_columns = FALSE,
+  row_names_side = &quot;right&quot;,
+  column_names_side = &quot;top&quot;,
+  clustering_method_columns = &quot;ward.D&quot;,
+  show_column_names = TRUE,
+  show_row_names = TRUE
+)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/plot%20heatmap-1.png" alt="" width="480" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Sequoia 15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Europe/Zurich
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] ggpattern_1.3.1        gridExtra_2.3.1        cowplot_1.2.0         
+ [4] patchwork_1.3.2        plotly_4.12.1          EnhancedVolcano_1.30.0
+ [7] RColorBrewer_1.1-3     circlize_0.4.18        ComplexHeatmap_2.28.0 
+[10] pheatmap_1.0.13        corrplot_0.95          ggcorrplot_0.3.0      
+[13] ggbeeswarm_0.7.3       ggrepel_0.9.8          ggpubr_1.0.0          
+[16] rstatix_1.1.0          readxl_1.5.0.1         writexl_2.0.1         
+[19] openxlsx_4.2.9         gtsummary_2.6.1        flextable_0.10.1      
+[22] tableone_0.13.2        table1_1.5.1           scales_1.4.0          
+[25] here_1.0.2             janitor_2.2.1          magrittr_2.0.5        
+[28] data.table_1.18.6.1    lubridate_1.9.5        forcats_1.0.1         
+[31] stringr_1.6.0          dplyr_1.2.1            purrr_1.2.2           
+[34] readr_2.2.0            tidyr_1.3.2            tibble_3.3.1          
+[37] ggplot2_4.0.3          tidyverse_2.0.0        workflowr_1.7.2       
+
+loaded via a namespace (and not attached):
+  [1] shape_1.4.6.1           rstudioapi_0.19.0       jsonlite_2.0.0         
+  [4] farver_2.1.2            rmarkdown_2.32          GlobalOptions_0.1.4    
+  [7] fs_2.1.0                ragg_1.5.2              vctrs_0.7.3            
+ [10] askpass_1.2.1           htmltools_0.5.9         survey_4.5             
+ [13] broom_1.0.13            cellranger_1.1.0        Formula_1.2-6          
+ [16] sass_0.4.10             bslib_0.12.0            htmlwidgets_1.6.4      
+ [19] cachem_1.1.0            uuid_1.2-2              whisker_0.4.1          
+ [22] lifecycle_1.0.5         iterators_1.0.14        pkgconfig_2.0.3        
+ [25] Matrix_1.7-6            R6_2.6.1                fastmap_1.2.0          
+ [28] clue_0.3-68             snakecase_0.11.1        digest_0.6.39          
+ [31] colorspace_2.1-4        S4Vectors_0.50.3        rprojroot_2.1.1        
+ [34] textshaping_1.0.5       labeling_0.4.3          timechange_0.4.0       
+ [37] httr_1.4.9              abind_1.4-8             compiler_4.6.1         
+ [40] fontquiver_0.2.1        withr_3.0.3             doParallel_1.0.17      
+ [43] S7_0.2.2                backports_1.5.1         carData_3.0-6          
+ [46] DBI_1.3.0               ggsignif_0.6.4          openssl_2.4.2          
+ [49] rjson_0.2.23            tools_4.6.1             vipor_0.4.7            
+ [52] otel_0.2.0              beeswarm_0.4.0          zip_3.0.2              
+ [55] httpuv_1.6.17           glue_1.8.1              callr_3.8.0            
+ [58] promises_1.5.0          getPass_0.2-4           cluster_2.1.8.3        
+ [61] generics_0.1.4          gtable_0.3.6            tzdb_0.5.0             
+ [64] hms_1.1.4               utf8_1.2.6              xml2_1.6.0             
+ [67] car_3.1-5               BiocGenerics_0.58.1     foreach_1.5.2          
+ [70] pillar_1.11.1           later_1.4.8             mitools_2.7            
+ [73] splines_4.6.1           lattice_0.23-1          survival_3.8-12        
+ [76] tidyselect_1.2.1        fontLiberation_0.1.0    knitr_1.52             
+ [79] git2r_0.36.2            fontBitstreamVera_0.1.1 IRanges_2.46.0         
+ [82] stats4_4.6.1            xfun_0.61               matrixStats_1.5.0      
+ [85] stringi_1.8.9           yaml_2.3.12             evaluate_1.0.5         
+ [88] codetools_0.2-20        officer_0.7.6           gdtools_0.5.1          
+ [91] cli_3.6.6               systemfonts_1.3.2       processx_3.9.0         
+ [94] jquerylib_0.1.4         Rcpp_1.1.2              png_0.1-9              
+ [97] parallel_4.6.1          viridisLite_0.4.3       crayon_1.5.3           
+[100] GetoptLong_1.1.1        rlang_1.3.0            </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
