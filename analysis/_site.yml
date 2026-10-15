@@ -1,22 +1,26 @@
-name: "CarTrans"
+name: CarTrans
 output_dir: ../docs
 navbar:
-  title: "Luminex CarTrans"
+  title: Luminex CarTrans
   left:
-    - text: "Home"
-      href: index.html
-    - text: "Quality Control"
-      href: Quality-Control.html
-    - text: "Clinical"
-      menu:
-        - text: "Table 1 and Heatmap"
-          href: TableOverall.html
-        - text: "Donor characteristics"
-          href: Donor-Characteristics.html
-        - text: "Kinetics"
-          href: Kinetics.html
+  - text: Home
+    href: index.html
+  - text: Quality Control
+    href: Quality-Control.html
+  - text: Clinical
+    menu:
+    - text: Table 1 and Heatmap
+      href: TableOverall.html
+    - text: Donor characteristics
+      href: Donor-Characteristics.html
+    - text: Kinetics
+      href: Kinetics.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/IsabellaH1993/Luminex-CarTrans
 output:
   workflowr::wflow_html:
-    toc: false
+    toc: no
     theme: cosmo
     highlight: textmate
