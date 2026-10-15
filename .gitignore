@@ -11,3 +11,8 @@ analysis/*_cache
 analysis/site_libs
 data/
 output/
+analysis/*_files
+site_libs/
+html/
+data/
+
