@@ -1,0 +1,396 @@
+---
+title: "Correlations"
+author: "I. Hanka"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries, echo=FALSE}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+
+```
+
+```{r define filepath, include=FALSE}
+basedir <- here ()
+```
+
+
+```{r import datasets}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) 
+```
+
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)
+```
+
+```{r prep metadata}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+
+# Create annotation table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
+
+list_Timepoint <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, Visit, Timepoint)
+
+ list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+
+rownames(list_Timepoint) <- list_Timepoint$Sample_ID
+list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE] 
+```
+
+```{r}
+  ann_colors <- list(
+   Visit = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Healthy" = "grey",
+    "VX1" = "#FFCCCC",
+    "VX2" = "#FF9999",
+    "VX3" = "#FF6666",
+    "VX4" = "darkred"
+  ),
+  Timepoint = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Rejection Context" = "#FF6B6B",
+    "Healthy" = "grey")
+)
+```
+
+```{r import lab excel}
+# Import only lab data sheet from excel file
+table_lab_overall <- readxl::read_xlsx(
+  here("data", "RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"),
+  sheet = "Lab Data",
+  col_names = TRUE
+)
+```
+
+```{r clean table_lab}
+#Previous labeling of EMB3 still gets imported, although it`s not visible in original excel
+# Remove double EMB 3 entries
+table_lab <- table_lab_overall %>%
+  dplyr::select(
+    -`Trop T EMB 3`,
+    -`CK total EMB 3`,
+    -`NT-proBNP EMB 3`,
+    -`CRP EMB 3`,
+    -`Leukozyten EMB 3`
+  )
+
+# -`Date of lab EMB 3` is not found
+
+# Remove _EMB6
+table_lab <- table_lab %>% dplyr::select(-ends_with("_EMB6")) #include EMB7 once the entries are updated
+
+# Rename ID to Study_ID for joining with Luminex
+table_lab <- table_lab %>% dplyr::rename("Study_ID"= "ID")
+```
+
+```{r prep lab}
+
+table_lab <- table_lab %>%
+  dplyr::select(-starts_with("Datelab_")) %>% #Exclude date of lab parameters for pivoting numeric values
+  mutate(across(matches("_(BL|EMB[0-9X]+)$"), as.numeric)) %>%
+  pivot_longer(cols = matches("_(BL|EMB[0-9X]+)$"),
+               names_to = c(".value", "Visit"),
+               names_pattern = "(.*)_(BL|EMB[0-9X]+)$") %>%
+  mutate(
+    Visit = recode(Visit,
+      "BL"    = "Baseline",
+      "EMB1"  = "Week 1",
+      "EMB2"  = "Week 2",
+      "EMB3"  = "Month 1-3",
+      "EMB4"  = "Month 4-6",
+      "EMB5"  = "Month 12",
+      "EMBX1" = "VX1",
+      "EMBX2" = "VX2",
+      "EMBX3" = "VX3",
+      "EMBX4" = "VX4"),
+    Visit = factor(Visit, levels = levels(table_lum_CarTrans_overall$Visit))
+  )
+
+```
+
+
+# NTproBNP
+
+```{r NTproBNP correlation, warning=FALSE}
+# Match Luminex and lab data per patient and visit
+  table_corr <- inner_join(table_lum_CarTrans_overall, table_lab,
+                           by = c("Study_ID", "Visit"))
+# Order Timepoints
+table_corr <- table_corr%>%
+mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
+
+# Define lab parameter (y axis)
+  lab_param <- "NTproBNP"
+  lab_label <- "NTproBNP (ng/l)"
+
+# Define Luminex analytes (x axis)
+  analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
+  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  names(analyte_labels) <- analytes
+
+# Create list for plots
+  plots_list <- list()
+
+# Loop Correlation Plot
+  for (p in analytes) 
+    
+    {
+  
+      # Compute Spearman correlation
+        cor_test <- cor.test(table_corr[[p]], table_corr[[lab_param]], method = "spearman")
+  
+      # Define x axis margins and breaks
+        max_x <- max(table_corr[[p]], na.rm = TRUE) * 1.1
+        min_x <- min(table_corr[[p]], na.rm = TRUE)
+        max_log10_limit <- 10^(ceiling(log10(max_x)))
+        min_log10_limit <- 10^(floor(log10(min_x)))
+        x_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+  
+      # Scatter plot with regression line
+        plot <- ggplot(table_corr, aes(x = .data[[p]], y = .data[[lab_param]])) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = "black",
+                           position = position_jitter(width = 0.05, height = 0)) +
+                geom_smooth(method = "lm", se = TRUE, color = "black") +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = x_breaks) +
+                theme_classic() +
+                labs(x = analyte_labels[[p]], y = lab_label) +
+                annotate("text", x = -Inf, y = Inf,
+                         label = paste0("r = ", round(cor_test$estimate, 2),
+                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+        
+      # Store each plot
+        plots_list[[p]] <- plot
+
+  }
+
+# Combine plots to a panel
+  panel <- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = "right")
+      
+  print(panel)
+```
+
+
+# CRP
+
+```{r CRP correlation, warning=FALSE}
+# Define lab parameter (y axis)
+  lab_param <- "CRP"
+  lab_label <- "CRP (ng/l)"
+
+# Define Luminex analytes (x axis)
+  analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
+  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  names(analyte_labels) <- analytes
+
+# Create list for plots
+  plots_list <- list()
+
+# Loop Correlation Plot
+  for (p in analytes) 
+    
+    {
+  
+      # Compute Spearman correlation
+        cor_test <- cor.test(table_corr[[p]], table_corr[[lab_param]], method = "spearman")
+  
+      # Define x axis margins and breaks
+        max_x <- max(table_corr[[p]], na.rm = TRUE) * 1.1
+        min_x <- min(table_corr[[p]], na.rm = TRUE)
+        max_log10_limit <- 10^(ceiling(log10(max_x)))
+        min_log10_limit <- 10^(floor(log10(min_x)))
+        x_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+  
+      # Scatter plot with regression line
+        plot <- ggplot(table_corr, aes(x = .data[[p]], y = .data[[lab_param]])) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = "black",
+                           position = position_jitter(width = 0.05, height = 0)) +
+                geom_smooth(method = "lm", se = TRUE, color = "black") +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = x_breaks) +
+                theme_classic() +
+                labs(x = analyte_labels[[p]], y = lab_label) +
+                annotate("text", x = -Inf, y = Inf,
+                         label = paste0("r = ", round(cor_test$estimate, 2),
+                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+        
+      # Store each plot
+        plots_list[[p]] <- plot
+
+  }
+
+# Combine plots to a panel
+  panel <- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = "right")
+      
+  print(panel)
+```
+
+
+# TropT
+
+```{r TropT correlation, warning=FALSE}
+# Define lab parameter (y axis)
+  lab_param <- "TropT"
+  lab_label <- "Troponin T (ng/l)"
+
+# Define Luminex analytes (x axis)
+  analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
+  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  names(analyte_labels) <- analytes
+
+# Create list for plots
+  plots_list <- list()
+
+# Loop Correlation Plot
+  for (p in analytes) 
+    
+    {
+  
+      # Compute Spearman correlation
+        cor_test <- cor.test(table_corr[[p]], table_corr[[lab_param]], method = "spearman")
+  
+      # Define x axis margins and breaks
+        max_x <- max(table_corr[[p]], na.rm = TRUE) * 1.1
+        min_x <- min(table_corr[[p]], na.rm = TRUE)
+        max_log10_limit <- 10^(ceiling(log10(max_x)))
+        min_log10_limit <- 10^(floor(log10(min_x)))
+        x_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+  
+      # Scatter plot with regression line
+        plot <- ggplot(table_corr, aes(x = .data[[p]], y = .data[[lab_param]])) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = "black",
+                           position = position_jitter(width = 0.05, height = 0)) +
+                geom_smooth(method = "lm", se = TRUE, color = "black") +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = x_breaks) +
+                theme_classic() +
+                labs(x = analyte_labels[[p]], y = lab_label) +
+                annotate("text", x = -Inf, y = Inf,
+                         label = paste0("r = ", round(cor_test$estimate, 2),
+                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+        
+      # Store each plot
+        plots_list[[p]] <- plot
+
+  }
+
+# Combine plots to a panel
+  panel <- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = "right")
+      
+  print(panel)
+```
+

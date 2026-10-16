@@ -304,7 +304,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -315,8 +315,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -329,9 +329,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Luminex_CarTrans/</code> <span
@@ -354,33 +354,36 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee266d447e386a2b0ac2e3bfe3e77a6beae573c52targetblanke266d44a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree786822c6140beec88a07b3e3c7350e84a0eb8571targetblank786822ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e266d447e386a2b0ac2e3bfe3e77a6beae573c52" target="_blank">e266d44</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/786822c6140beec88a07b3e3c7350e84a0eb8571" target="_blank">786822c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee266d447e386a2b0ac2e3bfe3e77a6beae573c52targetblanke266d44a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree786822c6140beec88a07b3e3c7350e84a0eb8571targetblank786822ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -390,7 +393,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e266d447e386a2b0ac2e3bfe3e77a6beae573c52" target="_blank">e266d44</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/786822c6140beec88a07b3e3c7350e84a0eb8571" target="_blank">786822c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -413,16 +416,12 @@ Ignored files:
     Ignored:    data/
     Ignored:    html/
 
+Untracked files:
+    Untracked:  analysis/Correlations.Rmd
+
 Unstaged changes:
-    Modified:   analysis/Convalesence_Rejetion.Rmd
-    Modified:   analysis/Immunsuppression_Luminex.Rmd
-    Modified:   analysis/Immunsuppression_Luminex_vsBaseline.Rmd
-    Modified:   analysis/Luminex_HeatmapVisit.Rmd
-    Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
-    Modified:   analysis/Luminex_Overview.Rmd
-    Modified:   analysis/PathologicalGrading_Luminex.Rmd
-    Modified:   analysis/TransplantationRisk.Rmd
-    Modified:   analysis/TransplantationRisk_vsBaseline.Rmd
+    Modified:   analysis/Kinetics.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -466,6 +465,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/4e98555056559f50e838112f677ea34c2239a48d/docs/index.html" target="_blank">4e98555</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_11:40
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -886,8 +902,11 @@ href="TransplantationRisk_vsBaseline.html">link</a></h4>
 </div>
 <div id="correlation" class="section level1">
 <h1>Correlation</h1>
-<div id="in-arbeit-1" class="section level4">
-<h4><em>in Arbeit</em></h4>
+<div
+id="with-standard-laboratory-parameters-crp-tropt-crp-and-ntprobnp-link"
+class="section level4">
+<h4>with standard laboratory parameters CRP, TropT, CRP and NTproBNP <a
+href="Correlations.html">link</a></h4>
 </div>
 </div>
 </div>

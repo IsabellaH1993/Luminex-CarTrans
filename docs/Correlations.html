@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="I. Hanka" />
+
+<meta name="date" content="2026-10-16" />
+
+<title>Correlations</title>
+
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Luminex CarTrans</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Quality-Control.html">Quality Control</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Clinical
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="TableOverall.html">Table 1 and Heatmap</a>
+    </li>
+    <li>
+      <a href="Donor-Characteristics.html">Donor characteristics</a>
+    </li>
+    <li>
+      <a href="Kinetics.html">Kinetics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/IsabellaH1993/Luminex-CarTrans">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Correlations</h1>
+<h4 class="author">I. Hanka</h4>
+<h4 class="date">2026-10-16</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-10-16
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Luminex_CarTrans/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20261015code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20261015)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20261015code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20261015)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree786822c6140beec88a07b3e3c7350e84a0eb8571targetblank786822ca">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/786822c6140beec88a07b3e3c7350e84a0eb8571" target="_blank">786822c</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree786822c6140beec88a07b3e3c7350e84a0eb8571targetblank786822ca"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/786822c6140beec88a07b3e3c7350e84a0eb8571" target="_blank">786822c</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    Quality-Control_files/
+    Ignored:    analysis/.DS_Store
+    Ignored:    data/
+    Ignored:    html/
+
+Untracked files:
+    Untracked:  analysis/Correlations.Rmd
+
+Unstaged changes:
+    Modified:   analysis/Kinetics.Rmd
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code># Import Luminex Data
+  
+  table_lum_healthy &lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_Healthy_all.xlsx&quot;))  
+
+  table_lum_CarTrans_V0&lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V0_all.xlsx&quot;)) 
+   
+  table_lum_CarTrans_V1&lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V1_all.xlsx&quot;)) 
+  
+  table_lum_CarTrans_V2 &lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V2_all.xlsx&quot;))
+  
+  table_lum_CarTrans_V3 &lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V3_all.xlsx&quot;))
+  
+  table_lum_CarTrans_V4 &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Lum_CarTrans_V4_all.xlsx&quot;))
+  
+  table_lum_CarTrans_V5 &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Lum_CarTrans_V5_all.xlsx&quot;))
+  
+table_lum_CarTrans_VX &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Lum_CarTrans_VX_all.xlsx&quot;))
+
+# Delete ATG_EMB column
+table_lum_healthy     &lt;- table_lum_healthy     %&gt;% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 &lt;- table_lum_CarTrans_V0 %&gt;% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 &lt;- table_lum_CarTrans_V1 %&gt;% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 &lt;- table_lum_CarTrans_V2 %&gt;% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 &lt;- table_lum_CarTrans_V3 %&gt;% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall &lt;- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%&gt;%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %&gt;% 
+    filter(!Study_ID %in% c(&quot;CarTrans-Long-31&quot;, &quot;CarTrans-Long-37&quot;, &quot;CarTrans-Long-38&quot;, &quot;CarTrans-Long-39&quot;, &quot;CarTrans-Long-40&quot;, &quot;CarTrans-Long-41&quot;, &quot;CarTrans-Long-42&quot;, &quot;CarTrans-Long-43&quot;, &quot;CarTrans-Long-44&quot;, &quot;CarTrans-Long-45&quot;, &quot;CarTrans-Long-46&quot;, &quot;CarTrans-Long-47&quot;, &quot;CarTrans-Long-48&quot;, &quot;CarTrans-Long-49&quot;, &quot;CarTrans-Long-50&quot;, &quot;CarTrans-Long-51&quot;, &quot;CarTrans-Healthy-29&quot;, &quot;CarTrans-Healthy-30&quot;, &quot;CarTrans-Healthy-31&quot;, &quot;CarTrans-Healthy-32&quot;, &quot;CarTrans-Healthy-33&quot;, &quot;CarTrans-Healthy-34&quot;, &quot;CarTrans-Healthy-35&quot;, &quot;CarTrans-Healthy-36&quot;, &quot;CarTrans-Healthy-37&quot;, &quot;CarTrans-Healthy-38&quot;, &quot;CarTrans-Healthy-39&quot;, &quot;CarTrans-Healthy-40&quot;, &quot;CarTrans-Healthy-41&quot;, &quot;CarTrans-Healthy-42&quot;, &quot;CarTrans-Healthy-43&quot;, &quot;CarTrans-Healthy-44&quot;, &quot;CarTrans-Healthy-45&quot;, &quot;CarTrans-Healthy-46&quot;, &quot;CarTrans-Healthy-47&quot;, &quot;CarTrans-Healthy-48&quot;,&quot;CarTrans-Healthy-49&quot;, &quot;CarTrans-Healthy-50&quot;)) </code></pre>
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%filter(
+    !(Study_ID %in% c(&quot;CarTrans-Long-16&quot;, &quot;CarTrans-Long-23&quot;, &quot;CarTrans-Long-36&quot;) &amp;
+      str_detect(Visit, &quot;^VX&quot;)))%&gt;%
+  select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)</code></pre>
+<pre class="r"><code># Rename visits in overall table
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == &quot;Healthy&quot; ~ &quot;Healthy&quot;,
+    Visit == &quot;V0&quot; ~ &quot;Baseline&quot;,
+    Visit == &quot;V1&quot; ~ &quot;Week 1&quot;,
+    Visit == &quot;V2&quot; ~ &quot;Week 2&quot;,
+    Visit == &quot;V3&quot; ~ &quot;Month 1-3&quot;,
+    Visit == &quot;V4&quot; ~ &quot;Month 4-6&quot;,
+    Visit == &quot;V5&quot; ~ &quot;Month 12&quot;,
+    grepl(&quot;^VX&quot;, Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;VX1&quot;, &quot;VX2&quot;, &quot;VX3&quot;, &quot;VX4&quot;)) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = &quot;_&quot;))
+
+# Create annotation table
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Timepoint= case_when(grepl(&quot;^VX&quot;, Visit) ~ &quot;Rejection Context&quot;,TRUE ~ Visit))
+
+list_Timepoint &lt;- table_lum_CarTrans_overall %&gt;%dplyr::select(Sample_ID, Visit, Timepoint)
+
+ list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;Rejection Context&quot;)) 
+
+rownames(list_Timepoint) &lt;- list_Timepoint$Sample_ID
+list_Timepoint &lt;- list_Timepoint[, c(&quot;Timepoint&quot;), drop = FALSE] </code></pre>
+<pre class="r"><code>  ann_colors &lt;- list(
+   Visit = c(
+    &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+    &quot;Week 1&quot; = &quot;#B2EBF2&quot;,
+    &quot;Week 2&quot; = &quot;#A8C7FF&quot;,
+    &quot;Month 1-3&quot; = &quot;#4DD0E1&quot;,
+    &quot;Month 4-6&quot; = &quot;#0097A7&quot;,
+    &quot;Month 12&quot; = &quot;#1E3FA3&quot;,
+    &quot;Healthy&quot; = &quot;grey&quot;,
+    &quot;VX1&quot; = &quot;#FFCCCC&quot;,
+    &quot;VX2&quot; = &quot;#FF9999&quot;,
+    &quot;VX3&quot; = &quot;#FF6666&quot;,
+    &quot;VX4&quot; = &quot;darkred&quot;
+  ),
+  Timepoint = c(
+    &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+    &quot;Week 1&quot; = &quot;#B2EBF2&quot;,
+    &quot;Week 2&quot; = &quot;#A8C7FF&quot;,
+    &quot;Month 1-3&quot; = &quot;#4DD0E1&quot;,
+    &quot;Month 4-6&quot; = &quot;#0097A7&quot;,
+    &quot;Month 12&quot; = &quot;#1E3FA3&quot;,
+    &quot;Rejection Context&quot; = &quot;#FF6B6B&quot;,
+    &quot;Healthy&quot; = &quot;grey&quot;)
+)</code></pre>
+<pre class="r"><code># Import only lab data sheet from excel file
+table_lab_overall &lt;- readxl::read_xlsx(
+  here(&quot;data&quot;, &quot;RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx&quot;),
+  sheet = &quot;Lab Data&quot;,
+  col_names = TRUE
+)</code></pre>
+<pre class="r"><code>#Previous labeling of EMB3 still gets imported, although it`s not visible in original excel
+# Remove double EMB 3 entries
+table_lab &lt;- table_lab_overall %&gt;%
+  dplyr::select(
+    -`Trop T EMB 3`,
+    -`CK total EMB 3`,
+    -`NT-proBNP EMB 3`,
+    -`CRP EMB 3`,
+    -`Leukozyten EMB 3`
+  )
+
+# -`Date of lab EMB 3` is not found
+
+# Remove _EMB6
+table_lab &lt;- table_lab %&gt;% dplyr::select(-ends_with(&quot;_EMB6&quot;)) #include EMB7 once the entries are updated
+
+# Rename ID to Study_ID for joining with Luminex
+table_lab &lt;- table_lab %&gt;% dplyr::rename(&quot;Study_ID&quot;= &quot;ID&quot;)</code></pre>
+<pre class="r"><code>table_lab &lt;- table_lab %&gt;%
+  dplyr::select(-starts_with(&quot;Datelab_&quot;)) %&gt;% #Exclude date of lab parameters for pivoting numeric values
+  mutate(across(matches(&quot;_(BL|EMB[0-9X]+)$&quot;), as.numeric)) %&gt;%
+  pivot_longer(cols = matches(&quot;_(BL|EMB[0-9X]+)$&quot;),
+               names_to = c(&quot;.value&quot;, &quot;Visit&quot;),
+               names_pattern = &quot;(.*)_(BL|EMB[0-9X]+)$&quot;) %&gt;%
+  mutate(
+    Visit = recode(Visit,
+      &quot;BL&quot;    = &quot;Baseline&quot;,
+      &quot;EMB1&quot;  = &quot;Week 1&quot;,
+      &quot;EMB2&quot;  = &quot;Week 2&quot;,
+      &quot;EMB3&quot;  = &quot;Month 1-3&quot;,
+      &quot;EMB4&quot;  = &quot;Month 4-6&quot;,
+      &quot;EMB5&quot;  = &quot;Month 12&quot;,
+      &quot;EMBX1&quot; = &quot;VX1&quot;,
+      &quot;EMBX2&quot; = &quot;VX2&quot;,
+      &quot;EMBX3&quot; = &quot;VX3&quot;,
+      &quot;EMBX4&quot; = &quot;VX4&quot;),
+    Visit = factor(Visit, levels = levels(table_lum_CarTrans_overall$Visit))
+  )</code></pre>
+<pre><code>Warning: There were 25 warnings in `mutate()`.
+The first warning was:
+ℹ In argument: `across(matches(&quot;_(BL|EMB[0-9X]+)$&quot;), as.numeric)`.
+Caused by warning:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 24 remaining warnings.</code></pre>
+<div id="ntprobnp" class="section level1">
+<h1>NTproBNP</h1>
+<pre class="r"><code># Match Luminex and lab data per patient and visit
+  table_corr &lt;- inner_join(table_lum_CarTrans_overall, table_lab,
+                           by = c(&quot;Study_ID&quot;, &quot;Visit&quot;))
+# Order Timepoints
+table_corr &lt;- table_corr%&gt;%
+mutate(Timepoint = factor(Timepoint, levels = c(&quot;Healthy&quot;, &quot;Baseline&quot;, &quot;Week 1&quot;, &quot;Week 2&quot;,&quot;Month 1-3&quot;, &quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;Rejection Context&quot;)))
+
+# Define lab parameter (y axis)
+  lab_param &lt;- &quot;NTproBNP&quot;
+  lab_label &lt;- &quot;NTproBNP (ng/l)&quot;
+
+# Define Luminex analytes (x axis)
+  analytes &lt;- c(&quot;PD_L1&quot;, &quot;CXCL10&quot;, &quot;IL2R&quot;, &quot;Grem2&quot;)
+  analyte_labels &lt;- c(&quot;PD L1 (pg/ml)&quot;, &quot;CXCL10 (pg/ml)&quot;, &quot;IL2R (pg/ml)&quot;, &quot;Grem2 (pg/ml)&quot;)
+  names(analyte_labels) &lt;- analytes
+
+# Create list for plots
+  plots_list &lt;- list()
+
+# Loop Correlation Plot
+  for (p in analytes) 
+    
+    {
+  
+      # Compute Spearman correlation
+        cor_test &lt;- cor.test(table_corr[[p]], table_corr[[lab_param]], method = &quot;spearman&quot;)
+  
+      # Define x axis margins and breaks
+        max_x &lt;- max(table_corr[[p]], na.rm = TRUE) * 1.1
+        min_x &lt;- min(table_corr[[p]], na.rm = TRUE)
+        max_log10_limit &lt;- 10^(ceiling(log10(max_x)))
+        min_log10_limit &lt;- 10^(floor(log10(min_x)))
+        x_breaks &lt;- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+  
+      # Scatter plot with regression line
+        plot &lt;- ggplot(table_corr, aes(x = .data[[p]], y = .data[[lab_param]])) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = &quot;black&quot;,
+                           position = position_jitter(width = 0.05, height = 0)) +
+                geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;black&quot;) +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = x_breaks) +
+                theme_classic() +
+                labs(x = analyte_labels[[p]], y = lab_label) +
+                annotate(&quot;text&quot;, x = -Inf, y = Inf,
+                         label = paste0(&quot;r = &quot;, round(cor_test$estimate, 2),
+                                        &quot;\np = &quot;, ifelse(cor_test$p.value &lt; 0.001, &quot;&lt; 0.001&quot;, signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+        
+      # Store each plot
+        plots_list[[p]] &lt;- plot
+
+  }
+
+# Combine plots to a panel
+  panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = &quot;right&quot;)</code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre class="r"><code>  print(panel)</code></pre>
+<p><img src="figure/Correlations.Rmd/NTproBNP%20correlation-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="crp" class="section level1">
+<h1>CRP</h1>
+<pre class="r"><code># Define lab parameter (y axis)
+  lab_param &lt;- &quot;CRP&quot;
+  lab_label &lt;- &quot;CRP (ng/l)&quot;
+
+# Define Luminex analytes (x axis)
+  analytes &lt;- c(&quot;PD_L1&quot;, &quot;CXCL10&quot;, &quot;IL2R&quot;, &quot;Grem2&quot;)
+  analyte_labels &lt;- c(&quot;PD L1 (pg/ml)&quot;, &quot;CXCL10 (pg/ml)&quot;, &quot;IL2R (pg/ml)&quot;, &quot;Grem2 (pg/ml)&quot;)
+  names(analyte_labels) &lt;- analytes
+
+# Create list for plots
+  plots_list &lt;- list()
+
+# Loop Correlation Plot
+  for (p in analytes) 
+    
+    {
+  
+      # Compute Spearman correlation
+        cor_test &lt;- cor.test(table_corr[[p]], table_corr[[lab_param]], method = &quot;spearman&quot;)
+  
+      # Define x axis margins and breaks
+        max_x &lt;- max(table_corr[[p]], na.rm = TRUE) * 1.1
+        min_x &lt;- min(table_corr[[p]], na.rm = TRUE)
+        max_log10_limit &lt;- 10^(ceiling(log10(max_x)))
+        min_log10_limit &lt;- 10^(floor(log10(min_x)))
+        x_breaks &lt;- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+  
+      # Scatter plot with regression line
+        plot &lt;- ggplot(table_corr, aes(x = .data[[p]], y = .data[[lab_param]])) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = &quot;black&quot;,
+                           position = position_jitter(width = 0.05, height = 0)) +
+                geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;black&quot;) +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = x_breaks) +
+                theme_classic() +
+                labs(x = analyte_labels[[p]], y = lab_label) +
+                annotate(&quot;text&quot;, x = -Inf, y = Inf,
+                         label = paste0(&quot;r = &quot;, round(cor_test$estimate, 2),
+                                        &quot;\np = &quot;, ifelse(cor_test$p.value &lt; 0.001, &quot;&lt; 0.001&quot;, signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+        
+      # Store each plot
+        plots_list[[p]] &lt;- plot
+
+  }
+
+# Combine plots to a panel
+  panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = &quot;right&quot;)</code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre class="r"><code>  print(panel)</code></pre>
+<p><img src="figure/Correlations.Rmd/CRP%20correlation-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tropt" class="section level1">
+<h1>TropT</h1>
+<pre class="r"><code># Define lab parameter (y axis)
+  lab_param &lt;- &quot;TropT&quot;
+  lab_label &lt;- &quot;Troponin T (ng/l)&quot;
+
+# Define Luminex analytes (x axis)
+  analytes &lt;- c(&quot;PD_L1&quot;, &quot;CXCL10&quot;, &quot;IL2R&quot;, &quot;Grem2&quot;)
+  analyte_labels &lt;- c(&quot;PD L1 (pg/ml)&quot;, &quot;CXCL10 (pg/ml)&quot;, &quot;IL2R (pg/ml)&quot;, &quot;Grem2 (pg/ml)&quot;)
+  names(analyte_labels) &lt;- analytes
+
+# Create list for plots
+  plots_list &lt;- list()
+
+# Loop Correlation Plot
+  for (p in analytes) 
+    
+    {
+  
+      # Compute Spearman correlation
+        cor_test &lt;- cor.test(table_corr[[p]], table_corr[[lab_param]], method = &quot;spearman&quot;)
+  
+      # Define x axis margins and breaks
+        max_x &lt;- max(table_corr[[p]], na.rm = TRUE) * 1.1
+        min_x &lt;- min(table_corr[[p]], na.rm = TRUE)
+        max_log10_limit &lt;- 10^(ceiling(log10(max_x)))
+        min_log10_limit &lt;- 10^(floor(log10(min_x)))
+        x_breaks &lt;- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+  
+      # Scatter plot with regression line
+        plot &lt;- ggplot(table_corr, aes(x = .data[[p]], y = .data[[lab_param]])) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = &quot;black&quot;,
+                           position = position_jitter(width = 0.05, height = 0)) +
+                geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;black&quot;) +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = x_breaks) +
+                theme_classic() +
+                labs(x = analyte_labels[[p]], y = lab_label) +
+                annotate(&quot;text&quot;, x = -Inf, y = Inf,
+                         label = paste0(&quot;r = &quot;, round(cor_test$estimate, 2),
+                                        &quot;\np = &quot;, ifelse(cor_test$p.value &lt; 0.001, &quot;&lt; 0.001&quot;, signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+        
+      # Store each plot
+        plots_list[[p]] &lt;- plot
+
+  }
+
+# Combine plots to a panel
+  panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = &quot;right&quot;)</code></pre>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;
+`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre class="r"><code>  print(panel)</code></pre>
+<p><img src="figure/Correlations.Rmd/TropT%20correlation-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Sequoia 15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Europe/Zurich
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] ggpattern_1.3.1        gridExtra_2.3.1        cowplot_1.2.0         
+ [4] patchwork_1.3.2        plotly_4.12.1          EnhancedVolcano_1.30.0
+ [7] RColorBrewer_1.1-3     circlize_0.4.18        ComplexHeatmap_2.28.0 
+[10] pheatmap_1.0.13        corrplot_0.95          ggcorrplot_0.3.0      
+[13] ggbeeswarm_0.7.3       ggrepel_0.9.8          ggpubr_1.0.0          
+[16] rstatix_1.1.0          readxl_1.5.0.1         writexl_2.0.1         
+[19] openxlsx_4.2.9         gtsummary_2.6.1        flextable_0.10.1      
+[22] tableone_0.13.2        table1_1.5.1           scales_1.4.0          
+[25] here_1.0.2             janitor_2.2.1          magrittr_2.0.5        
+[28] data.table_1.18.6.1    lubridate_1.9.5        forcats_1.0.1         
+[31] stringr_1.6.0          dplyr_1.2.1            purrr_1.2.2           
+[34] readr_2.2.0            tidyr_1.3.2            tibble_3.3.1          
+[37] ggplot2_4.0.3          tidyverse_2.0.0       
+
+loaded via a namespace (and not attached):
+ [1] shape_1.4.6.1           rstudioapi_0.19.0       jsonlite_2.0.0         
+ [4] farver_2.1.2            rmarkdown_2.32          GlobalOptions_0.1.4    
+ [7] fs_2.1.0                ragg_1.5.2              vctrs_0.7.3            
+[10] askpass_1.2.1           htmltools_0.5.9         survey_4.5             
+[13] broom_1.0.13            cellranger_1.1.0        Formula_1.2-6          
+[16] sass_0.4.10             bslib_0.12.0            htmlwidgets_1.6.4      
+[19] cachem_1.1.0            uuid_1.2-2              lifecycle_1.0.5        
+[22] iterators_1.0.14        pkgconfig_2.0.3         Matrix_1.7-6           
+[25] R6_2.6.1                fastmap_1.2.0           clue_0.3-68            
+[28] snakecase_0.11.1        digest_0.6.39           colorspace_2.1-4       
+[31] S4Vectors_0.50.3        rprojroot_2.1.1         textshaping_1.0.5      
+[34] labeling_0.4.3          timechange_0.4.0        mgcv_1.9-4             
+[37] httr_1.4.9              abind_1.4-8             compiler_4.6.1         
+[40] fontquiver_0.2.1        withr_3.0.3             doParallel_1.0.17      
+[43] S7_0.2.2                backports_1.5.1         carData_3.0-6          
+[46] DBI_1.3.0               ggsignif_0.6.4          openssl_2.4.2          
+[49] rjson_0.2.23            tools_4.6.1             vipor_0.4.7            
+[52] otel_0.2.0              beeswarm_0.4.0          zip_3.0.2              
+[55] httpuv_1.6.17           glue_1.8.1              nlme_3.1-171           
+[58] promises_1.5.0          cluster_2.1.8.3         generics_0.1.4         
+[61] gtable_0.3.6            tzdb_0.5.0              hms_1.1.4              
+[64] xml2_1.6.0              car_3.1-5               BiocGenerics_0.58.1    
+[67] foreach_1.5.2           pillar_1.11.1           later_1.4.8            
+[70] mitools_2.7             splines_4.6.1           lattice_0.23-1         
+[73] survival_3.8-12         tidyselect_1.2.1        fontLiberation_0.1.0   
+[76] knitr_1.52              git2r_0.36.2            fontBitstreamVera_0.1.1
+[79] IRanges_2.46.0          stats4_4.6.1            xfun_0.61              
+[82] matrixStats_1.5.0       stringi_1.8.9           workflowr_1.7.2        
+[85] yaml_2.3.12             evaluate_1.0.5          codetools_0.2-20       
+[88] officer_0.7.6           gdtools_0.5.1           cli_3.6.6              
+[91] systemfonts_1.3.2       jquerylib_0.1.4         Rcpp_1.1.2             
+[94] png_0.1-9               parallel_4.6.1          viridisLite_0.4.3      
+[97] crayon_1.5.3            GetoptLong_1.1.1        rlang_1.3.0            </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -45,7 +45,7 @@ editor_options:
 #### Grem2 [link](Analytes_Grem2.html)
 
 # Correlation
-#### *in Arbeit*
+#### with standard laboratory parameters CRP, TropT, CRP and NTproBNP [link](Correlations.html)
 
 
 

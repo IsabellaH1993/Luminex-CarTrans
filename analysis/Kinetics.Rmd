@@ -161,7 +161,7 @@ df_long_NTproBNP <- df_long_NTproBNP %>%
       "EMB2" = "Week 2",
       "EMB3" = "Month 1–3",
       "EMB4" = "Month 4–6",
-      "EMB5" = "12 Months",
+      "EMB5" = "Month 12",
       "EMBX1" = "Rejection",
       "EMBX2" = "Rejection",
       "EMBX3" = "Rejection",
@@ -178,7 +178,7 @@ df_long_NTproBNP$Timepoint <- factor(
     "Week 2",
     "Month 1–3",
     "Month 4–6",
-    "12 Months",
+    "Month 12",
     "Rejection"
   )
 )
@@ -243,7 +243,7 @@ df_long_TropT <- df_long_TropT %>%
       "EMB2" = "Week 2",
       "EMB3" = "Month 1–3",
       "EMB4" = "Month 4–6",
-      "EMB5" = "12 Months",
+      "EMB5" = "Month 12",
       "EMBX1" = "Rejection",
       "EMBX2" = "Rejection",
       "EMBX3" = "Rejection",
@@ -260,7 +260,7 @@ df_long_TropT$Timepoint <- factor(
     "Week 2",
     "Month 1–3",
     "Month 4–6",
-    "12 Months",
+    "Month 12",
     "Rejection"
   )
 )
@@ -326,7 +326,7 @@ df_long_CRP <- df_long_CRP %>%
       "EMB2" = "Week 2",
       "EMB3" = "Month 1–3",
       "EMB4" = "Month 4–6",
-      "EMB5" = "12 Months",
+      "EMB5" = "Month 12",
       "EMBX1" = "Rejection",
       "EMBX2" = "Rejection",
       "EMBX3" = "Rejection",
@@ -343,7 +343,7 @@ df_long_CRP$Timepoint <- factor(
     "Week 2",
     "Month 1–3",
     "Month 4–6",
-    "12 Months",
+    "Month 12",
     "Rejection"
   )
 )
@@ -409,7 +409,7 @@ df_long_Leuc <- df_long_Leuc %>%
       "EMB2" = "Week 2",
       "EMB3" = "Month 1–3",
       "EMB4" = "Month 4–6",
-      "EMB5" = "12 Months",
+      "EMB5" = "Month 12",
       "EMBX1" = "Rejection",
       "EMBX2" = "Rejection",
       "EMBX3" = "Rejection",
@@ -426,7 +426,7 @@ df_long_Leuc$Timepoint <- factor(
     "Week 2",
     "Month 1–3",
     "Month 4–6",
-    "12 Months",
+    "Month 12",
     "Rejection"
   )
 )
