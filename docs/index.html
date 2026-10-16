@@ -304,7 +304,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -315,8 +315,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -325,13 +325,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-10-15
+<strong>Last updated:</strong> 2026-10-16
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Luminex_CarTrans/</code> <span
@@ -354,36 +354,33 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree8d832b1a0a5e5213b1b50c2a786f0fe2ce9b1c47targetblank8d832b1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree5e854605eccb130b6f1166fb7c79bb5a728a4e3dtargetblank5e85460a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/8d832b1a0a5e5213b1b50c2a786f0fe2ce9b1c47" target="_blank">8d832b1</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/5e854605eccb130b6f1166fb7c79bb5a728a4e3d" target="_blank">5e85460</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree8d832b1a0a5e5213b1b50c2a786f0fe2ce9b1c47targetblank8d832b1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree5e854605eccb130b6f1166fb7c79bb5a728a4e3dtargetblank5e85460a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -393,7 +390,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/8d832b1a0a5e5213b1b50c2a786f0fe2ce9b1c47" target="_blank">8d832b1</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/5e854605eccb130b6f1166fb7c79bb5a728a4e3d" target="_blank">5e85460</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -415,9 +412,6 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    data/
     Ignored:    html/
-
-Unstaged changes:
-    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -461,6 +455,74 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/9b936293030b44fdaf60ccc712a58974ac3bf0e5/analysis/index.Rmd" target="_blank">9b93629</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_3
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/d668c2a4e9c0164568380b34ffa3601ba4d994d1/analysis/index.Rmd" target="_blank">d668c2a</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/181138dc85657bc081aa936aee5106ffdb4ee98e/analysis/index.Rmd" target="_blank">181138d</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+15.10.2026_20
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/181138dc85657bc081aa936aee5106ffdb4ee98e/docs/index.html" target="_blank">181138d</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+<td>
+15.10.2026_20
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -625,7 +687,7 @@ Start workflowr project.
 <h1>Quality Control</h1>
 <div id="quality-control-elisa-luminex-link" class="section level4">
 <h4>Quality Control ELISA + Luminex <a
-href="Quality-Control.html">link</a></h4>
+href="Quality_Control.html">link</a></h4>
 </div>
 </div>
 <div id="clinical-characterisation" class="section level1">
@@ -699,8 +761,8 @@ href="TransplantationRisk_vsBaseline.html">link</a></h4>
 <div id="pd-l1-link" class="section level4">
 <h4>PD-L1 <a href="Analytes_PDL1.html">link</a></h4>
 </div>
-<div id="il2r-in-arbeit" class="section level4">
-<h4>IL2R <em>in Arbeit</em></h4>
+<div id="il2r-link" class="section level4">
+<h4>IL2R <a href="Analytes_IL2R.html">link</a></h4>
 </div>
 <div id="cxcl10-in-arbeit" class="section level4">
 <h4>CXCL10 <em>in Arbeit</em></h4>
