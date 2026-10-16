@@ -226,7 +226,7 @@ print(res_vs_healthy)
 ```{r}
 ggplot(df_il2r, aes(x = Timepoint, y = IL2R)) +
   geom_boxplot(outlier.shape = NA, fill="lightyellow") +
-  geom_jitter(aes(color="black"), width = 0.2, alpha = 0.4) +
+  geom_jitter(aes(fill="black"), width = 0.2, alpha = 0.4) +
   geom_text(data = res_vs_healthy,
             aes(x = group2, y = max(df_il2r$IL2R, na.rm = TRUE) * 2, label = p.adj.signif),
             inherit.aes = FALSE, size = 4) +
@@ -267,7 +267,7 @@ print(res_vs_baseline)
 ```{r}
 ggplot(filter(df_il2r, Timepoint != "Healthy"), aes(x = Timepoint, y = IL2R)) +
   geom_boxplot(outlier.shape = NA, fill="lightyellow") +
-  geom_jitter(aes(color = "black"), width = 0.2, alpha = 0.4) +
+  geom_jitter(aes(fill = "black"), width = 0.2, alpha = 0.4) +
   geom_text(data = res_vs_baseline,
             aes(x = Timepoint, y = max(df_il2r$IL2R, na.rm = TRUE) * 2, label = p.adj.signif),
             inherit.aes = FALSE, size = 4) +
@@ -307,7 +307,7 @@ print(res_followups)
 ```{r , fig.width=8, fig.height=7.5, out.width="100%"}
 ggplot(filter(df_il2r, !Timepoint %in% c("Healthy", "Baseline")), aes(x = Timepoint, y = IL2R)) +
   geom_boxplot(outlier.shape = NA, fill="lightyellow") +
-  geom_jitter(aes(color = "black"), width = 0.2, alpha = 0.4) +
+  geom_jitter(aes(fill = "black"), width = 0.2, alpha = 0.4) +
   stat_pvalue_manual(
     res_followups %>%
       filter(p.adj < 0.05) %>%
