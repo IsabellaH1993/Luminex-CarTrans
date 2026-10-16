@@ -2,7 +2,8 @@
 title: "Quality Control"
 author: "I. Hanka"
 date: '`r Sys.Date()`'
-output: html_document
+output: workflowr::wflow_html:
+    toc: false
 ---
 
 ```{r clean environment}
