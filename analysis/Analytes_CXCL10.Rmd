@@ -1,0 +1,327 @@
+---
+title: "Analytes_CXCL10"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html:
+    toc: false
+---
+
+```{r clean environment, echo=FALSE}
+rm(list = ls())
+```
+
+```{r load libraries, echo=FALSE}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+
+```
+
+```{r define filepath, echo=FALSE}
+basedir <- here ()
+```
+
+
+```{r import datasets, echo=FALSE}
+# Import Luminex Data
+  
+  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
+
+  table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
+   
+  table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup), ~{
+        x <- as.numeric(as.character(.))  
+        x[is.na(x)] <- 0                  # replace NA (for now!! later:Imputation)
+        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
+      })) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-31", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
+```
+
+```{r clean overall table, echo=FALSE}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
+    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
+      str_detect(Visit, "^VX")))%>%
+  select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)
+```
+
+```{r prep metadata, echo=FALSE}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+
+# Create annotation table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
+
+list_Timepoint <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, Visit, Timepoint)
+
+ list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+
+rownames(list_Timepoint) <- list_Timepoint$Sample_ID
+list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE] 
+```
+
+```{r , echo=FALSE}
+  ann_colors <- list(
+   Visit = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Healthy" = "grey",
+    "VX1" = "#FFCCCC",
+    "VX2" = "#FF9999",
+    "VX3" = "#FF6666",
+    "VX4" = "darkred"
+  ),
+  Timepoint = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Rejection Context" = "#FF6B6B",
+    "Healthy" = "grey")
+)
+```
+
+# CXCL10
+
+```{r}
+#Prep dataframe
+df_cxcl10 <- table_lum_CarTrans_overall %>%
+  dplyr::select(Study_ID, Timepoint, Visit, CXCL10)
+
+```
+
+
+```{r boxplot CXCL10 per patient visit, fig.width=9, fig.height=12, out.width="100%"}
+ggplot(df_cxcl10, aes(x = Visit, y = CXCL10)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=Study_ID), width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "CXCL10 per patient",
+    x = "",
+    y = "CXCL10 (pg/ml)"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+
+```{r boxplot CXCL10 per patient timpoint, fig.width=9, fig.height=12, out.width="100%"}
+df_cxcl10 <- df_cxcl10%>%
+mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
+
+ggplot(df_cxcl10, aes(x = Timepoint, y = CXCL10)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=Study_ID), width = 0.2, alpha = 0.4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "CXCL10 per patient",
+    x = "",
+    y = "CXCL10 (pg/ml)"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+
+### Statistische Auswertung
+
+```{r}
+ggplot(df_cxcl10, aes(x = CXCL10)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(x = "CXCL10", y = "Count") +
+  theme_classic()
+```
+
+
+Vergleich vs Healthy: different set of patients and healthy probands - unpaired test with wilcox-test
+
+```{r}
+res_vs_healthy <- df_cxcl10 %>%
+  wilcox_test(CXCL10 ~ Timepoint, ref.group = "Healthy") %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance("p.adj")
+
+print(res_vs_healthy)
+```
+
+```{r}
+ggplot(df_cxcl10, aes(x = Timepoint, y = CXCL10)) +
+  geom_boxplot(outlier.shape = NA, fill="lightgreen") +
+  geom_jitter(aes(fill="black"), width = 0.2, alpha = 0.4) +
+  geom_text(data = res_vs_healthy,
+            aes(x = group2, y = max(df_cxcl10$CXCL10, na.rm = TRUE) * 2, label = p.adj.signif),
+            inherit.aes = FALSE, size = 4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "CXCL10 vs Healthy",
+    x = "",
+    y = "CXCL10 (pg/ml)",
+    caption = "Wilcoxon rank-sum test vs Healthy, BH-adjusted"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none")
+```
+
+
+Vergleich vs Baseline: same set of patients- paired wilcox test used
+```{r}
+res_vs_baseline <- df_cxcl10 %>%
+  filter(Timepoint != "Healthy") %>%
+  group_by(Study_ID, Timepoint) %>%
+  summarise(CXCL10 = mean(CXCL10)) %>%
+  pivot_wider(names_from = Timepoint, values_from = CXCL10) %>%
+  pivot_longer(-c(Study_ID, Baseline), names_to = "Timepoint", values_to = "CXCL10") %>%
+  filter(!is.na(Baseline), !is.na(CXCL10)) %>%
+  mutate(Timepoint = factor(Timepoint, levels = levels(df_cxcl10$Timepoint))) %>%
+  group_by(Timepoint) %>%
+  summarise(n_pairs = n(),
+            median_change = median(CXCL10 - Baseline),
+            p = wilcox.test(CXCL10, Baseline, paired = TRUE, exact = FALSE)$p.value) %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance("p.adj")
+
+print(res_vs_baseline)
+```
+
+
+```{r}
+ggplot(filter(df_cxcl10, Timepoint != "Healthy"), aes(x = Timepoint, y = CXCL10)) +
+  geom_boxplot(outlier.shape = NA, fill="lightgreen") +
+  geom_jitter(aes(fill = "black"), width = 0.2, alpha = 0.4) +
+  geom_text(data = res_vs_baseline,
+            aes(x = Timepoint, y = max(df_cxcl10$CXCL10, na.rm = TRUE) * 2, label = p.adj.signif),
+            inherit.aes = FALSE, size = 4) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(
+    title = "CXCL10 vs Baseline",
+    x = "",
+    y = "CXCL10 (pg/ml)",
+    caption = "Paired Wilcoxon signed-rank test vs Baseline, BH-adjusted"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none")
+```
+
+
+```{r}
+res_followups <- df_cxcl10 %>%
+  filter(!Timepoint %in% c("Healthy", "Baseline")) %>%
+  group_by(Study_ID, Timepoint) %>%
+  summarise(CXCL10 = mean(CXCL10), .groups = "drop") %>%
+  {inner_join(., ., by = "Study_ID", suffix = c(".1", ".2"), relationship = "many-to-many")} %>%
+  filter(as.integer(Timepoint.1) < as.integer(Timepoint.2)) %>%
+  group_by(group1 = as.character(Timepoint.1), group2 = as.character(Timepoint.2)) %>%
+  summarise(n_pairs = n(),
+            median_change = median(CXCL10.2 - CXCL10.1),
+            p = wilcox.test(CXCL10.2, CXCL10.1, paired = TRUE, exact = FALSE)$p.value,
+            .groups = "drop") %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance("p.adj")
+
+print(res_followups)
+```
+
+
+
+```{r , fig.width=8, fig.height=7.5, out.width="100%"}
+
+ggplot(filter(df_cxcl10, !Timepoint %in% c("Healthy", "Baseline")), aes(x = Timepoint, y = CXCL10)) +
+  geom_boxplot(outlier.shape = NA, fill="lightgreen") +
+  geom_jitter(aes(fill = "black"), width = 0.2, alpha = 0.4) +
+  stat_pvalue_manual(
+    res_followups %>%
+      filter(p.adj < 0.05) %>%
+      mutate(y.position = max(df_cxcl10$CXCL10, na.rm = TRUE) * (1 +0.05 * row_number())),
+    label = "p.adj.signif", tip.length = 0.01) +
+  theme_minimal() +
+  labs(
+    title = "CXCL10 between follow-up visits",
+    x = "",
+    y = "CXCL10 (pg/ml)",
+    caption = "Paired Wilcoxon signed-rank test, BH-adjusted"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none")
+```
