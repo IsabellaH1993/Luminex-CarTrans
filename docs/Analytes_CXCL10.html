@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0e162f548505142f9edf88915559f373bcf0092ctargetblank0e162f5a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeb1554f4c3476dff0a5f8cc9a9764de309f7c1d6atargetblankb1554f4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0e162f548505142f9edf88915559f373bcf0092c" target="_blank">0e162f5</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/b1554f4c3476dff0a5f8cc9a9764de309f7c1d6a" target="_blank">b1554f4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0e162f548505142f9edf88915559f373bcf0092ctargetblank0e162f5a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeb1554f4c3476dff0a5f8cc9a9764de309f7c1d6atargetblankb1554f4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0e162f548505142f9edf88915559f373bcf0092c" target="_blank">0e162f5</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/b1554f4c3476dff0a5f8cc9a9764de309f7c1d6a" target="_blank">b1554f4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -504,8 +504,13 @@ Ignored files:
     Ignored:    data/
     Ignored:    html/
 
+Untracked files:
+    Untracked:  analysis/Analytes_Grem2.Rmd
+
 Unstaged changes:
     Modified:   analysis/Analytes_CXCL10.Rmd
+    Modified:   analysis/Analytes_IL2R.Rmd
+    Modified:   analysis/Analytes_PDL1.Rmd
 
 </code></pre>
 <p>
@@ -555,6 +560,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/analysis/Analytes_CXCL10.Rmd" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_08:54
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/Analytes_CXCL10.html" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_08:54
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0e162f548505142f9edf88915559f373bcf0092c/analysis/Analytes_CXCL10.Rmd" target="_blank">0e162f5</a>
 </td>
 <td>
@@ -596,6 +635,44 @@ df_cxcl10 &lt;- table_lum_CarTrans_overall %&gt;%
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="figure/Analytes_CXCL10.Rmd/boxplot%20CXCL10%20per%20patient%20visit-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-boxplot-CXCL10-per-patient-visit-1">
+Past versions of "boxplot CXCL10 per patient visit-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-boxplot-CXCL10-per-patient-visit-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/boxplot CXCL10 per patient visit-1.png" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_cxcl10 &lt;- df_cxcl10%&gt;%
 mutate(Timepoint = factor(Timepoint, levels = c(&quot;Healthy&quot;, &quot;Baseline&quot;, &quot;Week 1&quot;, &quot;Week 2&quot;,&quot;Month 1-3&quot;, &quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;Rejection Context&quot;)))
 
@@ -612,6 +689,44 @@ ggplot(df_cxcl10, aes(x = Timepoint, y = CXCL10)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="figure/Analytes_CXCL10.Rmd/boxplot%20CXCL10%20per%20patient%20timpoint-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-boxplot-CXCL10-per-patient-timpoint-1">
+Past versions of "boxplot CXCL10 per patient timpoint-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-boxplot-CXCL10-per-patient-timpoint-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/boxplot CXCL10 per patient timpoint-1.png" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="statistische-auswertung" class="section level3">
 <h3>Statistische Auswertung</h3>
 <pre class="r"><code>ggplot(df_cxcl10, aes(x = CXCL10)) +
@@ -619,6 +734,43 @@ ggplot(df_cxcl10, aes(x = Timepoint, y = CXCL10)) +
   labs(x = &quot;CXCL10&quot;, y = &quot;Count&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/Analytes_CXCL10.Rmd/unnamed-chunk-3-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-3-1.png" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Vergleich vs Healthy: different set of patients and healthy probands
 - unpaired test with wilcox-test</p>
 <pre class="r"><code>res_vs_healthy &lt;- df_cxcl10 %&gt;%
@@ -643,17 +795,54 @@ print(res_vs_healthy)</code></pre>
   geom_text(data = res_vs_healthy,
             aes(x = group2, y = max(df_cxcl10$CXCL10, na.rm = TRUE) * 2, label = p.adj.signif),
             inherit.aes = FALSE, size = 4) +
-  scale_y_log10() +
   theme_minimal() +
+  scale_y_log10() +
   labs(
     title = &quot;CXCL10 vs Healthy&quot;,
     x = &quot;&quot;,
-    y = &quot;CXCL10 (pg/ml)&quot;,
+    y = &quot;CXCL10 (log, pg/ml)&quot;,
     caption = &quot;Wilcoxon rank-sum test vs Healthy, BH-adjusted&quot;
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = &quot;none&quot;)</code></pre>
 <p><img src="figure/Analytes_CXCL10.Rmd/unnamed-chunk-5-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-5-1.png" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Vergleich vs Baseline: same set of patients- paired wilcox test
 used</p>
 <pre class="r"><code>res_vs_baseline &lt;- df_cxcl10 %&gt;%
@@ -697,12 +886,49 @@ used</p>
   labs(
     title = &quot;CXCL10 vs Baseline&quot;,
     x = &quot;&quot;,
-    y = &quot;CXCL10 (pg/ml)&quot;,
+    y = &quot;CXCL10 (log, pg/ml)&quot;,
     caption = &quot;Paired Wilcoxon signed-rank test vs Baseline, BH-adjusted&quot;
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = &quot;none&quot;)</code></pre>
 <p><img src="figure/Analytes_CXCL10.Rmd/unnamed-chunk-7-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-7-1.png" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_followups &lt;- df_cxcl10 %&gt;%
   filter(!Timepoint %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;)) %&gt;%
   group_by(Study_ID, Timepoint) %&gt;%
@@ -754,6 +980,43 @@ print(res_followups)</code></pre>
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = &quot;none&quot;)</code></pre>
 <p><img src="figure/Analytes_CXCL10.Rmd/unnamed-chunk-9-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-9-1.png" target="_blank">c61e02f</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
