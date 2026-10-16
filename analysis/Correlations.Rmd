@@ -213,7 +213,7 @@ table_lab <- table_lab %>%
 
 # NTproBNP
 
-```{r NTproBNP correlation, warning=FALSE}
+```{r NTproBNP correlation, warning=FALSE, fig.height=10, fig.width=15}
 # Match Luminex and lab data per patient and visit
   table_corr <- inner_join(table_lum_CarTrans_overall, table_lab,
                            by = c("Study_ID", "Visit"))
@@ -279,7 +279,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # CRP
 
-```{r CRP correlation, warning=FALSE}
+```{r CRP correlation, warning=FALSE, fig.height=10, fig.width=15}
 # Define lab parameter (y axis)
   lab_param <- "CRP"
   lab_label <- "CRP (ng/l)"
@@ -338,7 +338,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # TropT
 
-```{r TropT correlation, warning=FALSE}
+```{r TropT correlation, warning=FALSE, fig.height=10, fig.width=15}
 # Define lab parameter (y axis)
   lab_param <- "TropT"
   lab_label <- "Troponin T (ng/l)"
