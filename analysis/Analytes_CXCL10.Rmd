@@ -2,8 +2,7 @@
 title: "Analytes_CXCL10"
 author: "I. Hanka"
 date: "`r Sys.Date()`"
-output: workflowr::wflow_html:
-    toc: false
+output: html_document
 ---
 
 ```{r clean environment, echo=FALSE}
