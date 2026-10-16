@@ -40,7 +40,7 @@ editor_options:
 
 # Analytes of interest
 #### PD-L1 [link](Analytes_PDL1.html)
-#### IL2R  *in Arbeit*
+#### IL2R  [link](Analytes_IL2R.html)
 #### CXCL10 *in Arbeit*
 #### Grem2 *in Arbeit*
 

@@ -159,8 +159,6 @@ list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE]
 )
 ```
 
-# Grem2
-
 # PD-L1
 ```{r}
 #Prep dataframe
@@ -320,9 +318,3 @@ ggplot(filter(df_pdl1, !Timepoint %in% c("Healthy", "Baseline")), aes(x = Timepo
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "none")
 ```
-
-
-
-# IL2R
-
-# CXCL10
