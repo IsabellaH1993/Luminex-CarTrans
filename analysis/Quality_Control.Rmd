@@ -10,7 +10,7 @@ output: workflowr::wflow_html:
 rm(list = ls())
 ```
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 # Load libraries
 library(tidyverse)
 library(readxl)
@@ -69,7 +69,9 @@ ggplot(table_Grem2, aes(x = label, y = grem2)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
 # Quality control Luminex analytes
+
 ```{r prep data Luminex}
 table_lum_overall <- table_lum_overall %>%
   mutate(
@@ -127,6 +129,7 @@ plot_limits(lum_long, c("LLOQ", "ULOQ"))
 ```{r lloq-plot, fig.width=20, fig.height=36, out.width="100%"}
 plot_limits(lum_long, "LLOQ")
 ```
+
 
 ```{r uloq-plot, fig.width=20, fig.height=36, out.width="100%", dpi=150}
 plot_limits(lum_long, "ULOQ")
