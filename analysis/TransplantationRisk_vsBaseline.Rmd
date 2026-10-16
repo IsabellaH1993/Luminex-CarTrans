@@ -83,11 +83,7 @@ table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
 
 # Combine Tables
   table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX)%>%
-mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup, Transplantation_risk), ~{
-        x <- as.numeric(as.character(.))  
-        x[is.na(x)] <- 0                  # replace NA (for now!! later:Imputation)
-        pmax(x, 1)                       #sets every value below 1 to 1 because of 0 values
-      })) %>% 
+mutate(across(where(is.numeric) & -c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup, Transplantation_risk), ~ replace_na(.x, 1)))%>%              # replace NA (for now!! later:Imputation) 
     filter(!Study_ID %in% c("CarTrans-Long-10", "CarTrans-Long-14", "CarTrans-Long-20","CarTrans-Long-25", "CarTrans-Long-30", "CarTrans-Long-31", "CarTrans-Long-33","CarTrans-Long-35", "CarTrans-Long-37", "CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-18", "CarTrans-Healthy-19", "CarTrans-Healthy-20", "CarTrans-Healthy-21", "CarTrans-Healthy-22", "CarTrans-Healthy-23", "CarTrans-Healthy-24", "CarTrans-Healthy-25", "CarTrans-Healthy-26", "CarTrans-Healthy-27", "CarTrans-Healthy-28", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
 ```
 
