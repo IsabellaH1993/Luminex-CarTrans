@@ -23,7 +23,7 @@ library(here)
 basedir <- here::here ()
 ```
 
-```{r import datasets, include=FALSE}
+```{r import datasets, echo=FALSE}
 # Import Luminex Data
   
   table_Grem2<- openxlsx::read.xlsx(file.path(basedir, "data", "Quality Control Runs_Grem2.xlsx"))  
