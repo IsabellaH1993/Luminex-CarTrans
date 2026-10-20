@@ -26,6 +26,7 @@ suppressPackageStartupMessages({
   library(writexl)
   library(readxl)
   library(rstatix)
+  library(lmerTest)
   # Visualization
   library(ggplot2)    
   library(ggpubr)
@@ -225,7 +226,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # Define Luminex analytes (x axis)
   analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
-  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
   names(analyte_labels) <- analytes
 
 # Create list for plots
@@ -284,7 +285,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # Define Luminex analytes (x axis)
   analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
-  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
   names(analyte_labels) <- analytes
 
 # Create list for plots
@@ -343,7 +344,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # Define Luminex analytes (x axis)
   analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
-  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
   names(analyte_labels) <- analytes
 
 # Create list for plots
@@ -474,7 +475,7 @@ Caviat: Spearman assumes independent tests!
 
 # Define Luminex analytes (y axis)
   analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
-  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
   names(analyte_labels) <- analytes
 
 # Create list for plots
@@ -531,7 +532,7 @@ table(table_corr_path$Rejection)
 ```
 
 ```{r}
-# Correlation over all visits, 
+# Correlation over all visits 
 
 plots_list <- list()
 
