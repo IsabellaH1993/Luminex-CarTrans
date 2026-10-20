@@ -87,9 +87,7 @@ mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %>%
 ```
 
 ```{r clean overall table}
-table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
-    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
-      str_detect(Visit, "^VX")))%>%
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
   select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)
 ```
 
@@ -393,4 +391,235 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
       
   print(panel)
 ```
+# Correlation with pathological grading
 
+```{r import pathology excel}
+# Import only lab data sheet from excel file
+table_pathology <- readxl::read_xlsx(
+  here("data", "RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"),
+  sheet = "Pathology",
+  col_names = TRUE)
+```
+
+```{r clean table_pathology}
+#Previous labeling of EMB4 still gets imported, although it`s not visible in original excel
+# Remove double EMB 4 entries
+table_pathology <- table_pathology %>%
+  dplyr::select(
+    -`Date of EMB 4`,
+    -`ISHLT 1990 EMB 4`,
+    -`ISHLT 2004 EMB e`,
+    -`pAMR EMB 34`,
+    -`Entzündliche Infiltrate EMB4`,
+    -`Histologie der entzündlichen Infiltrate EMB4`,
+    -`Quilty-Läsion EMB4`,
+    -`C4d EMB4`,
+    -`CD68/CD31 EMB4`,
+    -`Date of EMB5`)
+
+#Clean all EMB6 or EMB7 and CarTrans-Long-009
+table_pathology <- table_pathology %>%
+filter(ID != "CarTrans-Long-009") %>%
+select(-matches("EMB6|EMB7"))
+```
+
+
+```{r, warning=FALSE}
+table_pathology <- table_pathology %>%
+  mutate(across(matches("_(BL|EMB[0-9X]+)$"), as.character)) %>%
+  pivot_longer(cols = matches("_(BL|EMB[0-9X]+)$"),
+               names_to = c(".value", "Visit"),
+               names_pattern = "(.*)_(BL|EMB[0-9X]+)$") %>%
+  mutate(
+    Visit = recode(Visit,
+      "BL"    = "Baseline",
+      "EMB1"  = "Week 1",
+      "EMB2"  = "Week 2",
+      "EMB3"  = "Month 1-3",
+      "EMB4"  = "Month 4-6",
+      "EMB5"  = "Month 12",
+      "EMBX1" = "VX1",
+      "EMBX2" = "VX2",
+      "EMBX3" = "VX3",
+      "EMBX4" = "VX4"),
+    Visit = factor(Visit, levels = levels(table_lum_CarTrans_overall$Visit)),
+    ISHLT_2004 = factor(ISHLT_2004, levels = c("ACR 0", "ACR 1R", "ACR 2R", "ACR 3R"))
+  )
+```
+```{r exclude baseline and healthy}
+
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  filter(!Visit %in% c("Baseline", "Healthy"))
+```
+
+```{r}
+# Combine pathology and Luminex analytes
+table_corr_path <- table_lum_CarTrans_overall %>%
+  inner_join(table_pathology %>% dplyr::select(ID, Visit, ISHLT_2004),
+             by = c("Study_ID" = "ID", "Visit")) %>%
+  filter(!is.na(ISHLT_2004))
+
+# Order Timepoints
+table_corr_path <- table_corr_path%>%
+mutate(Timepoint = factor(Timepoint, levels = c("Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
+```
+
+Testing for monotonous correlation ACR 0 - ACR 1R - ACR 2R - ACR 3R
+- Rho (+): monotonous increase of analyte over increased grading (- decrease)
+
+Caviat: Spearman assumes independent tests!
+
+```{r}
+# Correlation overall between pathological grading and target analytes
+
+# Define Luminex analytes (y axis)
+  analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
+  analyte_labels <- c("PD L1 (pg/ml)", "CXCL10 (pg/ml)", "IL2R (pg/ml)", "Grem2 (pg/ml)")
+  names(analyte_labels) <- analytes
+
+# Create list for plots
+  plots_list <- list()
+
+# Loop Correlation Plot
+  for (p in analytes) {
+
+      # Spearman correlation with ordinal ISHLT grade
+        cor_test <- cor.test(as.numeric(table_corr_path$ISHLT_2004), table_corr_path[[p]],
+                             method = "spearman", exact = FALSE)
+
+      # Define y axis margins and breaks
+        max_y <- max(table_corr_path[[p]], na.rm = TRUE) * 1.1
+        min_y <- min(table_corr_path[[p]], na.rm = TRUE)
+        max_log10_limit <- 10^(ceiling(log10(max_y)))
+        min_log10_limit <- 10^(floor(log10(min_y)))
+        y_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+
+      # Box- and dotplot per ISHLT grade
+        plot <- ggplot(table_corr_path, aes(x = ISHLT_2004, y = .data[[p]])) +
+                geom_boxplot(outlier.shape = NA, fill = NA, width = 0.5) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = "black",
+                           position = position_jitter(width = 0.15, height = 0)) +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_x_discrete(drop = FALSE) +
+                scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE),
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = y_breaks) +
+                theme_classic() +
+                labs(x = "ISHLT 2004", y = analyte_labels[[p]]) +
+                annotate("text", x = -Inf, y = Inf,
+                         label = paste0("rho = ", round(cor_test$estimate, 2),
+                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+
+      # Store each plot
+        plots_list[[p]] <- plot
+  }
+
+# Combine plots to a panel
+  panel <- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = "right")
+
+  print(panel)
+```
+```{r}
+# Group for rejection vs no rejection
+table_corr_path <- table_corr_path %>%
+  mutate(Rejection = factor(ifelse(ISHLT_2004 %in% c("ACR 2R", "ACR 3R"), "Rejection", "No rejection"),
+                            levels = c("No rejection", "Rejection")))
+
+table(table_corr_path$Rejection)
+```
+
+```{r}
+# Correlation over all visits, 
+
+plots_list <- list()
+
+for (p in analytes) {
+
+      # Linear mixed model: rejection vs no rejection, random intercept per patient
+        fit <- lmer(as.formula(paste0("log10(", p, ") ~ Rejection + (1 | Study_ID)")),
+                    data = table_corr_path)
+        coef_rej <- summary(fit)$coefficients[2, ]
+
+      # Define y axis margins and breaks
+        max_y <- max(table_corr_path[[p]], na.rm = TRUE) * 1.1
+        min_y <- min(table_corr_path[[p]], na.rm = TRUE)
+        max_log10_limit <- 10^(ceiling(log10(max_y)))
+        min_log10_limit <- 10^(floor(log10(min_y)))
+        y_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+
+        plot <- ggplot(table_corr_path, aes(x = Rejection, y = .data[[p]])) +
+                geom_boxplot(outlier.shape = NA, fill = NA, width = 0.5) +
+                geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = "black",
+                           position = position_jitter(width = 0.15, height = 0)) +
+                scale_fill_manual(values = ann_colors$Timepoint) +
+                scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE),
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = y_breaks) +
+                theme_classic() +
+                labs(x = "ACR ≥ 2R", y = analyte_labels[[p]]) +
+                annotate("text", x = -Inf, y = Inf,
+                         label = paste0("FC = ", round(10^coef_rej["Estimate"], 2),
+                                        "\np = ", ifelse(coef_rej["Pr(>|t|)"] < 0.001, "< 0.001",
+                                                         signif(coef_rej["Pr(>|t|)"], 3))),
+                         hjust = -0.1, vjust = 1.2, size = 4)
+
+        plots_list[[p]] <- plot
+}
+
+panel <- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                   common.legend = TRUE, legend = "right")
+print(panel)
+```
+```{r outcome late rejection}
+# Outcome per patient: any rejection at late visits (from pathology, independent of Luminex availability)
+outcome_late <- table_pathology %>%
+  filter(Visit %in% c("Month 4-6", "Month 12", "VX1", "VX2", "VX3", "VX4"),
+         !is.na(ISHLT_2004)) %>%
+  group_by(ID) %>%
+  summarise(Late_rejection = any(ISHLT_2004 %in% c("ACR 2R", "ACR 3R"))) %>%
+  mutate(Late_rejection = factor(ifelse(Late_rejection, "Rejection", "No rejection"),
+                                 levels = c("No rejection", "Rejection")))
+
+
+# Early Luminex values with late outcome
+table_early <- table_lum_CarTrans_overall %>%
+  filter(Visit %in% c("Week 1", "Week 2", "Month 1-3")) %>%
+  inner_join(outcome_late, by = c("Study_ID" = "ID")) %>%
+  droplevels()
+
+table(table_early$Visit, table_early$Late_rejection)
+```
+```{r early values vs late rejection, warning=FALSE}
+plots_list <- list()
+
+for (p in analytes) {
+
+        max_y <- max(table_early[[p]], na.rm = TRUE) * 1.1
+        min_y <- min(table_early[[p]], na.rm = TRUE)
+        max_log10_limit <- 10^(ceiling(log10(max_y)))
+        min_log10_limit <- 10^(floor(log10(min_y)))
+        y_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+
+        plot <- ggplot(table_early, aes(x = Visit, y = .data[[p]], fill = Late_rejection)) +
+                geom_boxplot(outlier.shape = NA, width = 0.6, alpha = 0.4,
+                             position = position_dodge(width = 0.75)) +
+                geom_point(shape = 21, size = 2.5, color = "black",
+                           position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.75)) +
+                stat_compare_means(aes(group = Late_rejection), method = "wilcox.test",
+                                   label = "p.format", size = 3.5) +
+                scale_fill_manual(values = c("No rejection" = "grey80", "Rejection" = "#FF6B6B")) +
+                scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE),
+                              limits = c(min_log10_limit, max_log10_limit),
+                              expand = c(0.05, 0), breaks = y_breaks) +
+                theme_classic() +
+                labs(x = NULL, y = analyte_labels[[p]], fill = "Rejection V4/V5/VX")
+
+        plots_list[[p]] <- plot
+}
+
+panel <- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+                   common.legend = TRUE, legend = "right")
+print(panel)
+```

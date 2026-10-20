@@ -90,9 +90,7 @@ mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup), ~{
 ```
 
 ```{r clean overall table, echo=FALSE}
-table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
-    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
-      str_detect(Visit, "^VX")))%>%
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
   select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)
 ```
 

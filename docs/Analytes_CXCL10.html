@@ -11,7 +11,7 @@
 
 <meta name="author" content="I. Hanka" />
 
-<meta name="date" content="2026-10-16" />
+<meta name="date" content="2026-10-20" />
 
 <title>Analytes_CXCL10</title>
 
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Analytes_CXCL10</h1>
 <h4 class="author">I. Hanka</h4>
-<h4 class="date">2026-10-16</h4>
+<h4 class="date">2026-10-20</h4>
 
 </div>
 
@@ -329,7 +329,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-10-16
+<strong>Last updated:</strong> 2026-10-20
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeb1554f4c3476dff0a5f8cc9a9764de309f7c1d6atargetblankb1554f4a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreea596b3480af2c3af43daf1b9c366fc1951ac94dbtargetblanka596b34a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/b1554f4c3476dff0a5f8cc9a9764de309f7c1d6a" target="_blank">b1554f4</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/a596b3480af2c3af43daf1b9c366fc1951ac94db" target="_blank">a596b34</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeb1554f4c3476dff0a5f8cc9a9764de309f7c1d6atargetblankb1554f4a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreea596b3480af2c3af43daf1b9c366fc1951ac94dbtargetblanka596b34a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/b1554f4c3476dff0a5f8cc9a9764de309f7c1d6a" target="_blank">b1554f4</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/a596b3480af2c3af43daf1b9c366fc1951ac94db" target="_blank">a596b34</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -504,11 +504,9 @@ Ignored files:
     Ignored:    data/
     Ignored:    html/
 
-Untracked files:
-    Untracked:  analysis/Analytes_Grem2.Rmd
-
 Unstaged changes:
     Modified:   analysis/Analytes_CXCL10.Rmd
+    Modified:   analysis/Analytes_Grem2.Rmd
     Modified:   analysis/Analytes_IL2R.Rmd
     Modified:   analysis/Analytes_PDL1.Rmd
 
@@ -555,6 +553,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/e266d447e386a2b0ac2e3bfe3e77a6beae573c52/analysis/Analytes_CXCL10.Rmd" target="_blank">e266d44</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_11:00
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/e266d447e386a2b0ac2e3bfe3e77a6beae573c52/docs/Analytes_CXCL10.html" target="_blank">e266d44</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_11:00
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -787,8 +819,8 @@ print(res_vs_healthy)</code></pre>
 3 CXCL10 Healthy Week 2           28    32       464 0.820   0.820  ns          
 4 CXCL10 Healthy Month 1-3        28    32       631 0.00622 0.0413 *           
 5 CXCL10 Healthy Month 4-6        28    30       482 0.341   0.597  ns          
-6 CXCL10 Healthy Month 12         28    28       365 0.667   0.808  ns          
-7 CXCL10 Healthy Rejection Co…    28    33       434 0.693   0.808  ns          </code></pre>
+6 CXCL10 Healthy Month 12         28    28       365 0.667   0.778  ns          
+7 CXCL10 Healthy Rejection Co…    28    36       470 0.652   0.778  ns          </code></pre>
 <pre class="r"><code>ggplot(df_cxcl10, aes(x = Timepoint, y = CXCL10)) +
   geom_boxplot(outlier.shape = NA, fill=&quot;lightgreen&quot;) +
   geom_jitter(aes(fill=&quot;black&quot;), width = 0.2, alpha = 0.4) +
@@ -828,6 +860,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/e266d447e386a2b0ac2e3bfe3e77a6beae573c52/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-5-1.png" target="_blank">e266d44</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-5-1.png" target="_blank">c61e02f</a>
@@ -870,11 +913,11 @@ used</p>
   Timepoint         n_pairs median_change      p p.adj p.adj.signif
   &lt;fct&gt;               &lt;int&gt;         &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       
 1 Week 1                 12         -9.66 0.906  0.906 ns          
-2 Week 2                 12        -48.2  0.224  0.448 ns          
+2 Week 2                 12        -48.2  0.224  0.336 ns          
 3 Month 1-3              13       -128.   0.0211 0.127 ns          
 4 Month 4-6              12       -158.   0.0455 0.136 ns          
-5 Month 12               12        -69.1  0.327  0.490 ns          
-6 Rejection Context       3       -244.   0.423  0.507 ns          </code></pre>
+5 Month 12               12        -69.1  0.327  0.392 ns          
+6 Rejection Context       5       -167.   0.106  0.211 ns          </code></pre>
 <pre class="r"><code>ggplot(filter(df_cxcl10, Timepoint != &quot;Healthy&quot;), aes(x = Timepoint, y = CXCL10)) +
   geom_boxplot(outlier.shape = NA, fill=&quot;lightgreen&quot;) +
   geom_jitter(aes(fill = &quot;black&quot;), width = 0.2, alpha = 0.4) +
@@ -916,6 +959,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/e266d447e386a2b0ac2e3bfe3e77a6beae573c52/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-7-1.png" target="_blank">e266d44</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c61e02f65d63e0ca5520306de43239d84cd0ed41/docs/figure/Analytes_CXCL10.Rmd/unnamed-chunk-7-1.png" target="_blank">c61e02f</a>
 </td>
 <td>
@@ -949,19 +1003,19 @@ print(res_followups)</code></pre>
    &lt;chr&gt;     &lt;chr&gt;              &lt;int&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       
  1 Month 1-3 Month 12              28         60.8  5.66e-3 0.0249  *           
  2 Month 1-3 Month 4-6             30         18.8  8.78e-2 0.165   ns          
- 3 Month 1-3 Rejection Conte…      15         77.4  7.36e-2 0.158   ns          
- 4 Month 12  Rejection Conte…      14         25.7  2.09e-1 0.285   ns          
+ 3 Month 1-3 Rejection Conte…      18         77.7  3.28e-2 0.0704  ns          
+ 4 Month 12  Rejection Conte…      17          4.55 3.44e-1 0.469   ns          
  5 Month 4-6 Month 12              28         27.4  1.68e-1 0.252   ns          
- 6 Month 4-6 Rejection Conte…      15          3.26 8.87e-1 0.887   ns          
+ 6 Month 4-6 Rejection Conte…      18          8.84 7.28e-1 0.728   ns          
  7 Week 1    Month 1-3             31       -103.   2.57e-4 0.00386 **          
  8 Week 1    Month 12              28        -94.6  1.19e-2 0.0297  *           
  9 Week 1    Month 4-6             30        -57.5  6.63e-3 0.0249  *           
-10 Week 1    Rejection Conte…      15        -35.8  1.18e-1 0.197   ns          
+10 Week 1    Rejection Conte…      18        -37.7  1.51e-1 0.251   ns          
 11 Week 1    Week 2                31        -61.4  2.63e-3 0.0197  *           
 12 Week 2    Month 1-3             31        -54.7  1.18e-2 0.0297  *           
-13 Week 2    Month 12              27         24.3  4.64e-1 0.535   ns          
-14 Week 2    Month 4-6             29        -10.4  5.89e-1 0.631   ns          
-15 Week 2    Rejection Conte…      15         18.4  4.10e-1 0.513   ns          </code></pre>
+13 Week 2    Month 12              27         24.3  4.64e-1 0.580   ns          
+14 Week 2    Month 4-6             29        -10.4  5.89e-1 0.644   ns          
+15 Week 2    Rejection Conte…      18         15.0  6.01e-1 0.644   ns          </code></pre>
 <pre class="r"><code>ggplot(filter(df_cxcl10, !Timepoint %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;)), aes(x = Timepoint, y = CXCL10)) +
   geom_boxplot(outlier.shape = NA, fill=&quot;lightgreen&quot;) +
   geom_jitter(aes(fill = &quot;black&quot;), width = 0.2, alpha = 0.4) +

@@ -288,9 +288,6 @@ mutate(across(where(is.numeric) & -c(Study_ID, Visit, ISHLT_1990, ISHLT_2004), ~
 ```
 
 ```{r clean overall table and prep for heatmap}
-table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%filter(
-    !(Study_ID %in% c("CarTrans-Long-16", "CarTrans-Long-23", "CarTrans-Long-36") &
-      str_detect(Visit, "^VX")))
 
 #Create unique Study_ID by combination with Visit
 table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
