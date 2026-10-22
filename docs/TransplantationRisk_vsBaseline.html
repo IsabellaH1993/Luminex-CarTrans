@@ -11,7 +11,7 @@
 
 <meta name="author" content="I. Hanka" />
 
-<meta name="date" content="2026-10-16" />
+<meta name="date" content="2026-10-22" />
 
 <title>TransplantationRisk_vsBaseline</title>
 
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">TransplantationRisk_vsBaseline</h1>
 <h4 class="author">I. Hanka</h4>
-<h4 class="date">2026-10-16</h4>
+<h4 class="date">2026-10-22</h4>
 
 </div>
 
@@ -329,7 +329,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-10-16
+<strong>Last updated:</strong> 2026-10-22
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee266d447e386a2b0ac2e3bfe3e77a6beae573c52targetblanke266d44a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeeaf24542904967480efd7075b0cd78738f63be0btargetblankeaf2454a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e266d447e386a2b0ac2e3bfe3e77a6beae573c52" target="_blank">e266d44</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/eaf24542904967480efd7075b0cd78738f63be0b" target="_blank">eaf2454</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreee266d447e386a2b0ac2e3bfe3e77a6beae573c52targetblanke266d44a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeeaf24542904967480efd7075b0cd78738f63be0btargetblankeaf2454a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/e266d447e386a2b0ac2e3bfe3e77a6beae573c52" target="_blank">e266d44</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/eaf24542904967480efd7075b0cd78738f63be0b" target="_blank">eaf2454</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -504,8 +504,11 @@ Ignored files:
     Ignored:    data/
     Ignored:    html/
 
+Untracked files:
+    Untracked:  analysis/Convalesence_Rejection.Rmd
+
 Unstaged changes:
-    Modified:   analysis/Convalesence_Rejetion.Rmd
+    Deleted:    analysis/Convalesence_Rejetion.Rmd
     Modified:   analysis/Immunsuppression_Luminex.Rmd
     Modified:   analysis/Luminex_HeatmapVisit.Rmd
     Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
@@ -558,6 +561,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/4e98555056559f50e838112f677ea34c2239a48d/analysis/TransplantationRisk_vsBaseline.Rmd" target="_blank">4e98555</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_11:40
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/4e98555056559f50e838112f677ea34c2239a48d/docs/TransplantationRisk_vsBaseline.html" target="_blank">4e98555</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+<td>
+16.10.2026_11:40
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -641,9 +678,7 @@ Update Pages 15.10.2026
   library(emmeans)
 })</code></pre>
 <pre class="r"><code>basedir &lt;- here ()</code></pre>
-<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%filter(
-    !(Study_ID %in% c(&quot;CarTrans-Long-16&quot;, &quot;CarTrans-Long-23&quot;, &quot;CarTrans-Long-36&quot;) &amp;
-      str_detect(Visit, &quot;^VX&quot;)))%&gt;%
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
   select(-ISHLT_1990, -ISHLT_2004)</code></pre>
 <pre class="r"><code># Rename visits in overall table
 table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
@@ -865,47 +900,47 @@ formula: Class_Sup ~ Transplantation_risk * Timepoint + (1 | Study_ID)
 data:    df
 
  link  threshold nobs logLik  AIC    niter      max.grad cond.H 
- logit flexible  158  -150.01 332.03 1396(2863) 2.51e-05 4.3e+03
+ logit flexible  161  -154.27 340.54 1382(2835) 1.20e-05 4.3e+03
 
 Random effects:
  Groups   Name        Variance Std.Dev.
- Study_ID (Intercept) 0.2784   0.5277  
+ Study_ID (Intercept) 0.2895   0.538   
 Number of groups:  Study_ID 27 
 
 Coefficients:
                                                  Estimate Std. Error z value
-Transplantation_risk                            -0.217008   0.413867  -0.524
-TimepointWeek 2                                 -2.189027   1.676575  -1.306
-TimepointMonth 1-3                              -2.555161   1.794732  -1.424
-TimepointMonth 4-6                              -5.669653   1.720890  -3.295
-TimepointMonth 12                               -7.504033   1.915157  -3.918
-TimepointRejection Context                      -4.281470   2.068165  -2.070
-Transplantation_risk:TimepointWeek 2            -0.003374   0.577518  -0.006
-Transplantation_risk:TimepointMonth 1-3         -0.107058   0.606963  -0.176
-Transplantation_risk:TimepointMonth 4-6          0.236502   0.570551   0.415
-Transplantation_risk:TimepointMonth 12           0.718431   0.622998   1.153
-Transplantation_risk:TimepointRejection Context  0.038400   0.654372   0.059
+Transplantation_risk                            -0.219337   0.415265  -0.528
+TimepointWeek 2                                 -2.202284   1.682315  -1.309
+TimepointMonth 1-3                              -2.590900   1.798494  -1.441
+TimepointMonth 4-6                              -5.676389   1.711164  -3.317
+TimepointMonth 12                               -7.385994   1.884466  -3.919
+TimepointRejection Context                      -3.309614   1.973127  -1.677
+Transplantation_risk:TimepointWeek 2            -0.003784   0.579801  -0.007
+Transplantation_risk:TimepointMonth 1-3         -0.103052   0.608292  -0.169
+Transplantation_risk:TimepointMonth 4-6          0.237245   0.567332   0.418
+Transplantation_risk:TimepointMonth 12           0.680634   0.614196   1.108
+Transplantation_risk:TimepointRejection Context -0.293510   0.637282  -0.461
                                                 Pr(&gt;|z|)    
-Transplantation_risk                            0.600041    
-TimepointWeek 2                                 0.191670    
-TimepointMonth 1-3                              0.154533    
-TimepointMonth 4-6                              0.000986 ***
-TimepointMonth 12                               8.92e-05 ***
-TimepointRejection Context                      0.038436 *  
-Transplantation_risk:TimepointWeek 2            0.995338    
-Transplantation_risk:TimepointMonth 1-3         0.859993    
-Transplantation_risk:TimepointMonth 4-6         0.678497    
-Transplantation_risk:TimepointMonth 12          0.248835    
-Transplantation_risk:TimepointRejection Context 0.953205    
+Transplantation_risk                            0.597371    
+TimepointWeek 2                                 0.190507    
+TimepointMonth 1-3                              0.149699    
+TimepointMonth 4-6                              0.000909 ***
+TimepointMonth 12                               8.88e-05 ***
+TimepointRejection Context                      0.093475 .  
+Transplantation_risk:TimepointWeek 2            0.994793    
+Transplantation_risk:TimepointMonth 1-3         0.865473    
+Transplantation_risk:TimepointMonth 4-6         0.675818    
+Transplantation_risk:TimepointMonth 12          0.267788    
+Transplantation_risk:TimepointRejection Context 0.645110    
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Threshold coefficients:
     Estimate Std. Error z value
-2|3  -8.3377     1.4179  -5.880
-3|4  -4.8674     1.3130  -3.707
-4|5  -1.1994     1.2251  -0.979
-5|6  -0.5569     1.2167  -0.458</code></pre>
+2|3  -8.2093     1.4097  -5.823
+3|4  -4.9143     1.3162  -3.734
+4|5  -1.2034     1.2281  -0.980
+5|6  -0.5624     1.2197  -0.461</code></pre>
 <pre class="r"><code>## Reduced model without interaction: overall effect of risk score-
 ## assuming its effect is stable across timepoints
 mod_main &lt;- clmm(Class_Sup ~ Transplantation_risk + Timepoint + (1 | Study_ID),
@@ -918,30 +953,30 @@ formula: Class_Sup ~ Transplantation_risk + Timepoint + (1 | Study_ID)
 data:    df
 
  link  threshold nobs logLik  AIC    niter     max.grad cond.H 
- logit flexible  158  -151.07 324.13 634(1283) 1.47e-05 7.9e+02
+ logit flexible  161  -155.59 333.19 654(1323) 4.06e-05 8.0e+02
 
 Random effects:
  Groups   Name        Variance Std.Dev.
- Study_ID (Intercept) 0.2769   0.5262  
+ Study_ID (Intercept) 0.2904   0.5389  
 Number of groups:  Study_ID 27 
 
 Coefficients:
                            Estimate Std. Error z value Pr(&gt;|z|)    
-Transplantation_risk       -0.08367    0.20818  -0.402  0.68775    
-TimepointWeek 2            -2.17428    0.59374  -3.662  0.00025 ***
-TimepointMonth 1-3         -2.83656    0.63967  -4.434 9.23e-06 ***
-TimepointMonth 4-6         -4.98837    0.72104  -6.918 4.57e-12 ***
-TimepointMonth 12          -5.46854    0.75721  -7.222 5.12e-13 ***
-TimepointRejection Context -4.17679    0.68958  -6.057 1.39e-09 ***
+Transplantation_risk        -0.1282     0.2082  -0.616 0.537970    
+TimepointWeek 2             -2.1908     0.5952  -3.681 0.000232 ***
+TimepointMonth 1-3          -2.8562     0.6411  -4.455 8.39e-06 ***
+TimepointMonth 4-6          -4.9904     0.7173  -6.957 3.48e-12 ***
+TimepointMonth 12           -5.4493     0.7509  -7.257 3.96e-13 ***
+TimepointRejection Context  -4.1941     0.6794  -6.173 6.69e-10 ***
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Threshold coefficients:
     Estimate Std. Error z value
-2|3  -7.8853     0.9984  -7.898
-3|4  -4.4706     0.8521  -5.247
-4|5  -0.8282     0.7100  -1.167
-5|6  -0.1904     0.7016  -0.271</code></pre>
+2|3  -7.8676     0.9899  -7.948
+3|4  -4.6278     0.8563  -5.404
+4|5  -0.9507     0.7110  -1.337
+5|6  -0.3126     0.7025  -0.445</code></pre>
 <pre class="r"><code># Random effects
 ## Shows between-patient variance in baseline immunosuppresion tendency: large variance = quite heterogeneous at the same risk score and timepoint (no p-value)
 
@@ -953,39 +988,39 @@ Threshold coefficients:
 emmeans(mod_main, ~ Transplantation_risk | Timepoint, at = list(Transplantation_risk = c(0, 2.5, 5)))</code></pre>
 <pre><code>Timepoint = Week 1:
  Transplantation_risk  emmean    SE  df asymp.LCL asymp.UCL
-                  0.0  3.3437 0.757 Inf     1.859     4.828
-                  2.5  3.1345 0.482 Inf     2.189     4.080
-                  5.0  2.9253 0.658 Inf     1.635     4.216
+                  0.0  3.4397 0.760 Inf    1.9501     4.929
+                  2.5  3.1191 0.482 Inf    2.1745     4.064
+                  5.0  2.7986 0.655 Inf    1.5152     4.082
 
 Timepoint = Week 2:
  Transplantation_risk  emmean    SE  df asymp.LCL asymp.UCL
-                  0.0  1.1694 0.710 Inf    -0.222     2.561
-                  2.5  0.9602 0.435 Inf     0.107     1.813
-                  5.0  0.7510 0.645 Inf    -0.514     2.016
+                  0.0  1.2489 0.711 Inf   -0.1447     2.642
+                  2.5  0.9283 0.435 Inf    0.0752     1.781
+                  5.0  0.6078 0.644 Inf   -0.6551     1.871
 
 Timepoint = Month 1-3:
  Transplantation_risk  emmean    SE  df asymp.LCL asymp.UCL
-                  0.0  0.5071 0.725 Inf    -0.915     1.929
-                  2.5  0.2979 0.449 Inf    -0.583     1.179
-                  5.0  0.0887 0.647 Inf    -1.180     1.358
+                  0.0  0.5835 0.726 Inf   -0.8398     2.007
+                  2.5  0.2629 0.449 Inf   -0.6173     1.143
+                  5.0 -0.0576 0.646 Inf   -1.3245     1.209
 
 Timepoint = Month 4-6:
  Transplantation_risk  emmean    SE  df asymp.LCL asymp.UCL
-                  0.0 -1.6447 0.715 Inf    -3.045    -0.244
-                  2.5 -1.8539 0.463 Inf    -2.761    -0.947
-                  5.0 -2.0631 0.678 Inf    -3.392    -0.735
+                  0.0 -1.5508 0.709 Inf   -2.9408    -0.161
+                  2.5 -1.8713 0.457 Inf   -2.7673    -0.975
+                  5.0 -2.1919 0.676 Inf   -3.5165    -0.867
 
 Timepoint = Month 12:
  Transplantation_risk  emmean    SE  df asymp.LCL asymp.UCL
-                  0.0 -2.1249 0.751 Inf    -3.597    -0.653
-                  2.5 -2.3341 0.500 Inf    -3.314    -1.354
-                  5.0 -2.5432 0.691 Inf    -3.898    -1.188
+                  0.0 -2.0097 0.744 Inf   -3.4675    -0.552
+                  2.5 -2.3302 0.492 Inf   -3.2950    -1.365
+                  5.0 -2.6508 0.688 Inf   -3.9989    -1.303
 
 Timepoint = Rejection Context:
  Transplantation_risk  emmean    SE  df asymp.LCL asymp.UCL
-                  0.0 -0.8331 0.770 Inf    -2.342     0.676
-                  2.5 -1.0423 0.470 Inf    -1.964    -0.121
-                  5.0 -1.2515 0.625 Inf    -2.477    -0.026
+                  0.0 -0.7545 0.752 Inf   -2.2277     0.719
+                  2.5 -1.0750 0.449 Inf   -1.9559    -0.194
+                  5.0 -1.3956 0.617 Inf   -2.6050    -0.186
 
 Confidence level used: 0.95 </code></pre>
 <pre class="r"><code>## Likelihood ratio test: is the interaction actually needed?
@@ -1000,27 +1035,27 @@ mod_main flexible
 mod_full flexible  
 
          no.par    AIC  logLik LR.stat df Pr(&gt;Chisq)
-mod_main     11 324.13 -151.07                      
-mod_full     16 332.03 -150.01  2.1042  5     0.8345</code></pre>
+mod_main     11 333.19 -155.59                      
+mod_full     16 340.54 -154.27  2.6498  5     0.7538</code></pre>
 <pre class="r"><code># Pr(&gt;Chisq) &lt; 0.05: risk scores effect on immunosuppression genuinely differs by timepoint</code></pre>
 <pre class="r"><code>## Turns mod_main Transplantation_risk coefficient into Odds ratio:
 ##   exp(coef) = odds ratio for being in a higher immunosuppression class
 ##   per 1-point increase in risk score, adjusted for timepoint.
 exp(coef(mod_main)[&quot;Transplantation_risk&quot;])</code></pre>
 <pre><code>Transplantation_risk 
-           0.9197357 </code></pre>
+           0.8796604 </code></pre>
 <pre class="r"><code>confint(mod_main)  # insert Confidence Interval</code></pre>
-<pre><code>                               2.5 %     97.5 %
-2|3                        -9.842073 -5.9285975
-3|4                        -6.140708 -2.8005269
-4|5                        -2.219720  0.5632632
-5|6                        -1.565460  1.1845905
-Transplantation_risk       -0.491685  0.3243471
-TimepointWeek 2            -3.337993 -1.0105702
-TimepointMonth 1-3         -4.090295 -1.5828340
-TimepointMonth 4-6         -6.401582 -3.5751675
-TimepointMonth 12          -6.952638 -3.9844345
-TimepointRejection Context -5.528337 -2.8252472</code></pre>
+<pre><code>                                2.5 %     97.5 %
+2|3                        -9.8077787 -5.9273699
+3|4                        -6.3061573 -2.9494350
+4|5                        -2.3442469  0.4428456
+5|6                        -1.6895030  1.0643699
+Transplantation_risk       -0.5362582  0.2798194
+TimepointWeek 2            -3.3572792 -1.0242878
+TimepointMonth 1-3         -4.1127072 -1.5996337
+TimepointMonth 4-6         -6.3963842 -3.5844938
+TimepointMonth 12          -6.9211455 -3.9775510
+TimepointRejection Context -5.5257702 -2.8625080</code></pre>
 </div>
 <div
 id="sensitivity-check-linear-mixed-model-treat-class_sup-as-continuous"
@@ -1038,61 +1073,61 @@ Formula: as.numeric(as.character(Class_Sup)) ~ Transplantation_risk *
     Timepoint + (1 | Study_ID)
    Data: df
 
-REML criterion at convergence: 372.3
+REML criterion at convergence: 380.7
 
 Scaled residuals: 
      Min       1Q   Median       3Q      Max 
--2.47338 -0.51501 -0.07023  0.49066  2.88070 
+-2.45811 -0.47466 -0.06576  0.53605  2.98001 
 
 Random effects:
  Groups   Name        Variance Std.Dev.
- Study_ID (Intercept) 0.05545  0.2355  
- Residual             0.53221  0.7295  
-Number of obs: 158, groups:  Study_ID, 27
+ Study_ID (Intercept) 0.05806  0.2410  
+ Residual             0.53605  0.7322  
+Number of obs: 161, groups:  Study_ID, 27
 
 Fixed effects:
                                                   Estimate Std. Error
-(Intercept)                                       5.371823   0.443804
-Transplantation_risk                             -0.091748   0.152941
-TimepointWeek 2                                  -1.038008   0.592117
-TimepointMonth 1-3                               -1.061129   0.592117
-TimepointMonth 4-6                               -2.102932   0.602765
-TimepointMonth 12                                -2.615975   0.632439
-TimepointRejection Context                       -1.786814   0.698813
-Transplantation_risk:TimepointWeek 2              0.009379   0.204922
-Transplantation_risk:TimepointMonth 1-3          -0.036864   0.204922
-Transplantation_risk:TimepointMonth 4-6           0.098411   0.209801
-Transplantation_risk:TimepointMonth 12            0.227439   0.217973
-Transplantation_risk:TimepointRejection Context   0.084366   0.226154
+(Intercept)                                       5.372412   0.446222
+Transplantation_risk                             -0.091894   0.153776
+TimepointWeek 2                                  -1.038597   0.594261
+TimepointMonth 1-3                               -1.061719   0.594261
+TimepointMonth 4-6                               -2.102984   0.604942
+TimepointMonth 12                                -2.616486   0.634778
+TimepointRejection Context                       -1.507690   0.677105
+Transplantation_risk:TimepointWeek 2              0.009524   0.205661
+Transplantation_risk:TimepointMonth 1-3          -0.036719   0.205661
+Transplantation_risk:TimepointMonth 4-6           0.098438   0.210563
+Transplantation_risk:TimepointMonth 12            0.227608   0.218780
+Transplantation_risk:TimepointRejection Context  -0.013326   0.220065
                                                         df t value Pr(&gt;|t|)    
-(Intercept)                                     140.183568  12.104  &lt; 2e-16 ***
-Transplantation_risk                            139.987263  -0.600  0.54955    
-TimepointWeek 2                                 125.604119  -1.753  0.08203 .  
-TimepointMonth 1-3                              125.604119  -1.792  0.07553 .  
-TimepointMonth 4-6                              125.348804  -3.489  0.00067 ***
-TimepointMonth 12                               127.813391  -4.136 6.35e-05 ***
-TimepointRejection Context                      145.923954  -2.557  0.01158 *  
-Transplantation_risk:TimepointWeek 2            125.201124   0.046  0.96357    
-Transplantation_risk:TimepointMonth 1-3         125.201124  -0.180  0.85753    
-Transplantation_risk:TimepointMonth 4-6         125.982804   0.469  0.63983    
-Transplantation_risk:TimepointMonth 12          127.905894   1.043  0.29872    
-Transplantation_risk:TimepointRejection Context 145.594920   0.373  0.70966    
+(Intercept)                                     142.410347  12.040  &lt; 2e-16 ***
+Transplantation_risk                            142.189990  -0.598 0.551068    
+TimepointWeek 2                                 127.949473  -1.748 0.082913 .  
+TimepointMonth 1-3                              127.949473  -1.787 0.076367 .  
+TimepointMonth 4-6                              127.681704  -3.476 0.000695 ***
+TimepointMonth 12                               130.213164  -4.122 6.65e-05 ***
+TimepointRejection Context                      147.952213  -2.227 0.027480 *  
+Transplantation_risk:TimepointWeek 2            127.531587   0.046 0.963136    
+Transplantation_risk:TimepointMonth 1-3         127.531587  -0.179 0.858582    
+Transplantation_risk:TimepointMonth 4-6         128.335770   0.467 0.640937    
+Transplantation_risk:TimepointMonth 12          130.310822   1.040 0.300103    
+Transplantation_risk:TimepointRejection Context 147.136836  -0.061 0.951797    
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Correlation of Fixed Effects:
             (Intr) Trnsp_ TmpnW2 TmM1-3 TmM4-6 TmpM12 TmpnRC T_:TW2 T_:TM1-
 Trnsplnttn_ -0.941                                                         
-TimepontWk2 -0.682  0.641                                                  
-TmpntMnt1-3 -0.682  0.641  0.511                                           
-TmpntMnt4-6 -0.667  0.628  0.500  0.500                                    
-TmpntMnth12 -0.636  0.598  0.477  0.477  0.469                             
-TmpntRjctnC -0.576  0.541  0.431  0.431  0.425  0.411                      
-Trnspl_:TW2  0.638 -0.677 -0.941 -0.478 -0.468 -0.447 -0.404               
-Trns_:TM1-3  0.638 -0.677 -0.478 -0.941 -0.468 -0.447 -0.404  0.505        
-Trns_:TM4-6  0.621 -0.660 -0.466 -0.466 -0.941 -0.438 -0.396  0.493  0.493 
-Trnsp_:TM12  0.598 -0.636 -0.448 -0.448 -0.442 -0.945 -0.387  0.474  0.474 
-Trnspl_:TRC  0.577 -0.613 -0.432 -0.432 -0.426 -0.412 -0.955  0.457  0.457 
+TimepontWk2 -0.680  0.639                                                  
+TmpntMnt1-3 -0.680  0.639  0.511                                           
+TmpntMnt4-6 -0.666  0.627  0.500  0.500                                    
+TmpntMnth12 -0.635  0.597  0.477  0.477  0.469                             
+TmpntRjctnC -0.595  0.560  0.447  0.447  0.440  0.425                      
+Trnspl_:TW2  0.637 -0.676 -0.941 -0.478 -0.468 -0.446 -0.419               
+Trns_:TM1-3  0.637 -0.676 -0.478 -0.941 -0.468 -0.446 -0.419  0.506        
+Trns_:TM4-6  0.620 -0.659 -0.466 -0.466 -0.941 -0.438 -0.411  0.493  0.493 
+Trnsp_:TM12  0.597 -0.634 -0.448 -0.448 -0.442 -0.945 -0.401  0.474  0.474 
+Trnspl_:TRC  0.594 -0.631 -0.446 -0.446 -0.440 -0.425 -0.955  0.472  0.472 
             T_:TM4 T_:TM12
 Trnsplnttn_               
 TimepontWk2               
@@ -1104,7 +1139,7 @@ Trnspl_:TW2
 Trns_:TM1-3               
 Trns_:TM4-6               
 Trnsp_:TM12  0.466        
-Trnspl_:TRC  0.449  0.437 </code></pre>
+Trnspl_:TRC  0.463  0.451 </code></pre>
 <pre class="r"><code># Random effects
 ## Residuals: leftover within-patient variability accross timepoints/risk not explained by the fixed effects
 # Fixed effects
@@ -1112,14 +1147,10 @@ Trnspl_:TRC  0.449  0.437 </code></pre>
 ## df and p-value come from the Satterhwaite approximation</code></pre>
 <pre class="r"><code>anova(mod_lmer)   # Type III test, Satterthwaite df</code></pre>
 <pre><code>Type III Analysis of Variance Table with Satterthwaite&#39;s method
-                                Sum Sq Mean Sq NumDF   DenDF F value    Pr(&gt;F)
-Transplantation_risk            0.0676 0.06762     1  28.171  0.1271 0.7241553
-Timepoint                      11.7633 2.35265     5 130.891  4.4205 0.0009419
-Transplantation_risk:Timepoint  1.0011 0.20022     5 131.138  0.3762 0.8642970
-                                  
-Transplantation_risk              
-Timepoint                      ***
-Transplantation_risk:Timepoint    
+                                Sum Sq Mean Sq NumDF  DenDF F value   Pr(&gt;F)   
+Transplantation_risk            0.1697 0.16973     1  27.81  0.3166 0.578141   
+Timepoint                      11.4886 2.29772     5 133.44  4.2864 0.001199 **
+Transplantation_risk:Timepoint  1.0650 0.21300     5 134.49  0.3973 0.849963   
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code># Tests term as a whole (Timepoint across all its levels jointly)</code></pre>
@@ -1138,24 +1169,26 @@ summary(mod_rejection)</code></pre>
 formula: Class_Sup ~ Transplantation_risk + (1 | Study_ID)
 data:    df_rejection
 
- link  threshold nobs logLik AIC   niter    max.grad cond.H 
- logit flexible  29   -32.67 77.34 247(949) 3.48e-05 7.1e+02
+ link  threshold nobs logLik AIC   niter     max.grad cond.H 
+ logit flexible  32   -36.85 85.70 316(1572) 7.35e+00 1.1e+05
 
 Random effects:
  Groups   Name        Variance Std.Dev.
- Study_ID (Intercept) 3.942    1.985   
-Number of groups:  Study_ID 12 
+ Study_ID (Intercept) 5.014    2.239   
+Number of groups:  Study_ID 15 
 
 Coefficients:
-                     Estimate Std. Error z value Pr(&gt;|z|)
-Transplantation_risk -0.03292    0.87769  -0.038     0.97
+                      Estimate Std. Error z value Pr(&gt;|z|)    
+Transplantation_risk -0.681732   0.002604  -261.8   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Threshold coefficients:
-    Estimate Std. Error z value
-2|3  -3.8973     2.9297  -1.330
-3|4   0.2397     2.8177   0.085
-4|5   3.2999     3.0024   1.099
-5|6   5.3485     3.2768   1.632</code></pre>
+     Estimate Std. Error z value
+2|3 -5.678017   0.841189   -6.75
+3|4 -1.859966   0.002613 -711.70
+4|5  1.846661   0.002615  706.12
+5|6  3.890514   0.002615 1487.83</code></pre>
 </div>
 <div id="transplantation-risk-on-overall-analytes-z-score"
 class="section level1">

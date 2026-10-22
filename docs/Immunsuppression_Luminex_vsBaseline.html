@@ -11,7 +11,7 @@
 
 <meta name="author" content="I. Hanka" />
 
-<meta name="date" content="2026-10-20" />
+<meta name="date" content="2026-10-22" />
 
 <title>Luminex_Immunsuppression_vsBaseline</title>
 
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Luminex_Immunsuppression_vsBaseline</h1>
 <h4 class="author">I. Hanka</h4>
-<h4 class="date">2026-10-20</h4>
+<h4 class="date">2026-10-22</h4>
 
 </div>
 
@@ -329,7 +329,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-10-20
+<strong>Last updated:</strong> 2026-10-22
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreea596b3480af2c3af43daf1b9c366fc1951ac94dbtargetblanka596b34a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeeaf24542904967480efd7075b0cd78738f63be0btargetblankeaf2454a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/a596b3480af2c3af43daf1b9c366fc1951ac94db" target="_blank">a596b34</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/eaf24542904967480efd7075b0cd78738f63be0b" target="_blank">eaf2454</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreea596b3480af2c3af43daf1b9c366fc1951ac94dbtargetblanka596b34a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeeaf24542904967480efd7075b0cd78738f63be0btargetblankeaf2454a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/a596b3480af2c3af43daf1b9c366fc1951ac94db" target="_blank">a596b34</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/eaf24542904967480efd7075b0cd78738f63be0b" target="_blank">eaf2454</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -504,13 +504,19 @@ Ignored files:
     Ignored:    data/
     Ignored:    html/
 
+Untracked files:
+    Untracked:  analysis/Convalesence_Rejection.Rmd
+
 Unstaged changes:
-    Modified:   analysis/Analytes_CXCL10.Rmd
-    Modified:   analysis/Analytes_Grem2.Rmd
-    Modified:   analysis/Analytes_IL2R.Rmd
-    Modified:   analysis/Analytes_PDL1.Rmd
+    Deleted:    analysis/Convalesence_Rejetion.Rmd
+    Modified:   analysis/Immunsuppression_Luminex.Rmd
     Modified:   analysis/Immunsuppression_Luminex_vsBaseline.Rmd
+    Modified:   analysis/Luminex_HeatmapVisit.Rmd
+    Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
+    Modified:   analysis/Luminex_Overview.Rmd
     Modified:   analysis/PathologicalGrading_Luminex.Rmd
+    Modified:   analysis/TransplantationRisk.Rmd
+    Modified:   analysis/TransplantationRisk_vsBaseline.Rmd
 
 </code></pre>
 <p>
@@ -556,6 +562,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0b0f48942931b68430c8b09c95229c31c409dfce/analysis/Immunsuppression_Luminex_vsBaseline.Rmd" target="_blank">0b0f489</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+<td>
+20.10.2026_12:15
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/0b0f48942931b68430c8b09c95229c31c409dfce/docs/Immunsuppression_Luminex_vsBaseline.html" target="_blank">0b0f489</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+<td>
+20.10.2026_12:15
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1068,9 +1108,7 @@ IsabellaH1993
 </table>
 </div>
 </div>
-<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%filter(
-    !(Study_ID %in% c(&quot;CarTrans-Long-16&quot;, &quot;CarTrans-Long-23&quot;, &quot;CarTrans-Long-36&quot;) &amp;
-      str_detect(Visit, &quot;^VX&quot;)))%&gt;%
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
   select(-ISHLT_1990, -ISHLT_2004, -Transplantation_risk)</code></pre>
 <pre class="r"><code># Rename visits in overall table
 table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
@@ -1254,16 +1292,16 @@ print(shapiro_results)</code></pre>
 <pre><code># A tibble: 51 × 3
    analyte statistic  p_value
    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
- 1 CCL11       0.988 9.77e- 2
- 2 CCL19       0.990 2.05e- 1
- 3 CCL2        0.985 3.60e- 2
- 4 CCL20       0.907 7.22e-10
- 5 PD_L1       0.996 8.85e- 1
- 6 CCL3        0.844 2.22e-13
- 7 CCL4        0.981 7.64e- 3
- 8 CD40L       0.966 9.53e- 5
- 9 CXCL1       0.967 1.30e- 4
-10 CXCL10      0.989 1.23e- 1
+ 1 CCL11       0.989 1.05e- 1
+ 2 CCL19       0.990 1.62e- 1
+ 3 CCL2        0.985 3.51e- 2
+ 4 CCL20       0.906 4.92e-10
+ 5 PD_L1       0.996 8.28e- 1
+ 6 CCL3        0.850 3.45e-13
+ 7 CCL4        0.981 7.00e- 3
+ 8 CD40L       0.967 1.11e- 4
+ 9 CXCL1       0.967 9.84e- 5
+10 CXCL10      0.987 6.26e- 2
 # ℹ 41 more rows</code></pre>
 <pre class="r"><code># Visualize distribution
 plot_qq_all &lt;- function(data, cols) {
@@ -3316,18 +3354,18 @@ print(vs_Baseline)</code></pre>
 <pre><code># A tibble: 5 × 4
   `Class Immunosuppression`  mean_z p_value p_adj
   &lt;chr&gt;                       &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
-1 2                          0.0309  0.813  0.820
-2 3                         -0.0454  0.0851 0.213
-3 4                         -0.0608  0.0513 0.213
+1 2                          0.124   0.383  0.638
+2 3                         -0.0383  0.110  0.275
+3 4                         -0.0539  0.0636 0.275
 4 5                          0.0329  0.820  0.820
-5 6                         -0.0457  0.596  0.820</code></pre>
+5 6                         -0.0457  0.596  0.745</code></pre>
 <pre class="r"><code># Kruskal Wallis for non normal distribution overall (any Class different from healthy)
 kruskal.test(global_z ~ `Class Immunosuppression`, data = df_sample)</code></pre>
 <pre><code>
     Kruskal-Wallis rank sum test
 
 data:  global_z by Class Immunosuppression
-Kruskal-Wallis chi-squared = 1.9098, df = 5, p-value = 0.8615</code></pre>
+Kruskal-Wallis chi-squared = 3.0819, df = 5, p-value = 0.6874</code></pre>
 <pre class="r"><code># Pairwise comparison
 pairwise.wilcox.test(df_sample$global_z,df_sample$`Class Immunosuppression`,p.adjust.method = &quot;BH&quot;)</code></pre>
 <pre><code>
@@ -3336,11 +3374,11 @@ pairwise.wilcox.test(df_sample$global_z,df_sample$`Class Immunosuppression`,p.ad
 data:  df_sample$global_z and df_sample$`Class Immunosuppression` 
 
          2    3    4    5    6   
-3        0.97 -    -    -    -   
-4        0.97 1.00 -    -    -   
-5        0.97 0.97 0.97 -    -   
-6        0.97 0.97 0.97 0.97 -   
-Baseline 0.97 0.97 0.97 0.97 1.00
+3        0.94 -    -    -    -   
+4        0.94 1.00 -    -    -   
+5        1.00 0.94 0.94 -    -   
+6        0.94 0.94 0.94 0.94 -   
+Baseline 0.94 0.94 0.94 1.00 1.00
 
 P value adjustment method: BH </code></pre>
 <pre class="r"><code>ggplot(df_summary,
