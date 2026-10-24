@@ -47,6 +47,11 @@ editor_options:
 # Correlation
 #### with standard laboratory parameters CRP, TropT, CRP and NTproBNP [link](Correlations.html)
 
+# Comparison postoperative vs late rejection
+#### Overall comparison [link](Early_late_rejection.html)
+#### Analytes of interest[link](.html)
+
+
 
 
 

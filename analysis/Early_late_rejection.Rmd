@@ -1,0 +1,361 @@
+---
+title: "Early_late_rejection"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment}
+rm(list = ls())
+```
+
+```{r load libraries, echo=FALSE}
+suppressPackageStartupMessages({ 
+# Data handling
+  library(tidyverse)
+  library(data.table)
+  library(magrittr)
+  library(janitor)
+  library(here)
+  library(scales)
+  library(table1)
+  library(tableone)
+  library(flextable)
+  library(gtsummary)
+  library(openxlsx)
+  library(writexl)
+  library(readxl)
+  library(rstatix)
+  library(lmerTest)
+  # Visualization
+  library(ggplot2)    
+  library(ggpubr)
+  library(ggrepel)
+  library(ggbeeswarm)
+  library(ggcorrplot)
+  library(corrplot)
+  library(pheatmap)
+  library(ComplexHeatmap)
+  library(circlize)
+  library(RColorBrewer)
+  library(EnhancedVolcano)
+  library(plotly)
+  library(patchwork)
+  library(cowplot)
+  library(gridExtra)
+  library(grid)
+  library(ggpattern)
+})
+
+```
+
+```{r define filepath, include=FALSE}
+basedir <- here ()
+```
+
+
+```{r import datasets}
+# Import Luminex Data
+    table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
+  
+  table_lum_CarTrans_V2 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V2_all.xlsx"))
+  
+  table_lum_CarTrans_V3 <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V3_all.xlsx"))
+  
+  table_lum_CarTrans_V4 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V4_all.xlsx"))
+  
+  table_lum_CarTrans_V5 <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_V5_all.xlsx"))
+  
+table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
+
+# Delete ATG_EMB column
+table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX)%>%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %>% 
+    filter(!Study_ID %in% c("CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) 
+```
+
+```{r clean overall table}
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  select(-Class_Sup, -Transplantation_risk)
+```
+
+```{r prep metadata, include=FALSE}
+# Rename visits in overall table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(
+    Visit = as.character(Visit),
+    Visit = case_when(
+    Visit == "Healthy" ~ "Healthy",
+    Visit == "V0" ~ "Baseline",
+    Visit == "V1" ~ "Week 1",
+    Visit == "V2" ~ "Week 2",
+    Visit == "V3" ~ "Month 1-3",
+    Visit == "V4" ~ "Month 4-6",
+    Visit == "V5" ~ "Month 12",
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
+    TRUE~Visit
+    ),
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+  )
+
+# Assign unique sample IDs for each study ID
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+
+# Create annotation table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
+
+list_Timepoint <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, Visit, Timepoint)
+
+ list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+
+rownames(list_Timepoint) <- list_Timepoint$Sample_ID
+list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE] 
+```
+
+```{r , include=FALSE}
+  ann_colors <- list(
+   Visit = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Healthy" = "grey",
+    "VX1" = "#FFCCCC",
+    "VX2" = "#FF9999",
+    "VX3" = "#FF6666",
+    "VX4" = "darkred"
+  ),
+  Timepoint = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Rejection Context" = "#FF6B6B",
+    "Healthy" = "grey")
+)
+
+#Set colors for 2004 grading
+grade_colors_2004 <- c(
+  "ACR 0"  = "#1a9641",  
+  "ACR 1R" = "#a6d96a",
+  "ACR 2R"  = "#ffffbf",
+  "ACR 3R" = "#d73027"
+)
+```
+
+```{r}
+# Define Rejection as ACR >=2R
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Rejection = case_when(
+    ISHLT_2004 %in% c("ACR 2R", "ACR 3R") ~ "Rejection",
+    ISHLT_2004 %in% c("ACR 0", "ACR 1R")  ~ "No rejection"
+  ),
+  Rejection = factor(Rejection, levels = c("No rejection", "Rejection")))
+
+# Define analyte columns
+analytes <- setdiff(names(table_lum_CarTrans_overall),
+                    c("Study_ID", "Visit", "Sample_ID", "Timepoint", "ISHLT_2004", "ISHLT_1990", "Rejection"))
+
+table(table_lum_CarTrans_overall$Timepoint, table_lum_CarTrans_overall$Rejection)
+```
+```{r}
+volcano_rejection <- function(timepoints) {
+
+  # Filter phase and keep only graded samples
+  data_phase <- table_lum_CarTrans_overall %>%
+    filter(Timepoint %in% timepoints, !is.na(Rejection))
+
+  # Wilcoxon test per parameter: Rejection vs. No rejection
+  parameters <- names(dplyr::select(data_phase, CCL11:BMP4))
+  stat <- NULL
+
+  for (i in parameters) {
+    formula <- as.formula(paste(i, "Rejection", sep = "~"))
+    stat <- bind_rows(stat,
+                      data_phase %>%
+                        wilcox_test(formula = formula) %>%
+                        rename(Parameter = .y.))
+  }
+
+  # FDR across all parameters
+  stat <- stat %>%
+    mutate(FDR = p.adjust(p, method = "BH")) %>%
+    add_significance(p.col = "FDR")
+
+  # Mean per group and log2 FC (Rejection / No rejection)
+  volcano_table <- data_phase %>%
+    group_by(Rejection) %>%
+    summarise(across(CCL11:BMP4, ~ mean(.x, na.rm = TRUE))) %>%
+    pivot_longer(-Rejection, names_to = "Parameter", values_to = "Mean") %>%
+    pivot_wider(names_from = Rejection, values_from = Mean) %>%
+    mutate(log2_fc = log2(Rejection / `No rejection`)) %>%
+    left_join(stat %>% dplyr::select(Parameter, n1, n2, p, FDR), by = "Parameter") %>%
+    mutate(label_para = ifelse(FDR < 0.05 & abs(log2_fc) > log2(1.), Parameter, ""))
+
+  # Volcano plot
+  plot <- EnhancedVolcano(volcano_table,
+                          lab = volcano_table$label_para,
+                          x = "log2_fc", y = "FDR",
+                          FCcutoff = log2(1.5), pCutoff = 0.05,
+                          pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                          boxedLabels = TRUE, col = c("grey", "grey", "grey", "darkred"),
+                          xlab = bquote(~Log[2]~ "fold change (Rejection / No rejection)"),
+                          ylab = bquote(~-Log[10]~ "FDR"),
+                          title = NULL, subtitle = NULL, border = "full",
+                          drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = "darkred") +
+    theme_classic() +
+    theme(panel.grid = element_blank(),
+          panel.border = element_rect(colour = "black", fill = NA),
+          legend.position = "none")
+
+  list(table = volcano_table, plot = plot)
+}
+```
+
+```{r}
+# Rejection vs No rejection in early phase
+early <- volcano_rejection(c("Week 1", "Week 2", "Month 1-3"))
+print(early$plot)
+
+early$table %>% filter(FDR < 0.05) %>% arrange(FDR) %>% knitr::kable(digits = 3)
+```
+```{r}
+# Rejection vs No rejection in late phase
+late <- volcano_rejection(c("Month 4-6", "Month 12", "Rejection Context"))
+print(late$plot)
+
+late$table %>% filter(FDR < 0.05) %>% arrange(FDR) %>% knitr::kable(digits = 3)
+```
+
+```{r}
+# Comparison of early and late rejection 
+
+comparison <- full_join(
+  early$table %>% dplyr::select(Parameter, log2_fc, FDR),
+  late$table  %>% dplyr::select(Parameter, log2_fc, FDR),
+  by = "Parameter", suffix = c("_early", "_late")
+) %>%
+  mutate(
+    Signature_early = case_when(FDR_early < 0.05 & log2_fc_early >  1.5 ~ "Up",
+                                 FDR_early < 0.05 & log2_fc_early < -1.5 ~ "Down",
+                                 TRUE ~ "n.s."),
+    Signature_late  = case_when(FDR_late  < 0.05 & log2_fc_late  >  1.5 ~ "Up",
+                                 FDR_late  < 0.05 & log2_fc_late  < -1.5 ~ "Down",
+                                 TRUE ~ "n.s."),
+    Pattern = case_when(
+      Signature_early == "Up"   & Signature_late == "Up"   ~ "Up in both",
+      Signature_early == "Down" & Signature_late == "Down" ~ "Down in both",
+      Signature_early != "n.s." & Signature_late == "n.s." ~ paste(Signature_early, "early only"),
+      Signature_early == "n.s." & Signature_late != "n.s." ~ paste(Signature_late, "late only"),
+      Signature_early != "n.s." & Signature_late != "n.s." ~ "Opposite direction",
+      TRUE ~ "n.s."
+    )
+  )
+
+# Overview: how many analytes per pattern
+count(comparison, Pattern)
+
+# Detailed table
+comparison %>%
+  filter(Pattern != "n.s.") %>%
+  arrange(Pattern, Parameter) %>%
+  knitr::kable(digits = 3)
+
+```
+
+```{r}
+comparison %>%
+  filter(Pattern != "n.s.") %>%
+  pivot_longer(c(log2_fc_early, log2_fc_late, FDR_early, FDR_late),
+               names_to = c(".value", "Phase"),
+               names_pattern = "(log2_fc|FDR)_(early|late)") %>%
+  ggplot(aes(Phase, Parameter, fill = log2_fc)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = ifelse(FDR < 0.05, "*", "")), size = 6, vjust = 0.75) +
+  scale_fill_gradient2(low = "#4575b4", mid = "white", high = "#d73027", midpoint = 0,
+                       name = "log2 FC\nRejection /\nNo rejection") +
+  scale_x_discrete(labels = c(early = "Early phase", late = "Late phase")) +
+  facet_grid(Pattern ~ ., scales = "free_y", space = "free_y") +
+  labs(x = NULL, y = NULL) +
+  theme_classic() +
+  theme(strip.text.y = element_text(angle = 0),
+        panel.border = element_rect(colour = "black", fill = NA))
+```
+# Comparison of analytes of interest in early and late phase
+
+```{r}
+
+# Define Luminex analytes (y axis)
+  analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
+  analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
+  names(analyte_labels) <- analytes
+
+# Define function for comparison
+plot_rejection_phase <- function(data, title) {
+
+  plots_list <- list()
+
+  for (p in analytes) {
+
+    # Linear mixed model: rejection vs no rejection, random intercept per patient
+      fit <- lmer(as.formula(paste0("log10(", p, ") ~ Rejection + (1 | Study_ID)")),
+                  data = data)
+      coef_rej <- summary(fit)$coefficients[2, ]
+
+    # Y axis from the full table -> identical scale in early and late plots
+      max_y <- max(table_lum_CarTrans_overall[[p]], na.rm = TRUE) * 1.1
+      min_y <- min(table_lum_CarTrans_overall[[p]], na.rm = TRUE)
+      max_log10_limit <- 10^(ceiling(log10(max_y)))
+      min_log10_limit <- 10^(floor(log10(min_y)))
+      y_breaks <- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+
+      plot <- ggplot(data, aes(x = Rejection, y = .data[[p]])) +
+              geom_boxplot(outlier.shape = NA, fill = NA, width = 0.5) +
+              geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = "black",
+                         position = position_jitter(width = 0.15, height = 0)) +
+              scale_fill_manual(values = ann_colors$Timepoint) +
+              scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE),
+                            limits = c(min_log10_limit, max_log10_limit),
+                            expand = c(0.05, 0), breaks = y_breaks) +
+              theme_classic() +
+              labs(x = "ACR ≥ 2R", y = analyte_labels[[p]]) +
+              annotate("text", x = -Inf, y = Inf,
+                       label = paste0("FC = ", round(10^coef_rej["Estimate"], 2),
+                                      "\np = ", ifelse(coef_rej["Pr(>|t|)"] < 0.001, "< 0.001",
+                                                       signif(coef_rej["Pr(>|t|)"], 3))),
+                       hjust = -0.1, vjust = 1.2, size = 4)
+
+      plots_list[[p]] <- plot
+  }
+
+  ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+            common.legend = TRUE, legend = "right") %>%
+    annotate_figure(top = text_grob(title, face = "bold", size = 14))
+}
+```
+
+```{r}
+plot_rejection_phase(table_lum_CarTrans_overall %>%
+                       filter(Timepoint %in% c("Week 1", "Week 2", "Month 1-3"),
+                              !is.na(Rejection)),
+                     "Early phase (Week 1, Week 2, Month 1-3)")
+```
+```{r}
+plot_rejection_phase(table_lum_CarTrans_overall %>%
+                       filter(Timepoint %in% c("Month 4-6", "Month 12", "Rejection Context"),
+                              !is.na(Rejection)),
+                     "Late phase (Month 4-6, Month 12, Rejection Context)")
+```
+

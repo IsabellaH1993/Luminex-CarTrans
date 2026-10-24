@@ -11,7 +11,7 @@
 
 <meta name="author" content="I. Hanka" />
 
-<meta name="date" content="2026-10-20" />
+<meta name="date" content="2026-10-23" />
 
 <title>Correlations</title>
 
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Correlations</h1>
 <h4 class="author">I. Hanka</h4>
-<h4 class="date">2026-10-20</h4>
+<h4 class="date">2026-10-23</h4>
 
 </div>
 
@@ -329,7 +329,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-10-20
+<strong>Last updated:</strong> 2026-10-23
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0b0f48942931b68430c8b09c95229c31c409dfcetargetblank0b0f489a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree51d79014ec66ef4742fa5124ed457a42a5ddf1betargetblank51d7901a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0b0f48942931b68430c8b09c95229c31c409dfce" target="_blank">0b0f489</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/51d79014ec66ef4742fa5124ed457a42a5ddf1be" target="_blank">51d7901</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0b0f48942931b68430c8b09c95229c31c409dfcetargetblank0b0f489a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree51d79014ec66ef4742fa5124ed457a42a5ddf1betargetblank51d7901a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0b0f48942931b68430c8b09c95229c31c409dfce" target="_blank">0b0f489</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/51d79014ec66ef4742fa5124ed457a42a5ddf1be" target="_blank">51d7901</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -504,8 +504,26 @@ Ignored files:
     Ignored:    data/
     Ignored:    html/
 
+Untracked files:
+    Untracked:  Early_late_rejection.Rmd
+    Untracked:  analysis/Early_late_rejection.Rmd
+
 Unstaged changes:
+    Modified:   analysis/Analytes_CXCL10.Rmd
+    Modified:   analysis/Analytes_Grem2.Rmd
+    Modified:   analysis/Analytes_IL2R.Rmd
+    Modified:   analysis/Analytes_PDL1.Rmd
+    Modified:   analysis/Convalesence_Rejection.Rmd
     Modified:   analysis/Correlations.Rmd
+    Modified:   analysis/Immunsuppression_Luminex.Rmd
+    Modified:   analysis/Immunsuppression_Luminex_vsBaseline.Rmd
+    Modified:   analysis/Luminex_HeatmapVisit.Rmd
+    Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
+    Modified:   analysis/Luminex_Overview.Rmd
+    Modified:   analysis/PathologicalGrading_Luminex.Rmd
+    Modified:   analysis/TransplantationRisk.Rmd
+    Modified:   analysis/TransplantationRisk_vsBaseline.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -550,6 +568,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/analysis/Correlations.Rmd" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+<td>
+20.10.2026_12:50
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/eaf24542904967480efd7075b0cd78738f63be0b/docs/Correlations.html" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+<td>
+20.10.2026_12:50
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -672,7 +724,7 @@ table_lum_CarTrans_V3 &lt;- table_lum_CarTrans_V3 %&gt;% select(-ATG_EMB1_3)
 # Combine Tables
   table_lum_CarTrans_overall &lt;- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%&gt;%
 mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %&gt;% 
-    filter(!Study_ID %in% c(&quot;CarTrans-Long-31&quot;, &quot;CarTrans-Long-37&quot;, &quot;CarTrans-Long-38&quot;, &quot;CarTrans-Long-39&quot;, &quot;CarTrans-Long-40&quot;, &quot;CarTrans-Long-41&quot;, &quot;CarTrans-Long-42&quot;, &quot;CarTrans-Long-43&quot;, &quot;CarTrans-Long-44&quot;, &quot;CarTrans-Long-45&quot;, &quot;CarTrans-Long-46&quot;, &quot;CarTrans-Long-47&quot;, &quot;CarTrans-Long-48&quot;, &quot;CarTrans-Long-49&quot;, &quot;CarTrans-Long-50&quot;, &quot;CarTrans-Long-51&quot;, &quot;CarTrans-Healthy-29&quot;, &quot;CarTrans-Healthy-30&quot;, &quot;CarTrans-Healthy-31&quot;, &quot;CarTrans-Healthy-32&quot;, &quot;CarTrans-Healthy-33&quot;, &quot;CarTrans-Healthy-34&quot;, &quot;CarTrans-Healthy-35&quot;, &quot;CarTrans-Healthy-36&quot;, &quot;CarTrans-Healthy-37&quot;, &quot;CarTrans-Healthy-38&quot;, &quot;CarTrans-Healthy-39&quot;, &quot;CarTrans-Healthy-40&quot;, &quot;CarTrans-Healthy-41&quot;, &quot;CarTrans-Healthy-42&quot;, &quot;CarTrans-Healthy-43&quot;, &quot;CarTrans-Healthy-44&quot;, &quot;CarTrans-Healthy-45&quot;, &quot;CarTrans-Healthy-46&quot;, &quot;CarTrans-Healthy-47&quot;, &quot;CarTrans-Healthy-48&quot;,&quot;CarTrans-Healthy-49&quot;, &quot;CarTrans-Healthy-50&quot;)) </code></pre>
+    filter(!Study_ID %in% c(&quot;CarTrans-Long-38&quot;, &quot;CarTrans-Long-39&quot;, &quot;CarTrans-Long-40&quot;, &quot;CarTrans-Long-41&quot;, &quot;CarTrans-Long-42&quot;, &quot;CarTrans-Long-43&quot;, &quot;CarTrans-Long-44&quot;, &quot;CarTrans-Long-45&quot;, &quot;CarTrans-Long-46&quot;, &quot;CarTrans-Long-47&quot;, &quot;CarTrans-Long-48&quot;, &quot;CarTrans-Long-49&quot;, &quot;CarTrans-Long-50&quot;, &quot;CarTrans-Long-51&quot;, &quot;CarTrans-Healthy-29&quot;, &quot;CarTrans-Healthy-30&quot;, &quot;CarTrans-Healthy-31&quot;, &quot;CarTrans-Healthy-32&quot;, &quot;CarTrans-Healthy-33&quot;, &quot;CarTrans-Healthy-34&quot;, &quot;CarTrans-Healthy-35&quot;, &quot;CarTrans-Healthy-36&quot;, &quot;CarTrans-Healthy-37&quot;, &quot;CarTrans-Healthy-38&quot;, &quot;CarTrans-Healthy-39&quot;, &quot;CarTrans-Healthy-40&quot;, &quot;CarTrans-Healthy-41&quot;, &quot;CarTrans-Healthy-42&quot;, &quot;CarTrans-Healthy-43&quot;, &quot;CarTrans-Healthy-44&quot;, &quot;CarTrans-Healthy-45&quot;, &quot;CarTrans-Healthy-46&quot;, &quot;CarTrans-Healthy-47&quot;, &quot;CarTrans-Healthy-48&quot;,&quot;CarTrans-Healthy-49&quot;, &quot;CarTrans-Healthy-50&quot;)) </code></pre>
 <pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
   select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)</code></pre>
 <pre class="r"><code># Rename visits in overall table
@@ -872,6 +924,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/docs/figure/Correlations.Rmd/NTproBNP correlation-1.png" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/a596b3480af2c3af43daf1b9c366fc1951ac94db/docs/figure/Correlations.Rmd/NTproBNP correlation-1.png" target="_blank">a596b34</a>
 </td>
 <td>
@@ -981,6 +1044,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/docs/figure/Correlations.Rmd/CRP correlation-1.png" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/a596b3480af2c3af43daf1b9c366fc1951ac94db/docs/figure/Correlations.Rmd/CRP correlation-1.png" target="_blank">a596b34</a>
 </td>
 <td>
@@ -1088,6 +1162,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/docs/figure/Correlations.Rmd/TropT correlation-1.png" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/a596b3480af2c3af43daf1b9c366fc1951ac94db/docs/figure/Correlations.Rmd/TropT correlation-1.png" target="_blank">a596b34</a>
@@ -1224,12 +1309,49 @@ decrease)</p>
 # Combine plots to a panel
   panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
                      common.legend = TRUE, legend = &quot;right&quot;)</code></pre>
-<pre><code>Warning: Removed 14 rows containing non-finite outside the scale range
+<pre><code>Warning: Removed 16 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<pre><code>Warning: Removed 14 rows containing missing values or values outside the scale range
+<pre><code>Warning: Removed 16 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 <pre class="r"><code>  print(panel)</code></pre>
 <p><img src="figure/Correlations.Rmd/unnamed-chunk-4-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/docs/figure/Correlations.Rmd/unnamed-chunk-4-1.png" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Group for rejection vs no rejection
 table_corr_path &lt;- table_corr_path %&gt;%
   mutate(Rejection = factor(ifelse(ISHLT_2004 %in% c(&quot;ACR 2R&quot;, &quot;ACR 3R&quot;), &quot;Rejection&quot;, &quot;No rejection&quot;),
@@ -1238,7 +1360,7 @@ table_corr_path &lt;- table_corr_path %&gt;%
 table(table_corr_path$Rejection)</code></pre>
 <pre><code>
 No rejection    Rejection 
-         165           24 </code></pre>
+         173           25 </code></pre>
 <pre class="r"><code># Correlation over all visits 
 
 plots_list &lt;- list()
@@ -1278,12 +1400,49 @@ for (p in analytes) {
 
 panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
                    common.legend = TRUE, legend = &quot;right&quot;)</code></pre>
-<pre><code>Warning: Removed 14 rows containing non-finite outside the scale range
+<pre><code>Warning: Removed 16 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<pre><code>Warning: Removed 14 rows containing missing values or values outside the scale range
+<pre><code>Warning: Removed 16 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 <pre class="r"><code>print(panel)</code></pre>
 <p><img src="figure/Correlations.Rmd/unnamed-chunk-6-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/docs/figure/Correlations.Rmd/unnamed-chunk-6-1.png" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Outcome per patient: any rejection at late visits (from pathology, independent of Luminex availability)
 outcome_late &lt;- table_pathology %&gt;%
   filter(Visit %in% c(&quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;VX1&quot;, &quot;VX2&quot;, &quot;VX3&quot;, &quot;VX4&quot;),
@@ -1303,9 +1462,9 @@ table_early &lt;- table_lum_CarTrans_overall %&gt;%
 table(table_early$Visit, table_early$Late_rejection)</code></pre>
 <pre><code>           
             No rejection Rejection
-  Week 1              24         6
-  Week 2              23         6
-  Month 1-3           24         6</code></pre>
+  Week 1              26         6
+  Week 2              24         6
+  Month 1-3           26         6</code></pre>
 <pre class="r"><code>plots_list &lt;- list()
 
 for (p in analytes) {
@@ -1337,6 +1496,44 @@ panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
                    common.legend = TRUE, legend = &quot;right&quot;)
 print(panel)</code></pre>
 <p><img src="figure/Correlations.Rmd/early%20values%20vs%20late%20rejection-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-early-values-vs-late-rejection-1">
+Past versions of "early values vs late rejection-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-early-values-vs-late-rejection-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/eaf24542904967480efd7075b0cd78738f63be0b/docs/figure/Correlations.Rmd/early values vs late rejection-1.png" target="_blank">eaf2454</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
