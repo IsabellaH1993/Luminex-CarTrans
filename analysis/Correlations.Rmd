@@ -447,6 +447,8 @@ table_pathology <- table_pathology %>%
     ISHLT_2004 = factor(ISHLT_2004, levels = c("ACR 0", "ACR 1R", "ACR 2R", "ACR 3R"))
   )
 ```
+
+
 ```{r exclude baseline and healthy}
 
 table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%

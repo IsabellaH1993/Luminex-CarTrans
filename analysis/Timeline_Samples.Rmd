@@ -1,0 +1,134 @@
+---
+title: "Timeline Visualization"
+author: "I. Hanka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r clean environment, echo=FALSE}
+rm(list = ls())
+```
+
+```{r load libraries, echo=FALSE, warning=FALSE, message=FALSE}
+library(readxl)
+library(writexl)
+library(data.table)
+library(table1)
+library(tableone)
+library(flextable)
+library(magrittr)
+library(stringr)
+library(tidyr)
+library(dplyr)
+library(sjPlot)
+library(sjlabelled)
+library(data.table) 
+library(ggplot2)
+library(gplots)
+library(ggbeeswarm)
+library(pheatmap)
+library(RColorBrewer)
+library(here)
+library(officer)
+library(boot)
+library(purrr)
+library(patchwork)
+library(lubridate)
+```
+
+```{r define path}
+#herre::here() #check folder path
+basedir <- here()
+```
+
+```{r import excel}
+# Import only lab data sheet from excel file
+table_lab_overall <- readxl::read_xlsx(
+  here("data", "RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"),
+  sheet = "Lab Data",
+  col_names = TRUE
+)
+```
+
+```{r clean table_lab}
+#Previous labeling of EMB3 still gets imported, although it`s not visible in original excel
+# Remove double EMB 3 entries
+table_lab <- table_lab_overall %>%
+  dplyr::select(
+    -`Trop T EMB 3`,
+    -`CK total EMB 3`,
+    -`NT-proBNP EMB 3`,
+    -`CRP EMB 3`,
+    -`Leukozyten EMB 3`,
+    -`Date of lab\nEMB 3`
+  )
+
+#Clean all EMB6 or EMB7 and CarTrans-Long-009
+table_lab <- table_lab %>%
+filter(ID != "CarTrans-Long-009") %>%
+select(-matches("BL|EMB6|EMB7"))
+```
+
+```{r}
+# Select annotations colors
+ann_colors <- list(
+  Timepoint = c(
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Rejection Context" = "#FF6B6B")
+)
+```
+
+
+```{r}
+# Converts data entries into dates
+to_date <- function(x) {
+  if (inherits(x, c("Date", "POSIXct"))) return(as.Date(x))
+  x   <- as.character(x)
+  num <- suppressWarnings(as.numeric(x))
+  if_else(!is.na(num),
+          as.Date(num, origin = "1899-12-30"),
+          as.Date(parse_date_time(x, orders = c("dmy", "ymd"), quiet = TRUE)))
+}
+
+table_samples <- table_lab %>%
+  mutate(across(c(Date_Transplantation, starts_with("Datelab_")), to_date)) %>%
+  pivot_longer(starts_with("Datelab_"), names_to = "Visit", names_prefix = "Datelab_",
+               values_to = "Date_sample") %>%
+  filter(!is.na(Date_sample)) %>%
+  mutate(Months = as.numeric(Date_sample - Date_Transplantation) / 30.44,
+         Timepoint = case_when(Visit == "EMB1" ~ "Week 1",
+                               Visit == "EMB 2" ~ "Week 2",
+                               Visit == "EMB3" ~ "Month 1-3",
+                               Visit == "EMB4" ~ "Month 4-6",
+                               Visit == "EMB5" ~ "Month 12",
+                               grepl("^EMBX", Visit) ~ "Rejection Context"))
+
+# Target windows per visit in months (adjust to your protocol)
+windows <- tibble(Timepoint = c("Week 1", "Week 2", "Month 1-3", "Month 4-6", "Month 12"),
+                  start     = c(0,    0.35, 1, 4, 11),
+                  end       = c(0.35, 0.7,  3, 6, 13))
+```
+
+
+```{r, fig.width=11, fig.height=8}
+ggplot(table_samples, aes(Months, reorder(ID, Months, max))) +
+  geom_rect(data = windows,
+            aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = Timepoint),
+            alpha = 0.25, inherit.aes = FALSE) +
+  geom_line(aes(group = ID), color = "grey60", linewidth = 0.5) +
+  geom_point(aes(fill = Timepoint), shape = 21, size = 2.8, stroke = 0.3) +
+  scale_fill_manual(values = ann_colors$Timepoint,
+                    breaks = c("Week 1", "Week 2", "Month 1-3",
+                               "Month 4-6", "Month 12", "Rejection Context")) +
+  scale_x_continuous(breaks = seq(0, 24, by = 3)) +
+  labs(x = "Months since transplantation",
+       y = paste0("Patients (n = ", n_distinct(table_samples$ID), ")"),
+       fill = NULL) +
+  theme_classic() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+```
+

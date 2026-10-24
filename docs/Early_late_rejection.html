@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="I. Hanka" />
+
+<meta name="date" content="2026-10-24" />
+
+<title>Early_late_rejection</title>
+
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Luminex CarTrans</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Quality-Control.html">Quality Control</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Clinical
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="TableOverall.html">Table 1 and Heatmap</a>
+    </li>
+    <li>
+      <a href="Donor-Characteristics.html">Donor characteristics</a>
+    </li>
+    <li>
+      <a href="Kinetics.html">Kinetics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/IsabellaH1993/Luminex-CarTrans">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Early_late_rejection</h1>
+<h4 class="author">I. Hanka</h4>
+<h4 class="date">2026-10-24</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-10-24
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Luminex_CarTrans/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20261015code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20261015)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20261015code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20261015)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0f20a4505b149771dde67837d2b3519698721061targetblank0f20a45a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0f20a4505b149771dde67837d2b3519698721061" target="_blank">0f20a45</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0f20a4505b149771dde67837d2b3519698721061targetblank0f20a45a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0f20a4505b149771dde67837d2b3519698721061" target="_blank">0f20a45</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    Quality-Control_files/
+    Ignored:    analysis/.DS_Store
+    Ignored:    data/
+    Ignored:    html/
+
+Untracked files:
+    Untracked:  analysis/Timeline_Samples.Rmd
+
+Unstaged changes:
+    Modified:   analysis/Correlations.Rmd
+    Modified:   analysis/Early_late_rejection.Rmd
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Early_late_rejection.Rmd</code>)
+and HTML (<code>docs/Early_late_rejection.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/analysis/Early_late_rejection.Rmd" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+<td>
+24.10.2026_13:00
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code># Import Luminex Data
+    table_lum_CarTrans_V1&lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V1_all.xlsx&quot;)) 
+  
+  table_lum_CarTrans_V2 &lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V2_all.xlsx&quot;))
+  
+  table_lum_CarTrans_V3 &lt;- openxlsx::read.xlsx(file.path(basedir, &quot;data&quot;, &quot;Lum_CarTrans_V3_all.xlsx&quot;))
+  
+  table_lum_CarTrans_V4 &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Lum_CarTrans_V4_all.xlsx&quot;))
+  
+  table_lum_CarTrans_V5 &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Lum_CarTrans_V5_all.xlsx&quot;))
+  
+table_lum_CarTrans_VX &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Lum_CarTrans_VX_all.xlsx&quot;))
+
+# Delete ATG_EMB column
+table_lum_CarTrans_V1 &lt;- table_lum_CarTrans_V1 %&gt;% select(-ATG_EMB1_3)
+table_lum_CarTrans_V2 &lt;- table_lum_CarTrans_V2 %&gt;% select(-ATG_EMB1_3)
+table_lum_CarTrans_V3 &lt;- table_lum_CarTrans_V3 %&gt;% select(-ATG_EMB1_3)
+
+
+# Combine Tables
+  table_lum_CarTrans_overall &lt;- rbind(table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX)%&gt;%
+mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %&gt;% 
+    filter(!Study_ID %in% c(&quot;CarTrans-Long-38&quot;, &quot;CarTrans-Long-39&quot;, &quot;CarTrans-Long-40&quot;, &quot;CarTrans-Long-41&quot;, &quot;CarTrans-Long-42&quot;, &quot;CarTrans-Long-43&quot;, &quot;CarTrans-Long-44&quot;, &quot;CarTrans-Long-45&quot;, &quot;CarTrans-Long-46&quot;, &quot;CarTrans-Long-47&quot;, &quot;CarTrans-Long-48&quot;, &quot;CarTrans-Long-49&quot;, &quot;CarTrans-Long-50&quot;, &quot;CarTrans-Long-51&quot;, &quot;CarTrans-Healthy-29&quot;, &quot;CarTrans-Healthy-30&quot;, &quot;CarTrans-Healthy-31&quot;, &quot;CarTrans-Healthy-32&quot;, &quot;CarTrans-Healthy-33&quot;, &quot;CarTrans-Healthy-34&quot;, &quot;CarTrans-Healthy-35&quot;, &quot;CarTrans-Healthy-36&quot;, &quot;CarTrans-Healthy-37&quot;, &quot;CarTrans-Healthy-38&quot;, &quot;CarTrans-Healthy-39&quot;, &quot;CarTrans-Healthy-40&quot;, &quot;CarTrans-Healthy-41&quot;, &quot;CarTrans-Healthy-42&quot;, &quot;CarTrans-Healthy-43&quot;, &quot;CarTrans-Healthy-44&quot;, &quot;CarTrans-Healthy-45&quot;, &quot;CarTrans-Healthy-46&quot;, &quot;CarTrans-Healthy-47&quot;, &quot;CarTrans-Healthy-48&quot;,&quot;CarTrans-Healthy-49&quot;, &quot;CarTrans-Healthy-50&quot;)) </code></pre>
+<pre class="r"><code>table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  select(-Class_Sup, -Transplantation_risk)</code></pre>
+<pre class="r"><code># Define Rejection as ACR &gt;=2R
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Rejection = case_when(
+    ISHLT_2004 %in% c(&quot;ACR 2R&quot;, &quot;ACR 3R&quot;) ~ &quot;Rejection&quot;,
+    ISHLT_2004 %in% c(&quot;ACR 0&quot;, &quot;ACR 1R&quot;)  ~ &quot;No rejection&quot;
+  ),
+  Rejection = factor(Rejection, levels = c(&quot;No rejection&quot;, &quot;Rejection&quot;)))
+
+# Define analyte columns
+analytes &lt;- setdiff(names(table_lum_CarTrans_overall),
+                    c(&quot;Study_ID&quot;, &quot;Visit&quot;, &quot;Sample_ID&quot;, &quot;Timepoint&quot;, &quot;ISHLT_2004&quot;, &quot;ISHLT_1990&quot;, &quot;Rejection&quot;))
+
+table(table_lum_CarTrans_overall$Timepoint, table_lum_CarTrans_overall$Rejection)</code></pre>
+<pre><code>                   
+                    No rejection Rejection
+  Month 1-3                   33         1
+  Month 12                    28         1
+  Month 4-6                   30         2
+  Rejection Context           29         8
+  Week 1                      26         8
+  Week 2                      28         5</code></pre>
+<pre class="r"><code>volcano_rejection &lt;- function(timepoints) {
+
+  # Filter phase and keep only graded samples
+  data_phase &lt;- table_lum_CarTrans_overall %&gt;%
+    filter(Timepoint %in% timepoints, !is.na(Rejection))
+
+  # Wilcoxon test per parameter: Rejection vs. No rejection
+  parameters &lt;- names(dplyr::select(data_phase, CCL11:Grem2))
+  stat &lt;- NULL
+
+  for (i in parameters) {
+    formula &lt;- as.formula(paste(i, &quot;Rejection&quot;, sep = &quot;~&quot;))
+    stat &lt;- bind_rows(stat,
+                      data_phase %&gt;%
+                        wilcox_test(formula = formula) %&gt;%
+                        rename(Parameter = .y.))
+  }
+
+  # FDR across all parameters
+  stat &lt;- stat %&gt;%
+    mutate(FDR = p.adjust(p, method = &quot;BH&quot;)) %&gt;%
+    add_significance(p.col = &quot;FDR&quot;)
+
+  # Mean per group and log2 FC (Rejection / No rejection)
+  volcano_table &lt;- data_phase %&gt;%
+    group_by(Rejection) %&gt;%
+    summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE))) %&gt;%
+    pivot_longer(-Rejection, names_to = &quot;Parameter&quot;, values_to = &quot;Mean&quot;) %&gt;%
+    pivot_wider(names_from = Rejection, values_from = Mean) %&gt;%
+    mutate(log2_fc = log2(Rejection / `No rejection`)) %&gt;%
+    left_join(stat %&gt;% dplyr::select(Parameter, n1, n2, p, FDR), by = &quot;Parameter&quot;) %&gt;%
+    mutate(label_para = ifelse(FDR &lt; 0.05 &amp; abs(log2_fc) &gt; log2(1.), Parameter, &quot;&quot;))
+
+  # Volcano plot
+  plot &lt;- EnhancedVolcano(volcano_table,
+                          lab = volcano_table$label_para,
+                          x = &quot;log2_fc&quot;, y = &quot;FDR&quot;,
+                          FCcutoff = log2(1.5), pCutoff = 0.05,
+                          pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                          boxedLabels = TRUE, col = c(&quot;grey&quot;, &quot;grey&quot;, &quot;grey&quot;, &quot;darkred&quot;),
+                          xlab = bquote(~Log[2]~ &quot;fold change (Rejection / No rejection)&quot;),
+                          ylab = bquote(~-Log[10]~ &quot;FDR&quot;),
+                          title = NULL, subtitle = NULL, border = &quot;full&quot;,
+                          drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = &quot;darkred&quot;) +
+    theme_classic() +
+    theme(panel.grid = element_blank(),
+          panel.border = element_rect(colour = &quot;black&quot;, fill = NA),
+          legend.position = &quot;none&quot;)
+
+  list(table = volcano_table, plot = plot)
+}</code></pre>
+<pre class="r"><code># Rejection vs No rejection in early phase
+early &lt;- volcano_rejection(c(&quot;Week 1&quot;, &quot;Week 2&quot;, &quot;Month 1-3&quot;))</code></pre>
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+ℹ The deprecated feature was likely used in the EnhancedVolcano package.
+  Please report the issue to the authors.
+This warning is displayed once per session.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<pre><code>Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+ℹ The deprecated feature was likely used in the EnhancedVolcano package.
+  Please report the issue to the authors.
+This warning is displayed once per session.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<pre class="r"><code>print(early$plot)</code></pre>
+<p><img src="figure/Early_late_rejection.Rmd/unnamed-chunk-4-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>early$table %&gt;% filter(FDR &lt; 0.05) %&gt;% arrange(FDR) %&gt;% knitr::kable(digits = 3)</code></pre>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="18%" />
+<col width="14%" />
+<col width="11%" />
+<col width="4%" />
+<col width="4%" />
+<col width="8%" />
+<col width="8%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Parameter</th>
+<th align="right">No rejection</th>
+<th align="right">Rejection</th>
+<th align="right">log2_fc</th>
+<th align="right">n1</th>
+<th align="right">n2</th>
+<th align="right">p</th>
+<th align="right">FDR</th>
+<th align="left">label_para</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">CCL11</td>
+<td align="right">322.437</td>
+<td align="right">210.421</td>
+<td align="right">-0.616</td>
+<td align="right">87</td>
+<td align="right">14</td>
+<td align="right">0.002</td>
+<td align="right">0.033</td>
+<td align="left">CCL11</td>
+</tr>
+<tr class="even">
+<td align="left">CCL4</td>
+<td align="right">370.346</td>
+<td align="right">508.863</td>
+<td align="right">0.458</td>
+<td align="right">87</td>
+<td align="right">14</td>
+<td align="right">0.003</td>
+<td align="right">0.033</td>
+<td align="left">CCL4</td>
+</tr>
+<tr class="odd">
+<td align="left">CXCL1</td>
+<td align="right">133.431</td>
+<td align="right">192.434</td>
+<td align="right">0.528</td>
+<td align="right">87</td>
+<td align="right">14</td>
+<td align="right">0.002</td>
+<td align="right">0.033</td>
+<td align="left">CXCL1</td>
+</tr>
+<tr class="even">
+<td align="left">CXCL10</td>
+<td align="right">123.580</td>
+<td align="right">343.038</td>
+<td align="right">1.473</td>
+<td align="right">87</td>
+<td align="right">14</td>
+<td align="right">0.001</td>
+<td align="right">0.033</td>
+<td align="left">CXCL10</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Rejection vs No rejection in late phase
+late &lt;- volcano_rejection(c(&quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;Rejection Context&quot;))
+print(late$plot)</code></pre>
+<p><img src="figure/Early_late_rejection.Rmd/unnamed-chunk-5-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>late$table %&gt;% filter(FDR &lt; 0.05) %&gt;% arrange(FDR) %&gt;% knitr::kable(digits = 3)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="19%" />
+<col width="15%" />
+<col width="12%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="6%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Parameter</th>
+<th align="right">No rejection</th>
+<th align="right">Rejection</th>
+<th align="right">log2_fc</th>
+<th align="right">n1</th>
+<th align="right">n2</th>
+<th align="right">p</th>
+<th align="right">FDR</th>
+<th align="left">label_para</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<pre class="r"><code># Comparison of early and late phases of rejection vs no rejection
+
+comparison &lt;- full_join(
+  early$table %&gt;% dplyr::select(Parameter, log2_fc, FDR),
+  late$table  %&gt;% dplyr::select(Parameter, log2_fc, FDR),
+  by = &quot;Parameter&quot;, suffix = c(&quot;_early&quot;, &quot;_late&quot;)
+) %&gt;%
+  mutate(
+    Signature_early = case_when(FDR_early &lt; 0.05 &amp; log2_fc_early &gt;  log2(1.5) ~ &quot;Up&quot;,
+                                 FDR_early &lt; 0.05 &amp; log2_fc_early &lt; -log2(1.5) ~ &quot;Down&quot;,
+                                 TRUE ~ &quot;n.s.&quot;),
+    Signature_late  = case_when(FDR_late  &lt; 0.05 &amp; log2_fc_late  &gt;  log2(1.5) ~ &quot;Up&quot;,
+                                 FDR_late  &lt; 0.05 &amp; log2_fc_late  &lt; -log2(1.5) ~ &quot;Down&quot;,
+                                 TRUE ~ &quot;n.s.&quot;),
+    Pattern = case_when(
+      Signature_early == &quot;Up&quot;   &amp; Signature_late == &quot;Up&quot;   ~ &quot;Overall upregulation&quot;,
+      Signature_early == &quot;Down&quot; &amp; Signature_late == &quot;Down&quot; ~ &quot;Overall downregulation&quot;,
+      Signature_early != &quot;n.s.&quot; &amp; Signature_late == &quot;n.s.&quot; ~ paste(Signature_early, &quot;Upregulation Week 1- Month 3&quot;),
+      Signature_early == &quot;n.s.&quot; &amp; Signature_late != &quot;n.s.&quot; ~ paste(Signature_late, &quot;Upregulation Month 4-12&quot;),
+      Signature_early != &quot;n.s.&quot; &amp; Signature_late != &quot;n.s.&quot; ~ &quot;Opposite direction&quot;,
+      TRUE ~ &quot;n.s.&quot;
+    )
+  )
+
+# Overview: how many analytes per pattern
+count(comparison, Pattern)</code></pre>
+<pre><code># A tibble: 3 × 2
+  Pattern                               n
+  &lt;chr&gt;                             &lt;int&gt;
+1 Down Upregulation Week 1- Month 3     1
+2 Up Upregulation Week 1- Month 3       1
+3 n.s.                                 49</code></pre>
+<pre class="r"><code># Detailed table
+comparison %&gt;%
+  filter(Pattern != &quot;n.s.&quot;) %&gt;%
+  arrange(Pattern, Parameter) %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="11%" />
+<col width="8%" />
+<col width="10%" />
+<col width="7%" />
+<col width="13%" />
+<col width="12%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Parameter</th>
+<th align="right">log2_fc_early</th>
+<th align="right">FDR_early</th>
+<th align="right">log2_fc_late</th>
+<th align="right">FDR_late</th>
+<th align="left">Signature_early</th>
+<th align="left">Signature_late</th>
+<th align="left">Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">CCL11</td>
+<td align="right">-0.616</td>
+<td align="right">0.033</td>
+<td align="right">-0.654</td>
+<td align="right">0.215</td>
+<td align="left">Down</td>
+<td align="left">n.s.</td>
+<td align="left">Down Upregulation Week 1- Month 3</td>
+</tr>
+<tr class="even">
+<td align="left">CXCL10</td>
+<td align="right">1.473</td>
+<td align="right">0.033</td>
+<td align="right">0.660</td>
+<td align="right">0.242</td>
+<td align="left">Up</td>
+<td align="left">n.s.</td>
+<td align="left">Up Upregulation Week 1- Month 3</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>comparison %&gt;%
+  filter(Pattern != &quot;n.s.&quot;) %&gt;%
+  pivot_longer(c(log2_fc_early, log2_fc_late, FDR_early, FDR_late),
+               names_to = c(&quot;.value&quot;, &quot;Phase&quot;),
+               names_pattern = &quot;(log2_fc|FDR)_(early|late)&quot;) %&gt;%
+  ggplot(aes(log2_fc, Parameter, color = Phase)) +
+  geom_vline(xintercept = 0, color = &quot;grey40&quot;) +
+  geom_vline(xintercept = c(-log2(1.5), log2(1.5)), linetype = &quot;dashed&quot;, color = &quot;grey60&quot;) +
+  geom_line(aes(group = Parameter), color = &quot;grey70&quot;) +
+  geom_point(aes(shape = FDR &lt; 0.05), size = 4, stroke = 1.2) +
+  scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 1),
+                     labels = c(`TRUE` = &quot;FDR &lt; 0.05&quot;, `FALSE` = &quot;n.s.&quot;), name = NULL) +
+  scale_color_manual(values = c(early = &quot;#4DD0E1&quot;, late = &quot;#1E3FA3&quot;),
+                     labels = c(early = &quot;Early phase&quot;, late = &quot;Late phase&quot;), name = NULL) +
+  scale_x_continuous(sec.axis = sec_axis(~ 2^., name = &quot;Fold change (linear)&quot;)) +
+  labs(x = &quot;log2 fold change (Rejection / No rejection)&quot;, y = NULL) +
+  theme_classic() +
+  theme(panel.border = element_rect(colour = &quot;black&quot;, fill = NA))</code></pre>
+<p><img src="figure/Early_late_rejection.Rmd/unnamed-chunk-7-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Comparison of rejection in early vs late phase
+
+# Filter for rejection timepoints
+data_rej &lt;- table_lum_CarTrans_overall %&gt;%
+  filter(Rejection == &quot;Rejection&quot;,
+         Timepoint %in% c(&quot;Week 1&quot;, &quot;Week 2&quot;, &quot;Month 1-3&quot;,
+                          &quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;Rejection Context&quot;)) %&gt;%
+  mutate(Phase = ifelse(Timepoint %in% c(&quot;Week 1&quot;, &quot;Week 2&quot;, &quot;Month 1-3&quot;), &quot;Early&quot;, &quot;Late&quot;))
+
+table(data_rej$Phase)</code></pre>
+<pre><code>
+Early  Late 
+   14    11 </code></pre>
+<pre class="r"><code># Patients with rejection in both phases (relevant for repeated measures)
+data_rej %&gt;% distinct(Study_ID, Phase) %&gt;% count(Study_ID) %&gt;% filter(n == 2)</code></pre>
+<pre><code>          Study_ID n
+1 CarTrans-Long-18 2
+2 CarTrans-Long-29 2</code></pre>
+<pre class="r"><code># Wilcoxon test per parameter: Late vs. Early
+stat_phase &lt;- NULL
+for (i in names(dplyr::select(data_rej, CCL11:Grem2))) {
+  formula &lt;- as.formula(paste(i, &quot;Phase&quot;, sep = &quot;~&quot;))
+  stat_phase &lt;- bind_rows(stat_phase,
+                          data_rej %&gt;% wilcox_test(formula = formula) %&gt;% rename(Parameter = .y.))
+}
+stat_phase &lt;- stat_phase %&gt;% mutate(FDR = p.adjust(p, method = &quot;BH&quot;))
+
+# Mean per phase, log2 FC (Late / Early)
+volcano_phase &lt;- data_rej %&gt;%
+  group_by(Phase) %&gt;%
+  summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE))) %&gt;%
+  pivot_longer(-Phase, names_to = &quot;Parameter&quot;, values_to = &quot;Mean&quot;) %&gt;%
+  pivot_wider(names_from = Phase, values_from = Mean) %&gt;%
+  mutate(log2_fc = log2(Late / Early)) %&gt;%
+  left_join(stat_phase %&gt;% dplyr::select(Parameter, n1, n2, p, FDR), by = &quot;Parameter&quot;) %&gt;%
+  mutate(label_para = ifelse(FDR &lt; 0.05 &amp; abs(log2_fc) &gt; log2(1.5), Parameter, &quot;&quot;))</code></pre>
+<pre class="r"><code>EnhancedVolcano(volcano_phase,
+                lab = volcano_phase$label_para,
+                x = &quot;log2_fc&quot;, y = &quot;FDR&quot;,
+                FCcutoff = log2(1.5), pCutoff = 0.05,
+                pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                boxedLabels = TRUE, col = c(&quot;grey&quot;, &quot;grey&quot;, &quot;grey&quot;, &quot;darkred&quot;),
+                xlab = bquote(~Log[2]~ &quot;fold change (Late / Early rejection)&quot;),
+                ylab = bquote(~-Log[10]~ &quot;FDR&quot;),
+                title = NULL, subtitle = NULL, border = &quot;full&quot;,
+                drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = &quot;darkred&quot;) +
+  theme_classic() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_rect(colour = &quot;black&quot;, fill = NA),
+        legend.position = &quot;none&quot;)</code></pre>
+<p><img src="figure/Early_late_rejection.Rmd/unnamed-chunk-9-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcano_phase %&gt;% filter(p &lt; 0.05) %&gt;% arrange(p) %&gt;% knitr::kable(digits = 3)</code></pre>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="4%" />
+<col width="4%" />
+<col width="9%" />
+<col width="9%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Parameter</th>
+<th align="right">Early</th>
+<th align="right">Late</th>
+<th align="right">log2_fc</th>
+<th align="right">n1</th>
+<th align="right">n2</th>
+<th align="right">p</th>
+<th align="right">FDR</th>
+<th align="left">label_para</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">IL2</td>
+<td align="right">6.332</td>
+<td align="right">7.284</td>
+<td align="right">0.202</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.011</td>
+<td align="right">0.259</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">CXCL1</td>
+<td align="right">192.434</td>
+<td align="right">106.108</td>
+<td align="right">-0.859</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.013</td>
+<td align="right">0.259</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">CCL11</td>
+<td align="right">210.421</td>
+<td align="right">272.009</td>
+<td align="right">0.370</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.015</td>
+<td align="right">0.259</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">BMP4</td>
+<td align="right">16.737</td>
+<td align="right">12.314</td>
+<td align="right">-0.443</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.021</td>
+<td align="right">0.273</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">IL17E</td>
+<td align="right">39.341</td>
+<td align="right">29.927</td>
+<td align="right">-0.395</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.035</td>
+<td align="right">0.330</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">VEGF</td>
+<td align="right">435.697</td>
+<td align="right">296.543</td>
+<td align="right">-0.555</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.044</td>
+<td align="right">0.330</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">TGFa</td>
+<td align="right">23.662</td>
+<td align="right">14.314</td>
+<td align="right">-0.725</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">0.045</td>
+<td align="right">0.330</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<div id="comparison-of-analytes-of-interest-in-early-and-late-phase"
+class="section level1">
+<h1>Comparison of analytes of interest in early and late phase</h1>
+<pre class="r"><code># Define Luminex analytes (y axis)
+  analytes &lt;- c(&quot;PD_L1&quot;, &quot;CXCL10&quot;, &quot;IL2R&quot;, &quot;Grem2&quot;)
+  analyte_labels &lt;- c(&quot;PD L1 (log pg/ml)&quot;, &quot;CXCL10 (log pg/ml)&quot;, &quot;IL2R (log pg/ml)&quot;, &quot;Grem2 (log pg/ml)&quot;)
+  names(analyte_labels) &lt;- analytes
+
+# Define function for comparison
+plot_rejection_phase &lt;- function(data, title) {
+
+  plots_list &lt;- list()
+
+  for (p in analytes) {
+
+    # Linear mixed model: rejection vs no rejection, random intercept per patient
+      fit &lt;- lmer(as.formula(paste0(&quot;log10(&quot;, p, &quot;) ~ Rejection + (1 | Study_ID)&quot;)),
+                  data = data)
+      coef_rej &lt;- summary(fit)$coefficients[2, ]
+
+    # Y axis from the full table -&gt; identical scale in early and late plots
+      max_y &lt;- max(table_lum_CarTrans_overall[[p]], na.rm = TRUE) * 1.1
+      min_y &lt;- min(table_lum_CarTrans_overall[[p]], na.rm = TRUE)
+      max_log10_limit &lt;- 10^(ceiling(log10(max_y)))
+      min_log10_limit &lt;- 10^(floor(log10(min_y)))
+      y_breaks &lt;- 10^(seq(log10(min_log10_limit), log10(max_log10_limit), by = 1))
+
+      plot &lt;- ggplot(data, aes(x = Rejection, y = .data[[p]])) +
+              geom_boxplot(outlier.shape = NA, fill = NA, width = 0.5) +
+              geom_point(aes(fill = Timepoint), shape = 21, size = 2.5, color = &quot;black&quot;,
+                         position = position_jitter(width = 0.15, height = 0)) +
+              scale_fill_manual(values = ann_colors$Timepoint) +
+              scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE),
+                            limits = c(min_log10_limit, max_log10_limit),
+                            expand = c(0.05, 0), breaks = y_breaks) +
+              theme_classic() +
+              labs(x = &quot;ACR ≥ 2R&quot;, y = analyte_labels[[p]]) +
+              annotate(&quot;text&quot;, x = -Inf, y = Inf,
+                       label = paste0(&quot;FC = &quot;, round(10^coef_rej[&quot;Estimate&quot;], 2),
+                                      &quot;\np = &quot;, ifelse(coef_rej[&quot;Pr(&gt;|t|)&quot;] &lt; 0.001, &quot;&lt; 0.001&quot;,
+                                                       signif(coef_rej[&quot;Pr(&gt;|t|)&quot;], 3))),
+                       hjust = -0.1, vjust = 1.2, size = 4)
+
+      plots_list[[p]] &lt;- plot
+  }
+
+  ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
+            common.legend = TRUE, legend = &quot;right&quot;) %&gt;%
+    annotate_figure(top = text_grob(title, face = &quot;bold&quot;, size = 14))
+}</code></pre>
+<pre class="r"><code>plot_rejection_phase(table_lum_CarTrans_overall %&gt;%
+                       filter(Timepoint %in% c(&quot;Week 1&quot;, &quot;Week 2&quot;, &quot;Month 1-3&quot;),
+                              !is.na(Rejection)),
+                     &quot;Early phase (Week 1, Week 2, Month 1-3)&quot;)</code></pre>
+<pre><code>boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>Warning: Removed 4 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 4 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+<p><img src="figure/Early_late_rejection.Rmd/unnamed-chunk-11-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_rejection_phase(table_lum_CarTrans_overall %&gt;%
+                       filter(Timepoint %in% c(&quot;Month 4-6&quot;, &quot;Month 12&quot;, &quot;Rejection Context&quot;),
+                              !is.na(Rejection)),
+                     &quot;Late phase (Month 4-6, Month 12, Rejection Context)&quot;)</code></pre>
+<pre><code>Warning: Removed 12 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 12 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+<p><img src="figure/Early_late_rejection.Rmd/unnamed-chunk-12-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Sequoia 15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Europe/Zurich
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] ggpattern_1.3.1        gridExtra_2.3.1        cowplot_1.2.0         
+ [4] patchwork_1.3.2        plotly_4.12.1          EnhancedVolcano_1.30.0
+ [7] RColorBrewer_1.1-3     circlize_0.4.18        ComplexHeatmap_2.28.0 
+[10] pheatmap_1.0.13        corrplot_0.95          ggcorrplot_0.3.0      
+[13] ggbeeswarm_0.7.3       ggrepel_0.9.8          ggpubr_1.0.0          
+[16] lmerTest_3.2-1         lme4_2.0-6             Matrix_1.7-6          
+[19] rstatix_1.1.0          readxl_1.5.0.1         writexl_2.0.1         
+[22] openxlsx_4.2.9         gtsummary_2.6.1        flextable_0.10.1      
+[25] tableone_0.13.2        table1_1.5.1           scales_1.4.0          
+[28] here_1.0.2             janitor_2.2.1          magrittr_2.0.5        
+[31] data.table_1.18.6.1    lubridate_1.9.5        forcats_1.0.1         
+[34] stringr_1.6.0          dplyr_1.2.1            purrr_1.2.2           
+[37] readr_2.2.0            tidyr_1.3.2            tibble_3.3.1          
+[40] ggplot2_4.0.3          tidyverse_2.0.0       
+
+loaded via a namespace (and not attached):
+  [1] shape_1.4.6.1           rstudioapi_0.19.0       jsonlite_2.0.0         
+  [4] farver_2.1.2            nloptr_2.2.1            rmarkdown_2.32         
+  [7] GlobalOptions_0.1.4     fs_2.1.0                ragg_1.5.2             
+ [10] vctrs_0.7.3             minqa_1.2.8             askpass_1.2.1          
+ [13] htmltools_0.5.9         survey_4.5              broom_1.0.13           
+ [16] cellranger_1.1.0        Formula_1.2-6           sass_0.4.10            
+ [19] bslib_0.12.0            htmlwidgets_1.6.4       cachem_1.1.0           
+ [22] uuid_1.2-2              whisker_0.4.1           lifecycle_1.0.5        
+ [25] iterators_1.0.14        pkgconfig_2.0.3         R6_2.6.1               
+ [28] fastmap_1.2.0           clue_0.3-68             rbibutils_2.4.1        
+ [31] snakecase_0.11.1        digest_0.6.39           numDeriv_2016.8-1.1    
+ [34] colorspace_2.1-4        S4Vectors_0.50.3        rprojroot_2.1.1        
+ [37] textshaping_1.0.5       labeling_0.4.3          timechange_0.4.0       
+ [40] httr_1.4.9              abind_1.4-8             compiler_4.6.1         
+ [43] fontquiver_0.2.1        withr_3.0.3             doParallel_1.0.17      
+ [46] S7_0.2.2                backports_1.5.1         carData_3.0-6          
+ [49] DBI_1.3.0               ggsignif_0.6.4          MASS_7.3-66            
+ [52] openssl_2.4.2           rjson_0.2.23            tools_4.6.1            
+ [55] vipor_0.4.7             otel_0.2.0              beeswarm_0.4.0         
+ [58] zip_3.0.2               httpuv_1.6.17           glue_1.8.1             
+ [61] nlme_3.1-171            promises_1.5.0          cluster_2.1.8.3        
+ [64] generics_0.1.4          gtable_0.3.6            tzdb_0.5.0             
+ [67] hms_1.1.4               utf8_1.2.6              xml2_1.6.0             
+ [70] car_3.1-5               BiocGenerics_0.58.1     foreach_1.5.2          
+ [73] pillar_1.11.1           later_1.4.8             mitools_2.7            
+ [76] splines_4.6.1           lattice_0.23-1          survival_3.8-12        
+ [79] tidyselect_1.2.1        fontLiberation_0.1.0    knitr_1.52             
+ [82] git2r_0.36.2            fontBitstreamVera_0.1.1 reformulas_0.4.4       
+ [85] IRanges_2.46.0          stats4_4.6.1            xfun_0.61              
+ [88] matrixStats_1.5.0       stringi_1.8.9           workflowr_1.7.2        
+ [91] yaml_2.3.12             boot_1.3-32             evaluate_1.0.5         
+ [94] codetools_0.2-20        officer_0.7.6           gdtools_0.5.1          
+ [97] cli_3.6.6               systemfonts_1.3.2       Rdpack_2.6.6           
+[100] jquerylib_0.1.4         Rcpp_1.1.2              png_0.1-9              
+[103] parallel_4.6.1          viridisLite_0.4.3       crayon_1.5.3           
+[106] GetoptLong_1.1.1        rlang_1.3.0            </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

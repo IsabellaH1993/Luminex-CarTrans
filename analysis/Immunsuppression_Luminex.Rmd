@@ -114,7 +114,6 @@ list_ATG <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, ATG_EMB1_3, V
 rownames(list_ATG) <- list_ATG$Sample_ID
 list_ATG<- list_ATG[, c("ATG_EMB1_3", "Visit"), drop = FALSE]  #,"Visit" add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
 
-# Remove metadata columns
 table_lum_CarTrans_overall_01 <- table_lum_CarTrans_overall %>%
   dplyr::select(-Study_ID, -Visit, -Sample_ID, -ATG_EMB1_3)
 
@@ -394,15 +393,19 @@ table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
     Visit == "V3" ~ "Month 1-3",
     Visit == "V4" ~ "Month 4-6",
     Visit == "V5" ~ "Month 12",
-    grepl("^VX", Visit) ~ "Rejection Context", 
+    grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
     TRUE~Visit
     ),
-    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
   )
 
 # Assign unique sample IDs for each study ID
 table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
   mutate(Sample_ID = paste(Study_ID, Visit, sep = "_"))
+
+# Mutate into rejection context
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
 
 # Rename Class_Sup
 table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
@@ -412,12 +415,12 @@ table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
 ```{r build dataframe for visualisation}
 #Prep table
 df_Sup <- table_lum_CarTrans_overall %>%
-  select(`Class Immunosuppression`, Visit) %>%
-  filter(!Visit %in% c("Healthy", "Baseline")) #Filter out Healthy and Baseline for plotting
+  select(`Class Immunosuppression`, Timepoint) %>%
+  filter(!Timepoint %in% c("Healthy", "Baseline")) #Filter out Healthy and Baseline for plotting
 
 #Set order
-df_Sup$Visit <- factor(
-  df_Sup$Visit,
+df_Sup$Timepoint <- factor(
+  df_Sup$Timepoint,
   levels = c(
     "Week 1",
     "Week 2",
@@ -442,7 +445,7 @@ grade_colors_Sup <- c(
 ```
 
 ```{r count plot immunosuppression}
-ggplot(df_Sup, aes(x = Visit, fill = `Class Immunosuppression`)) +
+ggplot(df_Sup, aes(x = Timepoint, fill = `Class Immunosuppression`)) +
   geom_bar(position = "dodge") +
   scale_fill_manual(values = grade_colors_Sup) +
   labs(
@@ -457,9 +460,9 @@ ggplot(df_Sup, aes(x = Visit, fill = `Class Immunosuppression`)) +
 ```{r distribution immunosuppression}
 # Create summary table with counts
 df_counts <- df_Sup %>%
-  count(Visit, `Class Immunosuppression`)
+  count(Timepoint, `Class Immunosuppression`)
 
-ggplot(df_counts, aes(x = Visit, y=n, fill = `Class Immunosuppression`)) +
+ggplot(df_counts, aes(x = Timepoint, y=n, fill = `Class Immunosuppression`)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(
     aes(label = n),
@@ -474,12 +477,163 @@ ggplot(df_counts, aes(x = Visit, y=n, fill = `Class Immunosuppression`)) +
   ) +
   theme_classic()
 ```
+```{r}
+# Create annotation table
+table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
+  mutate(Timepoint= case_when(grepl("^VX", Visit) ~ "Rejection Context",TRUE ~ Visit))
 
+list_Timepoint <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, "Class Immunosuppression", Visit, Timepoint)
+
+list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+list_Timepoint$`Class Immunosuppression` = factor(list_Timepoint$`Class Immunosuppression`,levels = c("Healthy","Baseline","1","2","3","4","5", "6")) 
+
+
+
+rownames(list_Timepoint) <- list_Timepoint$Sample_ID
+list_Timepoint <- list_Timepoint[, c("Class Immunosuppression","Timepoint"), drop = FALSE]  #,"Visit" add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
+
+# Remove metadata columns
+table_lum_CarTrans_overall_01 <- table_lum_CarTrans_overall %>%
+  dplyr::select(-Study_ID, -Visit, -Sample_ID, -`Class Immunosuppression`)
+
+# Convert Data Table to Data Frame
+  table_lum_CarTrans_overall_01 <- as.data.frame(table_lum_CarTrans_overall_01)
+  
+# Transpose Data Table
+  table_lum_CarTrans_overall_01_t <- t(table_lum_CarTrans_overall_01)
+
+## Column Annotations
+  colnames(table_lum_CarTrans_overall_01_t) <- table_lum_CarTrans_overall$Sample_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups <- openxlsx::read.xlsx(file.path(basedir,"data", "Grouping of Luminex Marker.xlsx"))
+
+  # Create list with Columns of data table
+    list_parameter_datatable <- as.data.frame(rownames(table_lum_CarTrans_overall_01_t))
+                                colnames(list_parameter_datatable) <- "Parameter"
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 <- merge(list_parameter_groups, list_parameter_datatable, by.y = "Parameter")
+
+# Define the predefined order for Group
+  group_order <- c("Cytokine", "Chemokine", "Growth factor/Tissue Cytokine", "Activation Marker")
+  
+# Filter and order
+  list_parameter_groups_02 <- list_parameter_groups_01 %>%
+#                              filter(Parameter %in% selected_markers) %>%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %>%
+#                              Parameter = factor(Parameter, levels = selected_markers)) %>%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 <- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_lum_CarTrans_overall_01_t_ordered <- as.data.frame(table_lum_CarTrans_overall_01_t)
+  table_lum_CarTrans_overall_01_t_ordered <- table_lum_CarTrans_overall_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_lum_CarTrans_overall_01_t_ordered <- as.matrix(table_lum_CarTrans_overall_01_t_ordered)
+
+#Convert back to numeric
+  table_lum_CarTrans_overall_01_t_ordered <- matrix(
+    as.numeric(trimws(table_lum_CarTrans_overall_01_t_ordered)),
+    nrow = nrow(table_lum_CarTrans_overall_01_t_ordered),
+    dimnames = dimnames(table_lum_CarTrans_overall_01_t_ordered))
+  
+# Log Transform 
+  table_lum_CarTrans_overall_01_t_ordered <- log2(table_lum_CarTrans_overall_01_t_ordered)
+  
+# Scale 
+  table_lum_CarTrans_overall_01_t_ordered <- t(apply(table_lum_CarTrans_overall_01_t_ordered, 1, scale))
+
+  
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors <- list(
+  Timepoint = c(
+    "Baseline" = "#E0F7FA",
+    "Week 1" = "#B2EBF2",
+    "Week 2" = "#A8C7FF",
+    "Month 1-3" = "#4DD0E1",
+    "Month 4-6" = "#0097A7",
+    "Month 12" = "#1E3FA3",
+    "Rejection Context" = "#FF6B6B",
+    "Healthy" = "grey"),
+  Grouping = c(
+    "Cytokine" = "darkseagreen",
+    "Chemokine" = "lightblue", 
+    "Growth factor/Tissue Cytokine" = "mediumpurple3",
+    "Activation Marker" =  "lightpink"),
+  "Class Immunosuppression" = c(  
+  "Baseline" = "#E0F7FA",
+  "Healthy" = "grey",
+  "1" = "#66bd63",
+  "2" = "#a6d96a",
+  "3"  = "#ffffbf",
+  "4" = "#fdae61",
+  "5" = "#f46d43",
+  "6" = "#d73027"
+))
+
+# Column Annotation
+  col_anno <- HeatmapAnnotation(df = list_Timepoint, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno <- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_lum <- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_lum)
+```
+
+```{r split by different suppression classes, fig.height =9, fig.width=16, out.width="100%"}
+# Reorder grouped Immunsuppression
+list_Timepoint$`Class Immunosuppression` = factor(list_Timepoint$`Class Immunosuppression`,levels = c("Healthy","Baseline","1","2","3","4","5", "6")) 
+
+
+# Create Heatmap split by visits
+  heatmap_lum_split <- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = "Expression",  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c("blue", "white", "red")),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = FALSE,
+                         clustering_method_columns = "ward.D",  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(23, "cm"), height = unit(15, "cm"),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno,
+                         column_split = list_Timepoint$`Class Immunosuppression`,
+                         column_gap = unit(4, "mm") 
+                          )
+
+
+# Draw Heatmap
+  show(heatmap_lum_split)
+```
 
 ```{r prep data for z score and statistical testing}
 # define analyte columns
 analyte_cols <- setdiff(colnames(table_lum_CarTrans_overall),
-                        c("Study_ID", "Visit", "Sample_ID", "Class Immunosuppression"))
+                        c("Study_ID", "Visit", "Sample_ID", "Class Immunosuppression", "Timepoint"))
 
 # Log transform input values
 table_lum_CarTrans_overall_z <- table_lum_CarTrans_overall %>%

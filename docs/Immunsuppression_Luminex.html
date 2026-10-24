@@ -11,7 +11,7 @@
 
 <meta name="author" content="I. Hanka" />
 
-<meta name="date" content="2026-10-23" />
+<meta name="date" content="2026-10-24" />
 
 <title>Immunsuppression_Luminex</title>
 
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Immunsuppression_Luminex</h1>
 <h4 class="author">I. Hanka</h4>
-<h4 class="date">2026-10-23</h4>
+<h4 class="date">2026-10-24</h4>
 
 </div>
 
@@ -329,7 +329,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-10-23
+<strong>Last updated:</strong> 2026-10-24
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree51d79014ec66ef4742fa5124ed457a42a5ddf1betargetblank51d7901a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0f20a4505b149771dde67837d2b3519698721061targetblank0f20a45a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/51d79014ec66ef4742fa5124ed457a42a5ddf1be" target="_blank">51d7901</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0f20a4505b149771dde67837d2b3519698721061" target="_blank">0f20a45</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree51d79014ec66ef4742fa5124ed457a42a5ddf1betargetblank51d7901a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree0f20a4505b149771dde67837d2b3519698721061targetblank0f20a45a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/51d79014ec66ef4742fa5124ed457a42a5ddf1be" target="_blank">51d7901</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/0f20a4505b149771dde67837d2b3519698721061" target="_blank">0f20a45</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -501,23 +501,17 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    Quality-Control_files/
     Ignored:    analysis/.DS_Store
+    Ignored:    analysis/figure/
     Ignored:    data/
     Ignored:    html/
 
 Untracked files:
-    Untracked:  Early_late_rejection.Rmd
-    Untracked:  analysis/Early_late_rejection.Rmd
+    Untracked:  analysis/Timeline_Samples.Rmd
 
 Unstaged changes:
-    Modified:   analysis/Convalesence_Rejection.Rmd
+    Modified:   analysis/Correlations.Rmd
+    Modified:   analysis/Early_late_rejection.Rmd
     Modified:   analysis/Immunsuppression_Luminex.Rmd
-    Modified:   analysis/Immunsuppression_Luminex_vsBaseline.Rmd
-    Modified:   analysis/Luminex_HeatmapVisit.Rmd
-    Modified:   analysis/Luminex_HeatmapVisit_vsBaseline.Rmd
-    Modified:   analysis/Luminex_Overview.Rmd
-    Modified:   analysis/PathologicalGrading_Luminex.Rmd
-    Modified:   analysis/TransplantationRisk.Rmd
-    Modified:   analysis/TransplantationRisk_vsBaseline.Rmd
     Modified:   analysis/index.Rmd
 
 </code></pre>
@@ -564,6 +558,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/analysis/Immunsuppression_Luminex.Rmd" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+<td>
+24.10.2026_13:00
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/0f20a4505b149771dde67837d2b3519698721061/docs/Immunsuppression_Luminex.html" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+<td>
+24.10.2026_13:00
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -772,7 +800,6 @@ table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
 rownames(list_ATG) &lt;- list_ATG$Sample_ID
 list_ATG&lt;- list_ATG[, c(&quot;ATG_EMB1_3&quot;, &quot;Visit&quot;), drop = FALSE]  #,&quot;Visit&quot; add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
 
-# Remove metadata columns
 table_lum_CarTrans_overall_01 &lt;- table_lum_CarTrans_overall %&gt;%
   dplyr::select(-Study_ID, -Visit, -Sample_ID, -ATG_EMB1_3)
 
@@ -898,6 +925,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/r heatmap-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/r heatmap-1.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -981,6 +1019,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/split by different conditions-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/split by different conditions-1.png" target="_blank">51d7901</a>
@@ -1144,6 +1193,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/volcano plot ATG-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/volcano plot ATG-1.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1193,27 +1253,31 @@ table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
     Visit == &quot;V3&quot; ~ &quot;Month 1-3&quot;,
     Visit == &quot;V4&quot; ~ &quot;Month 4-6&quot;,
     Visit == &quot;V5&quot; ~ &quot;Month 12&quot;,
-    grepl(&quot;^VX&quot;, Visit) ~ &quot;Rejection Context&quot;, 
+    grepl(&quot;^VX&quot;, Visit) ~ Visit, #keep different X timepoints to not create duplicates
     TRUE~Visit
     ),
-    Visit = factor(Visit,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;Rejection Context&quot;)) 
+    Visit = factor(Visit,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;VX1&quot;, &quot;VX2&quot;, &quot;VX3&quot;, &quot;VX4&quot;)) 
   )
 
 # Assign unique sample IDs for each study ID
 table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
   mutate(Sample_ID = paste(Study_ID, Visit, sep = &quot;_&quot;))
 
+# Mutate into rejection context
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Timepoint= case_when(grepl(&quot;^VX&quot;, Visit) ~ &quot;Rejection Context&quot;,TRUE ~ Visit))
+
 # Rename Class_Sup
 table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
                             rename(`Class Immunosuppression` = Class_Sup)</code></pre>
 <pre class="r"><code>#Prep table
 df_Sup &lt;- table_lum_CarTrans_overall %&gt;%
-  select(`Class Immunosuppression`, Visit) %&gt;%
-  filter(!Visit %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;)) #Filter out Healthy and Baseline for plotting
+  select(`Class Immunosuppression`, Timepoint) %&gt;%
+  filter(!Timepoint %in% c(&quot;Healthy&quot;, &quot;Baseline&quot;)) #Filter out Healthy and Baseline for plotting
 
 #Set order
-df_Sup$Visit &lt;- factor(
-  df_Sup$Visit,
+df_Sup$Timepoint &lt;- factor(
+  df_Sup$Timepoint,
   levels = c(
     &quot;Week 1&quot;,
     &quot;Week 2&quot;,
@@ -1235,7 +1299,7 @@ grade_colors_Sup &lt;- c(
   &quot;5&quot; = &quot;#f46d43&quot;,
   &quot;6&quot; = &quot;#d73027&quot;
 )</code></pre>
-<pre class="r"><code>ggplot(df_Sup, aes(x = Visit, fill = `Class Immunosuppression`)) +
+<pre class="r"><code>ggplot(df_Sup, aes(x = Timepoint, fill = `Class Immunosuppression`)) +
   geom_bar(position = &quot;dodge&quot;) +
   scale_fill_manual(values = grade_colors_Sup) +
   labs(
@@ -1269,6 +1333,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/count plot immunosuppression-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/count plot immunosuppression-1.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1295,9 +1370,9 @@ IsabellaH1993
 </div>
 <pre class="r"><code># Create summary table with counts
 df_counts &lt;- df_Sup %&gt;%
-  count(Visit, `Class Immunosuppression`)
+  count(Timepoint, `Class Immunosuppression`)
 
-ggplot(df_counts, aes(x = Visit, y=n, fill = `Class Immunosuppression`)) +
+ggplot(df_counts, aes(x = Timepoint, y=n, fill = `Class Immunosuppression`)) +
   geom_bar(stat = &quot;identity&quot;, position = &quot;fill&quot;) +
   geom_text(
     aes(label = n),
@@ -1337,6 +1412,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/distribution immunosuppression-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/distribution immunosuppression-1.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1361,9 +1447,228 @@ IsabellaH1993
 </table>
 </div>
 </div>
+<pre class="r"><code># Create annotation table
+table_lum_CarTrans_overall &lt;- table_lum_CarTrans_overall %&gt;%
+  mutate(Timepoint= case_when(grepl(&quot;^VX&quot;, Visit) ~ &quot;Rejection Context&quot;,TRUE ~ Visit))
+
+list_Timepoint &lt;- table_lum_CarTrans_overall %&gt;%dplyr::select(Sample_ID, &quot;Class Immunosuppression&quot;, Visit, Timepoint)
+
+list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;Week 1&quot;,&quot;Week 2&quot;,&quot;Month 1-3&quot;,&quot;Month 4-6&quot;,&quot;Month 12&quot;, &quot;Rejection Context&quot;)) 
+list_Timepoint$`Class Immunosuppression` = factor(list_Timepoint$`Class Immunosuppression`,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;, &quot;6&quot;)) 
+
+
+
+rownames(list_Timepoint) &lt;- list_Timepoint$Sample_ID
+list_Timepoint &lt;- list_Timepoint[, c(&quot;Class Immunosuppression&quot;,&quot;Timepoint&quot;), drop = FALSE]  #,&quot;Visit&quot; add Visit into c() to get two factor grouping of overall visits groups and keep also all visits
+
+# Remove metadata columns
+table_lum_CarTrans_overall_01 &lt;- table_lum_CarTrans_overall %&gt;%
+  dplyr::select(-Study_ID, -Visit, -Sample_ID, -`Class Immunosuppression`)
+
+# Convert Data Table to Data Frame
+  table_lum_CarTrans_overall_01 &lt;- as.data.frame(table_lum_CarTrans_overall_01)
+  
+# Transpose Data Table
+  table_lum_CarTrans_overall_01_t &lt;- t(table_lum_CarTrans_overall_01)
+
+## Column Annotations
+  colnames(table_lum_CarTrans_overall_01_t) &lt;- table_lum_CarTrans_overall$Sample_ID
+
+
+## Row Annotations
+  # Create list with Parameters 
+    list_parameter_groups &lt;- openxlsx::read.xlsx(file.path(basedir,&quot;data&quot;, &quot;Grouping of Luminex Marker.xlsx&quot;))
+
+  # Create list with Columns of data table
+    list_parameter_datatable &lt;- as.data.frame(rownames(table_lum_CarTrans_overall_01_t))
+                                colnames(list_parameter_datatable) &lt;- &quot;Parameter&quot;
+
+  # Merge to match the order of parameters
+    list_parameter_groups_01 &lt;- merge(list_parameter_groups, list_parameter_datatable, by.y = &quot;Parameter&quot;)
+
+# Define the predefined order for Group
+  group_order &lt;- c(&quot;Cytokine&quot;, &quot;Chemokine&quot;, &quot;Growth factor/Tissue Cytokine&quot;, &quot;Activation Marker&quot;)
+  
+# Filter and order
+  list_parameter_groups_02 &lt;- list_parameter_groups_01 %&gt;%
+#                              filter(Parameter %in% selected_markers) %&gt;%
+                              mutate(Grouping = factor(Grouping, levels = group_order)) %&gt;%
+#                              Parameter = factor(Parameter, levels = selected_markers)) %&gt;%
+                              arrange(Parameter)
+  
+# Extract ordered parameter vector
+  list_parameter_groups_03 &lt;- as.character(list_parameter_groups_02$Parameter)
+
+# Reorder Data Table based on the new ordered list
+  table_lum_CarTrans_overall_01_t_ordered &lt;- as.data.frame(table_lum_CarTrans_overall_01_t)
+  table_lum_CarTrans_overall_01_t_ordered &lt;- table_lum_CarTrans_overall_01_t[list_parameter_groups_03, ]
+
+# Convert it back to matrix
+  table_lum_CarTrans_overall_01_t_ordered &lt;- as.matrix(table_lum_CarTrans_overall_01_t_ordered)
+
+#Convert back to numeric
+  table_lum_CarTrans_overall_01_t_ordered &lt;- matrix(
+    as.numeric(trimws(table_lum_CarTrans_overall_01_t_ordered)),
+    nrow = nrow(table_lum_CarTrans_overall_01_t_ordered),
+    dimnames = dimnames(table_lum_CarTrans_overall_01_t_ordered))
+  
+# Log Transform 
+  table_lum_CarTrans_overall_01_t_ordered &lt;- log2(table_lum_CarTrans_overall_01_t_ordered)
+  
+# Scale 
+  table_lum_CarTrans_overall_01_t_ordered &lt;- t(apply(table_lum_CarTrans_overall_01_t_ordered, 1, scale))
+
+  
+# Create Cohort Label Colors of Annotations in heatmap
+  ann_colors &lt;- list(
+  Timepoint = c(
+    &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+    &quot;Week 1&quot; = &quot;#B2EBF2&quot;,
+    &quot;Week 2&quot; = &quot;#A8C7FF&quot;,
+    &quot;Month 1-3&quot; = &quot;#4DD0E1&quot;,
+    &quot;Month 4-6&quot; = &quot;#0097A7&quot;,
+    &quot;Month 12&quot; = &quot;#1E3FA3&quot;,
+    &quot;Rejection Context&quot; = &quot;#FF6B6B&quot;,
+    &quot;Healthy&quot; = &quot;grey&quot;),
+  Grouping = c(
+    &quot;Cytokine&quot; = &quot;darkseagreen&quot;,
+    &quot;Chemokine&quot; = &quot;lightblue&quot;, 
+    &quot;Growth factor/Tissue Cytokine&quot; = &quot;mediumpurple3&quot;,
+    &quot;Activation Marker&quot; =  &quot;lightpink&quot;),
+  &quot;Class Immunosuppression&quot; = c(  
+  &quot;Baseline&quot; = &quot;#E0F7FA&quot;,
+  &quot;Healthy&quot; = &quot;grey&quot;,
+  &quot;1&quot; = &quot;#66bd63&quot;,
+  &quot;2&quot; = &quot;#a6d96a&quot;,
+  &quot;3&quot;  = &quot;#ffffbf&quot;,
+  &quot;4&quot; = &quot;#fdae61&quot;,
+  &quot;5&quot; = &quot;#f46d43&quot;,
+  &quot;6&quot; = &quot;#d73027&quot;
+))
+
+# Column Annotation
+  col_anno &lt;- HeatmapAnnotation(df = list_Timepoint, col = ann_colors)
+
+# Row Annotation
+  #  Prepare row annotations as a data frame
+  row_anno &lt;- rowAnnotation(Grouping = list_parameter_groups_02$Grouping,
+                            col = list(Grouping = ann_colors$Grouping))
+
+# Create Heatmap
+  heatmap_lum &lt;- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = &quot;Expression&quot;,  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;)),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = TRUE,  
+                         clustering_method_columns = &quot;ward.D&quot;,  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(18, &quot;cm&quot;), height = unit(15, &quot;cm&quot;),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno)
+
+# Draw Heatmap
+  show(heatmap_lum)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">51d7901</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/4e98555056559f50e838112f677ea34c2239a48d/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">4e98555</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c51e568298eca20ab55002e444a3c4bc5d92f7ff/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">c51e568</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># Reorder grouped Immunsuppression
+list_Timepoint$`Class Immunosuppression` = factor(list_Timepoint$`Class Immunosuppression`,levels = c(&quot;Healthy&quot;,&quot;Baseline&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;, &quot;6&quot;)) 
+
+
+# Create Heatmap split by visits
+  heatmap_lum_split &lt;- Heatmap(table_lum_CarTrans_overall_01_t_ordered, 
+                         name = &quot;Expression&quot;,  
+                         col = circlize::colorRamp2(c(-5, 0, 5), c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;)),  
+                         cluster_rows = TRUE,  
+                         cluster_columns = FALSE,
+                         clustering_method_columns = &quot;ward.D&quot;,  
+                         show_column_names = TRUE,  
+                         column_names_gp = gpar(fontsize = 8),  
+                         row_names_gp = gpar(fontsize = 10),  
+                         width = unit(23, &quot;cm&quot;), height = unit(15, &quot;cm&quot;),  
+                         top_annotation = col_anno,
+                         right_annotation = row_anno,
+                         column_split = list_Timepoint$`Class Immunosuppression`,
+                         column_gap = unit(4, &quot;mm&quot;) 
+                          )
+
+
+# Draw Heatmap
+  show(heatmap_lum_split)</code></pre>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/split%20by%20different%20suppression%20classes-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># define analyte columns
 analyte_cols &lt;- setdiff(colnames(table_lum_CarTrans_overall),
-                        c(&quot;Study_ID&quot;, &quot;Visit&quot;, &quot;Sample_ID&quot;, &quot;Class Immunosuppression&quot;))
+                        c(&quot;Study_ID&quot;, &quot;Visit&quot;, &quot;Sample_ID&quot;, &quot;Class Immunosuppression&quot;, &quot;Timepoint&quot;))
 
 # Log transform input values
 table_lum_CarTrans_overall_z &lt;- table_lum_CarTrans_overall %&gt;%
@@ -1435,6 +1740,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-1.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1483,6 +1799,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-2.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-2.png" target="_blank">51d7901</a>
@@ -1535,6 +1862,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-3.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-3.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1583,6 +1921,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-4.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-4.png" target="_blank">51d7901</a>
@@ -1635,6 +1984,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-5.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-5.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1683,6 +2043,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-6.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-6.png" target="_blank">51d7901</a>
@@ -1735,6 +2106,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-7.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-7.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1783,6 +2165,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-8.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-8.png" target="_blank">51d7901</a>
@@ -1835,6 +2228,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-9.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-9.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1883,6 +2287,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-10.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-10.png" target="_blank">51d7901</a>
@@ -1935,6 +2350,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-11.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-11.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -1983,6 +2409,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-12.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-12.png" target="_blank">51d7901</a>
@@ -2035,6 +2472,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-13.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-13.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2083,6 +2531,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-14.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-14.png" target="_blank">51d7901</a>
@@ -2135,6 +2594,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-15.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-15.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2183,6 +2653,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-16.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-16.png" target="_blank">51d7901</a>
@@ -2235,6 +2716,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-17.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-17.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2283,6 +2775,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-18.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-18.png" target="_blank">51d7901</a>
@@ -2335,6 +2838,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-19.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-19.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2383,6 +2897,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-20.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-20.png" target="_blank">51d7901</a>
@@ -2435,6 +2960,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-21.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-21.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2483,6 +3019,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-22.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-22.png" target="_blank">51d7901</a>
@@ -2535,6 +3082,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-23.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-23.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2583,6 +3141,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-24.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-24.png" target="_blank">51d7901</a>
@@ -2635,6 +3204,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-25.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-25.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2683,6 +3263,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-26.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-26.png" target="_blank">51d7901</a>
@@ -2735,6 +3326,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-27.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-27.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2783,6 +3385,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-28.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-28.png" target="_blank">51d7901</a>
@@ -2835,6 +3448,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-29.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-29.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2883,6 +3507,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-30.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-30.png" target="_blank">51d7901</a>
@@ -2935,6 +3570,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-31.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-31.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -2983,6 +3629,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-32.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-32.png" target="_blank">51d7901</a>
@@ -3035,6 +3692,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-33.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-33.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3083,6 +3751,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-34.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-34.png" target="_blank">51d7901</a>
@@ -3135,6 +3814,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-35.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-35.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3183,6 +3873,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-36.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-36.png" target="_blank">51d7901</a>
@@ -3235,6 +3936,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-37.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-37.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3283,6 +3995,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-38.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-38.png" target="_blank">51d7901</a>
@@ -3335,6 +4058,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-39.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-39.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3383,6 +4117,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-40.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-40.png" target="_blank">51d7901</a>
@@ -3435,6 +4180,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-41.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-41.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3483,6 +4239,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-42.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-42.png" target="_blank">51d7901</a>
@@ -3535,6 +4302,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-43.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-43.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3585,6 +4363,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-44.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-44.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3633,6 +4422,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-45.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-45.png" target="_blank">51d7901</a>
@@ -3696,6 +4496,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-46.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-46.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3744,6 +4555,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-47.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-47.png" target="_blank">51d7901</a>
@@ -3796,6 +4618,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-48.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-48.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3844,6 +4677,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-49.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-49.png" target="_blank">51d7901</a>
@@ -3896,6 +4740,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-50.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-50.png" target="_blank">51d7901</a>
 </td>
 <td>
@@ -3944,6 +4799,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-51.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/prep data for z score and statistical testing-51.png" target="_blank">51d7901</a>
@@ -4059,66 +4925,7 @@ P value adjustment method: BH </code></pre>
   labs(title = &quot;Longitudinal Immune Profiling&quot;,
        y = &quot;Global Z-score (vs Healthy)&quot;,
     caption = &quot;*Global Z-score: mean Z-score across all analytes&quot;)</code></pre>
-<p><img src="figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
-Past versions of unnamed-chunk-1-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">51d7901</a>
-</td>
-<td>
-IsabellaH1993
-</td>
-<td>
-2026-10-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/4e98555056559f50e838112f677ea34c2239a48d/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">4e98555</a>
-</td>
-<td>
-IsabellaH1993
-</td>
-<td>
-2026-10-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/c51e568298eca20ab55002e444a3c4bc5d92f7ff/docs/figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-1-1.png" target="_blank">c51e568</a>
-</td>
-<td>
-IsabellaH1993
-</td>
-<td>
-2026-10-15
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/Immunsuppression_Luminex.Rmd/unnamed-chunk-2-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(df_sample,
        aes(x = `Class Immunosuppression`, y = global_z)) +
   geom_boxplot() +
@@ -4163,6 +4970,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/plot test on sample level-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/plot test on sample level-1.png" target="_blank">51d7901</a>
@@ -4269,6 +5087,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Immunsuppression_Luminex.Rmd/plot heatmap-1.png" target="_blank">0f20a45</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/51d79014ec66ef4742fa5124ed457a42a5ddf1be/docs/figure/Immunsuppression_Luminex.Rmd/plot heatmap-1.png" target="_blank">51d7901</a>

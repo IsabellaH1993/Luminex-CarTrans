@@ -178,7 +178,7 @@ volcano_rejection <- function(timepoints) {
     filter(Timepoint %in% timepoints, !is.na(Rejection))
 
   # Wilcoxon test per parameter: Rejection vs. No rejection
-  parameters <- names(dplyr::select(data_phase, CCL11:BMP4))
+  parameters <- names(dplyr::select(data_phase, CCL11:Grem2))
   stat <- NULL
 
   for (i in parameters) {
@@ -197,7 +197,7 @@ volcano_rejection <- function(timepoints) {
   # Mean per group and log2 FC (Rejection / No rejection)
   volcano_table <- data_phase %>%
     group_by(Rejection) %>%
-    summarise(across(CCL11:BMP4, ~ mean(.x, na.rm = TRUE))) %>%
+    summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE))) %>%
     pivot_longer(-Rejection, names_to = "Parameter", values_to = "Mean") %>%
     pivot_wider(names_from = Rejection, values_from = Mean) %>%
     mutate(log2_fc = log2(Rejection / `No rejection`)) %>%
@@ -240,7 +240,7 @@ late$table %>% filter(FDR < 0.05) %>% arrange(FDR) %>% knitr::kable(digits = 3)
 ```
 
 ```{r}
-# Comparison of early and late rejection 
+# Comparison of early and late phases of rejection vs no rejection
 
 comparison <- full_join(
   early$table %>% dplyr::select(Parameter, log2_fc, FDR),
@@ -248,17 +248,17 @@ comparison <- full_join(
   by = "Parameter", suffix = c("_early", "_late")
 ) %>%
   mutate(
-    Signature_early = case_when(FDR_early < 0.05 & log2_fc_early >  1.5 ~ "Up",
-                                 FDR_early < 0.05 & log2_fc_early < -1.5 ~ "Down",
+    Signature_early = case_when(FDR_early < 0.05 & log2_fc_early >  log2(1.5) ~ "Up",
+                                 FDR_early < 0.05 & log2_fc_early < -log2(1.5) ~ "Down",
                                  TRUE ~ "n.s."),
-    Signature_late  = case_when(FDR_late  < 0.05 & log2_fc_late  >  1.5 ~ "Up",
-                                 FDR_late  < 0.05 & log2_fc_late  < -1.5 ~ "Down",
+    Signature_late  = case_when(FDR_late  < 0.05 & log2_fc_late  >  log2(1.5) ~ "Up",
+                                 FDR_late  < 0.05 & log2_fc_late  < -log2(1.5) ~ "Down",
                                  TRUE ~ "n.s."),
     Pattern = case_when(
-      Signature_early == "Up"   & Signature_late == "Up"   ~ "Up in both",
-      Signature_early == "Down" & Signature_late == "Down" ~ "Down in both",
-      Signature_early != "n.s." & Signature_late == "n.s." ~ paste(Signature_early, "early only"),
-      Signature_early == "n.s." & Signature_late != "n.s." ~ paste(Signature_late, "late only"),
+      Signature_early == "Up"   & Signature_late == "Up"   ~ "Overall upregulation",
+      Signature_early == "Down" & Signature_late == "Down" ~ "Overall downregulation",
+      Signature_early != "n.s." & Signature_late == "n.s." ~ paste(Signature_early, "Upregulation Week 1- Month 3"),
+      Signature_early == "n.s." & Signature_late != "n.s." ~ paste(Signature_late, "Upregulation Month 4-12"),
       Signature_early != "n.s." & Signature_late != "n.s." ~ "Opposite direction",
       TRUE ~ "n.s."
     )
@@ -281,18 +281,75 @@ comparison %>%
   pivot_longer(c(log2_fc_early, log2_fc_late, FDR_early, FDR_late),
                names_to = c(".value", "Phase"),
                names_pattern = "(log2_fc|FDR)_(early|late)") %>%
-  ggplot(aes(Phase, Parameter, fill = log2_fc)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = ifelse(FDR < 0.05, "*", "")), size = 6, vjust = 0.75) +
-  scale_fill_gradient2(low = "#4575b4", mid = "white", high = "#d73027", midpoint = 0,
-                       name = "log2 FC\nRejection /\nNo rejection") +
-  scale_x_discrete(labels = c(early = "Early phase", late = "Late phase")) +
-  facet_grid(Pattern ~ ., scales = "free_y", space = "free_y") +
-  labs(x = NULL, y = NULL) +
+  ggplot(aes(log2_fc, Parameter, color = Phase)) +
+  geom_vline(xintercept = 0, color = "grey40") +
+  geom_vline(xintercept = c(-log2(1.5), log2(1.5)), linetype = "dashed", color = "grey60") +
+  geom_line(aes(group = Parameter), color = "grey70") +
+  geom_point(aes(shape = FDR < 0.05), size = 4, stroke = 1.2) +
+  scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 1),
+                     labels = c(`TRUE` = "FDR < 0.05", `FALSE` = "n.s."), name = NULL) +
+  scale_color_manual(values = c(early = "#4DD0E1", late = "#1E3FA3"),
+                     labels = c(early = "Early phase", late = "Late phase"), name = NULL) +
+  scale_x_continuous(sec.axis = sec_axis(~ 2^., name = "Fold change (linear)")) +
+  labs(x = "log2 fold change (Rejection / No rejection)", y = NULL) +
   theme_classic() +
-  theme(strip.text.y = element_text(angle = 0),
-        panel.border = element_rect(colour = "black", fill = NA))
+  theme(panel.border = element_rect(colour = "black", fill = NA))
 ```
+```{r}
+# Comparison of rejection in early vs late phase
+
+# Filter for rejection timepoints
+data_rej <- table_lum_CarTrans_overall %>%
+  filter(Rejection == "Rejection",
+         Timepoint %in% c("Week 1", "Week 2", "Month 1-3",
+                          "Month 4-6", "Month 12", "Rejection Context")) %>%
+  mutate(Phase = ifelse(Timepoint %in% c("Week 1", "Week 2", "Month 1-3"), "Early", "Late"))
+
+table(data_rej$Phase)
+
+# Patients with rejection in both phases (relevant for repeated measures)
+data_rej %>% distinct(Study_ID, Phase) %>% count(Study_ID) %>% filter(n == 2)
+
+# Wilcoxon test per parameter: Late vs. Early
+stat_phase <- NULL
+for (i in names(dplyr::select(data_rej, CCL11:Grem2))) {
+  formula <- as.formula(paste(i, "Phase", sep = "~"))
+  stat_phase <- bind_rows(stat_phase,
+                          data_rej %>% wilcox_test(formula = formula) %>% rename(Parameter = .y.))
+}
+stat_phase <- stat_phase %>% mutate(FDR = p.adjust(p, method = "BH"))
+
+# Mean per phase, log2 FC (Late / Early)
+volcano_phase <- data_rej %>%
+  group_by(Phase) %>%
+  summarise(across(CCL11:Grem2, ~ mean(.x, na.rm = TRUE))) %>%
+  pivot_longer(-Phase, names_to = "Parameter", values_to = "Mean") %>%
+  pivot_wider(names_from = Phase, values_from = Mean) %>%
+  mutate(log2_fc = log2(Late / Early)) %>%
+  left_join(stat_phase %>% dplyr::select(Parameter, n1, n2, p, FDR), by = "Parameter") %>%
+  mutate(label_para = ifelse(FDR < 0.05 & abs(log2_fc) > log2(1.5), Parameter, ""))
+```
+```{r}
+EnhancedVolcano(volcano_phase,
+                lab = volcano_phase$label_para,
+                x = "log2_fc", y = "FDR",
+                FCcutoff = log2(1.5), pCutoff = 0.05,
+                pointSize = 3.5, labSize = 4, colAlpha = 0.7,
+                boxedLabels = TRUE, col = c("grey", "grey", "grey", "darkred"),
+                xlab = bquote(~Log[2]~ "fold change (Late / Early rejection)"),
+                ylab = bquote(~-Log[10]~ "FDR"),
+                title = NULL, subtitle = NULL, border = "full",
+                drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = "darkred") +
+  theme_classic() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_rect(colour = "black", fill = NA),
+        legend.position = "none")
+
+volcano_phase %>% filter(p < 0.05) %>% arrange(p) %>% knitr::kable(digits = 3)
+```
+
+
+
 # Comparison of analytes of interest in early and late phase
 
 ```{r}
