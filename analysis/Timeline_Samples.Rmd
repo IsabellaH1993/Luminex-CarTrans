@@ -43,30 +43,32 @@ basedir <- here()
 
 ```{r import excel}
 # Import only lab data sheet from excel file
-table_lab_overall <- readxl::read_xlsx(
+table_pathology <- readxl::read_xlsx(
   here("data", "RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"),
-  sheet = "Lab Data",
-  col_names = TRUE
-)
+  sheet = "Pathology",
+  col_names = TRUE)
 ```
 
-```{r clean table_lab}
-#Previous labeling of EMB3 still gets imported, although it`s not visible in original excel
-# Remove double EMB 3 entries
-table_lab <- table_lab_overall %>%
+```{r clean table_pathology}
+#Previous labeling of EMB4 still gets imported, although it`s not visible in original excel
+# Remove double EMB 4 entries
+table_pathology <- table_pathology %>%
   dplyr::select(
-    -`Trop T EMB 3`,
-    -`CK total EMB 3`,
-    -`NT-proBNP EMB 3`,
-    -`CRP EMB 3`,
-    -`Leukozyten EMB 3`,
-    -`Date of lab\nEMB 3`
-  )
+    -`Date of EMB 4`,
+    -`ISHLT 1990 EMB 4`,
+    -`ISHLT 2004 EMB e`,
+    -`pAMR EMB 34`,
+    -`Entzündliche Infiltrate EMB4`,
+    -`Histologie der entzündlichen Infiltrate EMB4`,
+    -`Quilty-Läsion EMB4`,
+    -`C4d EMB4`,
+    -`CD68/CD31 EMB4`,
+    -`Date of EMB5`)
 
 #Clean all EMB6 or EMB7 and CarTrans-Long-009
-table_lab <- table_lab %>%
+table_pathology <- table_pathology %>%
 filter(ID != "CarTrans-Long-009") %>%
-select(-matches("BL|EMB6|EMB7"))
+select(-matches("EMB6|EMB7"))
 ```
 
 ```{r}
@@ -94,14 +96,14 @@ to_date <- function(x) {
           as.Date(parse_date_time(x, orders = c("dmy", "ymd"), quiet = TRUE)))
 }
 
-table_samples <- table_lab %>%
-  mutate(across(c(Date_Transplantation, starts_with("Datelab_")), to_date)) %>%
-  pivot_longer(starts_with("Datelab_"), names_to = "Visit", names_prefix = "Datelab_",
+table_samples <- table_pathology %>%
+  mutate(across(c(Date_Transplantation, starts_with("Date_EMB")), to_date)) %>%
+  pivot_longer(starts_with("Date_EMB"), names_to = "Visit", names_prefix = "Date_",
                values_to = "Date_sample") %>%
   filter(!is.na(Date_sample)) %>%
   mutate(Months = as.numeric(Date_sample - Date_Transplantation) / 30.44,
          Timepoint = case_when(Visit == "EMB1" ~ "Week 1",
-                               Visit == "EMB 2" ~ "Week 2",
+                               Visit == "EMB2" ~ "Week 2",
                                Visit == "EMB3" ~ "Month 1-3",
                                Visit == "EMB4" ~ "Month 4-6",
                                Visit == "EMB5" ~ "Month 12",
@@ -128,6 +130,46 @@ ggplot(table_samples, aes(Months, reorder(ID, Months, max))) +
   labs(x = "Months since transplantation",
        y = paste0("Patients (n = ", n_distinct(table_samples$ID), ")"),
        fill = NULL) +
+  theme_classic() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+```
+# Mark relevant rejection in swimmer plot
+
+```{r}
+table_samples <- table_pathology %>%
+  mutate(across(c(Date_Transplantation, starts_with("Date_EMB")), to_date),
+         across(starts_with("ISHLT_2004_EMB"), as.character)) %>%
+  pivot_longer(c(starts_with("Date_EMB"), starts_with("ISHLT_2004_EMB")),
+               names_to = c(".value", "Visit"),
+               names_pattern = "(Date|ISHLT_2004)_(EMB.*)") %>%
+  filter(!is.na(Date)) %>%
+  mutate(Months = as.numeric(Date - Date_Transplantation) / 30.44,
+         Timepoint = case_when(Visit == "EMB1" ~ "Week 1",
+                               Visit == "EMB2" ~ "Week 2",
+                               Visit == "EMB3" ~ "Month 1-3",
+                               Visit == "EMB4" ~ "Month 4-6",
+                               Visit == "EMB5" ~ "Month 12",
+                               grepl("^EMBX", Visit) ~ "Rejection Context"),
+         Rejection = grepl("2R|3R", ISHLT_2004))
+```
+
+```{r}
+ggplot(table_samples, aes(Months, reorder(ID, Months, max))) +
+  geom_rect(data = windows,
+            aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = Timepoint),
+            alpha = 0.25, inherit.aes = FALSE) +
+  geom_line(aes(group = ID), color = "grey60", linewidth = 0.5) +
+  geom_point(aes(color = Rejection), shape = 16, size = 2.4) +
+  scale_fill_manual(values = ann_colors$Timepoint,
+                    breaks = c("Week 1", "Week 2", "Month 1-3", "Month 4-6",
+                               "Month 12", "Rejection Context")) +
+  scale_color_manual(values = c(`FALSE` = "grey55", `TRUE` = "#d73027"),
+                     labels = c(`FALSE` = "ACR < 2R", `TRUE` = "ACR ≥ 2R"),
+                     name = NULL) +
+  scale_x_continuous(breaks = seq(0, ceiling(max(table_samples$Months, na.rm = TRUE)), by = 3)) +
+  labs(x = "Months since transplantation",
+       y = paste0("Patients (n = ", n_distinct(table_samples$ID), ")"),
+       fill = "Target window") +
   theme_classic() +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 ```

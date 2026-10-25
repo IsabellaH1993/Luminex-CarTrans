@@ -345,7 +345,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # TropT
 
-```{r TropT correlation, warning=FALSE, fig.height=10, fig.width=15}
+```{r TropT correlation, warning=FALSE, fig.height=10, fig.width=18}
 # Define lab parameter (y axis)
   lab_param <- "TropT"
   lab_label <- "Troponin T (log ng/l)"

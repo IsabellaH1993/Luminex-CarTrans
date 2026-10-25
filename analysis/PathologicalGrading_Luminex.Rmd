@@ -62,7 +62,7 @@ table_pathology <- readxl::read_xlsx(
   col_names = TRUE)
 ```
 
-```{r clean table_lab}
+```{r clean table_pathology}
 #Previous labeling of EMB4 still gets imported, although it`s not visible in original excel
 # Remove double EMB 4 entries
 table_pathology <- table_pathology %>%
