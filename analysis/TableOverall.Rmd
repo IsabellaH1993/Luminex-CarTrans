@@ -490,9 +490,10 @@ row_col_list <- list(
 ht <- Heatmap(heatmap_mat,name = "CarTrans", col = "white",
   
   top_annotation = top_ha,
-  cluster_columns = TRUE,
+  cluster_columns = FALSE,
+  column_order = order(as.numeric(annotation_df$`Transplantation risk score`)),
   cluster_rows = FALSE,
-  clustering_method_columns = "ward.D",
+  #clustering_method_columns = "ward.D",
   
   show_row_names = TRUE,
   show_column_names = FALSE,

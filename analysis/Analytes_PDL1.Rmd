@@ -233,7 +233,7 @@ ggplot(df_pdl1, aes(x = Timepoint, y = PD_L1)) +
     y = "PD L1 (log, pg/ml)",
     caption = "Wilcoxon rank-sum test vs Healthy, BH-adjusted"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 0, hjust = 1),
         legend.position = "none")
 ```
 

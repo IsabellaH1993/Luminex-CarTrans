@@ -49,6 +49,7 @@ suppressPackageStartupMessages({
 
 ```
 
+
 ```{r define filepath, include=FALSE}
 basedir <- here ()
 ```
@@ -56,9 +57,6 @@ basedir <- here ()
 
 ```{r import datasets}
 # Import Luminex Data
-  
-  table_lum_healthy <- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_Healthy_all.xlsx"))  
-
   table_lum_CarTrans_V0<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V0_all.xlsx")) 
    
   table_lum_CarTrans_V1<- openxlsx::read.xlsx(file.path(basedir, "data", "Lum_CarTrans_V1_all.xlsx")) 
@@ -74,7 +72,6 @@ basedir <- here ()
 table_lum_CarTrans_VX <- openxlsx::read.xlsx(file.path(basedir,"data", "Lum_CarTrans_VX_all.xlsx"))
 
 # Delete ATG_EMB column
-table_lum_healthy     <- table_lum_healthy     %>% select(-ATG_EMB1_3)
 table_lum_CarTrans_V0 <- table_lum_CarTrans_V0 %>% select(-ATG_EMB1_3)
 table_lum_CarTrans_V1 <- table_lum_CarTrans_V1 %>% select(-ATG_EMB1_3)
 table_lum_CarTrans_V2 <- table_lum_CarTrans_V2 %>% select(-ATG_EMB1_3)
@@ -82,9 +79,9 @@ table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
 
 
 # Combine Tables
-  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)%>%
+  table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX)%>%
 mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %>% 
-    filter(!Study_ID %in% c("CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) 
+    filter(!Study_ID %in% c("CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51")) 
 ```
 
 ```{r clean overall table}
@@ -98,7 +95,6 @@ table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
   mutate(
     Visit = as.character(Visit),
     Visit = case_when(
-    Visit == "Healthy" ~ "Healthy",
     Visit == "V0" ~ "Baseline",
     Visit == "V1" ~ "Week 1",
     Visit == "V2" ~ "Week 2",
@@ -108,7 +104,7 @@ table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
     grepl("^VX", Visit) ~ Visit, #keep different X timepoints to not create duplicates
     TRUE~Visit
     ),
-    Visit = factor(Visit,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
+    Visit = factor(Visit,levels = c("Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "VX1", "VX2", "VX3", "VX4")) 
   )
 
 # Assign unique sample IDs for each study ID
@@ -121,7 +117,7 @@ table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
 
 list_Timepoint <- table_lum_CarTrans_overall %>%dplyr::select(Sample_ID, Visit, Timepoint)
 
- list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Healthy","Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
+ list_Timepoint$Timepoint = factor(list_Timepoint$Timepoint,levels = c("Baseline","Week 1","Week 2","Month 1-3","Month 4-6","Month 12", "Rejection Context")) 
 
 rownames(list_Timepoint) <- list_Timepoint$Sample_ID
 list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE] 
@@ -136,7 +132,6 @@ list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE]
     "Month 1-3" = "#4DD0E1",
     "Month 4-6" = "#0097A7",
     "Month 12" = "#1E3FA3",
-    "Healthy" = "grey",
     "VX1" = "#FFCCCC",
     "VX2" = "#FF9999",
     "VX3" = "#FF6666",
@@ -149,8 +144,7 @@ list_Timepoint <- list_Timepoint[, c("Timepoint"), drop = FALSE]
     "Month 1-3" = "#4DD0E1",
     "Month 4-6" = "#0097A7",
     "Month 12" = "#1E3FA3",
-    "Rejection Context" = "#FF6B6B",
-    "Healthy" = "grey")
+    "Rejection Context" = "#FF6B6B")
 )
 ```
 
@@ -210,15 +204,16 @@ table_lab <- table_lab %>%
 ```
 
 
+
 # NTproBNP
 
-```{r NTproBNP correlation, warning=FALSE, fig.height=10, fig.width=15}
+```{r NTproBNP correlation, warning=FALSE, fig.height=10, fig.width=18}
 # Match Luminex and lab data per patient and visit
   table_corr <- inner_join(table_lum_CarTrans_overall, table_lab,
                            by = c("Study_ID", "Visit"))
 # Order Timepoints
 table_corr <- table_corr%>%
-mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
+mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
 
 # Define lab parameter (y axis)
   lab_param <- "NTproBNP"
@@ -239,6 +234,10 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
   
       # Compute Spearman correlation
         cor_test <- cor.test(table_corr[[p]], table_corr[[lab_param]], method = "spearman")
+        
+        # Mixed model: adjusted for timepoint and patient
+        fit <- lmer(as.formula(paste0("log10(", lab_param, ") ~ log10(", p, ") + Timepoint + (1 | Study_ID)")), data = table_corr)
+        coef_adj <- summary(fit)$coefficients[2, ]
   
       # Define x axis margins and breaks
         max_x <- max(table_corr[[p]], na.rm = TRUE) * 1.1
@@ -256,6 +255,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                 scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
                               limits = c(min_log10_limit, max_log10_limit),
                               expand = c(0.05, 0), breaks = x_breaks) +
+                scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE)) +
                 theme_classic() +
                 theme(legend.text  = element_text(size = 12),
                 legend.title = element_text(size = 13),
@@ -263,9 +263,9 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                   guides(fill = guide_legend(override.aes = list(size = 4))) +
                 labs(x = analyte_labels[[p]], y = lab_label) +
                 annotate("text", x = min_log10_limit, y = Inf,
-                         label = paste0("rho = ", round(cor_test$estimate, 2),
-                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
-                         hjust = -0.1, vjust = 1.2, size = 4)
+                label = paste0("rho = ", round(cor_test$estimate, 2),
+                "\nadjusted p", ifelse(coef_adj["Pr(>|t|)"] < 0.001, "< 0.001",
+                paste("=", signif(coef_adj["Pr(>|t|)"], 2)))),hjust = -0.1, vjust = 1.2, size = 4)
         
       # Store each plot
         plots_list[[p]] <- plot
@@ -282,8 +282,11 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # CRP
 
-```{r CRP correlation, warning=FALSE, fig.height=10, fig.width=15}
-# Define lab parameter (y axis)
+```{r CRP correlation, warning=FALSE, fig.height=10, fig.width=15, include=FALSE, eval=FALSE}
+### Ausstehend: log transformation von CRP funktioniert bei Eingaben von <0.6 oder 0 nicht - korrigieren!!
+  
+  
+  # Define lab parameter (y axis)
   lab_param <- "CRP"
   lab_label <- "CRP (log ng/l)"
 
@@ -302,6 +305,12 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
   
       # Compute Spearman correlation
         cor_test <- cor.test(table_corr[[p]], table_corr[[lab_param]], method = "spearman")
+        
+        # Mixed model: adjusted for timepoint and patient
+        fit <- lmer(as.formula(paste0("log10(", lab_param, ") ~ log10(", p, ") + Timepoint + (1 | Study_ID)")),
+              data = table_corr)
+        coef_adj <- summary(fit)$coefficients[2, ]
+  
   
       # Define x axis margins and breaks
         max_x <- max(table_corr[[p]], na.rm = TRUE) * 1.1
@@ -319,6 +328,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                 scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
                               limits = c(min_log10_limit, max_log10_limit),
                               expand = c(0.05, 0), breaks = x_breaks) +
+                scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE)) +
                 theme_classic() +
                 theme(legend.text  = element_text(size = 12),
                 legend.title = element_text(size = 13),
@@ -326,9 +336,9 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                   guides(fill = guide_legend(override.aes = list(size = 4))) +
                 labs(x = analyte_labels[[p]], y = lab_label) +
                 annotate("text", x = min_log10_limit, y = Inf,
-                         label = paste0("rho = ", round(cor_test$estimate, 2),
-                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
-                         hjust = -0.1, vjust = 1.2, size = 4)
+                label = paste0("rho = ", round(cor_test$estimate, 2),
+                "\nadjusted p", ifelse(coef_adj["Pr(>|t|)"] < 0.001, "< 0.001",
+                paste("=", signif(coef_adj["Pr(>|t|)"], 2)))),hjust = -0.1, vjust = 1.2, size = 4)
         
       # Store each plot
         plots_list[[p]] <- plot
@@ -345,7 +355,10 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
 
 # TropT
 
-```{r TropT correlation, warning=FALSE, fig.height=10, fig.width=18}
+```{r, warning=FALSE, fig.height=10, fig.width=18}
+# Using a linear model with adjustment/coefficients: timepoint and patient
+
+
 # Define lab parameter (y axis)
   lab_param <- "TropT"
   lab_label <- "Troponin T (log ng/l)"
@@ -365,6 +378,11 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
   
       # Compute Spearman correlation
         cor_test <- cor.test(table_corr[[p]], table_corr[[lab_param]], method = "spearman")
+        
+        # Mixed model: adjusted for timepoint and patient
+        fit <- lmer(as.formula(paste0("log10(", lab_param, ") ~ log10(", p, ") + Timepoint + (1 | Study_ID)")),
+              data = table_corr)
+        coef_adj <- summary(fit)$coefficients[2, ]
   
       # Define x axis margins and breaks
         max_x <- max(table_corr[[p]], na.rm = TRUE) * 1.1
@@ -382,6 +400,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                 scale_x_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE), 
                               limits = c(min_log10_limit, max_log10_limit),
                               expand = c(0.05, 0), breaks = x_breaks) +
+                scale_y_log10(labels = function(y) format(y, scientific = FALSE, trim = TRUE)) +
                 theme_classic() +
                 theme(legend.text  = element_text(size = 12),
                 legend.title = element_text(size = 13),
@@ -389,9 +408,9 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                 guides(fill = guide_legend(override.aes = list(size = 4))) +
                 labs(x = analyte_labels[[p]], y = lab_label) +
                 annotate("text", x = min_log10_limit, y = Inf,
-                         label = paste0("rho = ", round(cor_test$estimate, 2),
-                                        "\np = ", ifelse(cor_test$p.value < 0.001, "< 0.001", signif(cor_test$p.value, 3))),
-                         hjust = -0.1, vjust = 1.2, size = 4)
+                label = paste0("rho = ", round(cor_test$estimate, 2),
+                "\nadjusted p", ifelse(coef_adj["Pr(>|t|)"] < 0.001, "< 0.001",
+                paste("=", signif(coef_adj["Pr(>|t|)"], 2)))),hjust = -0.1, vjust = 1.2, size = 4)
       
         
       # Store each plot
@@ -404,7 +423,12 @@ mutate(Timepoint = factor(Timepoint, levels = c("Healthy", "Baseline", "Week 1",
                      common.legend = TRUE, legend = "right")
       
   print(panel)
+  
 ```
+
+
+
+
 # Correlation with pathological grading
 
 ```{r import pathology excel}
