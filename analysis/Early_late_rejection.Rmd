@@ -515,7 +515,7 @@ res_phase <- map_dfr(c("CXCL10", "PD_L1", "IL2R"), function(p) {
 knitr::kable(res_phase, digits = 3)
 ```
 
-```{r}
+```{r, fig.width=12, fig.height=7}
 
 rej_colors <- c("No rejection" = "grey75", "Rejection" = "#d73027")
 
