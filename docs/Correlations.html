@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree58d6ac593bef5cd5fbafa86b37b09f7e1a961deftargetblank58d6ac5a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeaba1496ef6501eeee4b90832047c31b4b5915685targetblankaba1496a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/58d6ac593bef5cd5fbafa86b37b09f7e1a961def" target="_blank">58d6ac5</a>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/aba1496ef6501eeee4b90832047c31b4b5915685" target="_blank">aba1496</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstree58d6ac593bef5cd5fbafa86b37b09f7e1a961deftargetblank58d6ac5a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomIsabellaH1993LuminexCarTranstreeaba1496ef6501eeee4b90832047c31b4b5915685targetblankaba1496a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/58d6ac593bef5cd5fbafa86b37b09f7e1a961def" target="_blank">58d6ac5</a>.
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/tree/aba1496ef6501eeee4b90832047c31b4b5915685" target="_blank">aba1496</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -550,6 +550,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/aba1496ef6501eeee4b90832047c31b4b5915685/analysis/Correlations.Rmd" target="_blank">aba1496</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-25
+</td>
+<td>
+25.10.2026_11:19
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/IsabellaH1993/Luminex-CarTrans/aba1496ef6501eeee4b90832047c31b4b5915685/docs/Correlations.html" target="_blank">aba1496</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-25
+</td>
+<td>
+25.10.2026_11:19
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -917,8 +951,8 @@ mutate(Timepoint = factor(Timepoint, levels = c(&quot;Healthy&quot;, &quot;Basel
                 legend.key.size = unit(0.8, &quot;cm&quot;)) +
                   guides(fill = guide_legend(override.aes = list(size = 4))) +
                 labs(x = analyte_labels[[p]], y = lab_label) +
-                annotate(&quot;text&quot;, x = -Inf, y = Inf,
-                         label = paste0(&quot;r = &quot;, round(cor_test$estimate, 2),
+                annotate(&quot;text&quot;, x = min_log10_limit, y = Inf,
+                         label = paste0(&quot;rho = &quot;, round(cor_test$estimate, 2),
                                         &quot;\np = &quot;, ifelse(cor_test$p.value &lt; 0.001, &quot;&lt; 0.001&quot;, signif(cor_test$p.value, 3))),
                          hjust = -0.1, vjust = 1.2, size = 4)
         
@@ -959,6 +993,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/aba1496ef6501eeee4b90832047c31b4b5915685/docs/figure/Correlations.Rmd/NTproBNP correlation-1.png" target="_blank">aba1496</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Correlations.Rmd/NTproBNP correlation-1.png" target="_blank">0f20a45</a>
@@ -1052,8 +1097,8 @@ IsabellaH1993
                 legend.key.size = unit(0.8, &quot;cm&quot;)) +
                   guides(fill = guide_legend(override.aes = list(size = 4))) +
                 labs(x = analyte_labels[[p]], y = lab_label) +
-                annotate(&quot;text&quot;, x = -Inf, y = Inf,
-                         label = paste0(&quot;r = &quot;, round(cor_test$estimate, 2),
+                annotate(&quot;text&quot;, x = min_log10_limit, y = Inf,
+                         label = paste0(&quot;rho = &quot;, round(cor_test$estimate, 2),
                                         &quot;\np = &quot;, ifelse(cor_test$p.value &lt; 0.001, &quot;&lt; 0.001&quot;, signif(cor_test$p.value, 3))),
                          hjust = -0.1, vjust = 1.2, size = 4)
         
@@ -1094,6 +1139,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/aba1496ef6501eeee4b90832047c31b4b5915685/docs/figure/Correlations.Rmd/CRP correlation-1.png" target="_blank">aba1496</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Correlations.Rmd/CRP correlation-1.png" target="_blank">0f20a45</a>
@@ -1187,10 +1243,11 @@ IsabellaH1993
                 legend.key.size = unit(0.8, &quot;cm&quot;)) +
                 guides(fill = guide_legend(override.aes = list(size = 4))) +
                 labs(x = analyte_labels[[p]], y = lab_label) +
-                annotate(&quot;text&quot;, x = -Inf, y = Inf,
-                         label = paste0(&quot;r = &quot;, round(cor_test$estimate, 2),
+                annotate(&quot;text&quot;, x = min_log10_limit, y = Inf,
+                         label = paste0(&quot;rho = &quot;, round(cor_test$estimate, 2),
                                         &quot;\np = &quot;, ifelse(cor_test$p.value &lt; 0.001, &quot;&lt; 0.001&quot;, signif(cor_test$p.value, 3))),
                          hjust = -0.1, vjust = 1.2, size = 4)
+      
         
       # Store each plot
         plots_list[[p]] &lt;- plot
@@ -1229,6 +1286,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/aba1496ef6501eeee4b90832047c31b4b5915685/docs/figure/Correlations.Rmd/TropT correlation-1.png" target="_blank">aba1496</a>
+</td>
+<td>
+IsabellaH1993
+</td>
+<td>
+2026-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/IsabellaH1993/Luminex-CarTrans/blob/0f20a4505b149771dde67837d2b3519698721061/docs/figure/Correlations.Rmd/TropT correlation-1.png" target="_blank">0f20a45</a>
@@ -1392,7 +1460,7 @@ decrease)</p>
 <pre><code>Warning: Removed 16 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 <pre class="r"><code>  print(panel)</code></pre>
-<p><img src="figure/Correlations.Rmd/unnamed-chunk-4-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Correlations.Rmd/unnamed-chunk-4-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
 Past versions of unnamed-chunk-4-1.png
@@ -1493,7 +1561,7 @@ panel &lt;- ggarrange(plotlist = plots_list, ncol = 2, nrow = 2,
 <pre><code>Warning: Removed 16 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 <pre class="r"><code>print(panel)</code></pre>
-<p><img src="figure/Correlations.Rmd/unnamed-chunk-6-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Correlations.Rmd/unnamed-chunk-6-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
 Past versions of unnamed-chunk-6-1.png
