@@ -153,7 +153,7 @@ table_samples <- table_pathology %>%
          Rejection = grepl("2R|3R", ISHLT_2004))
 ```
 
-```{r}
+```{r, fig.width=11, fig.height=8}
 ggplot(table_samples, aes(Months, reorder(ID, Months, max))) +
   geom_rect(data = windows,
             aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = Timepoint),
