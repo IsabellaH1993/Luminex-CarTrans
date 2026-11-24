@@ -282,10 +282,10 @@ table_lum_CarTrans_V4 <- table_lum_CarTrans_V4 %>% select(-Class_Sup, - Transpla
 table_lum_CarTrans_V5 <- table_lum_CarTrans_V5 %>% select(-Class_Sup, - Transplantation_risk)
 
 # Combine Tables
-  table_lum_CarTrans_overall <- dplyr::bind_rows(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy)   %>%
-    mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004), ~{
-        x <- as.numeric(as.character(.))  
-      })) %>%     
+  table_lum_CarTrans_overall <- dplyr::bind_rows(
+    lapply(list(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX, table_lum_healthy),
+             function(d) mutate(d, across(everything(), as.character)))) %>%
+    mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004), ~ as.numeric(gsub(",", ".", .x))))%>%     
     filter(!Study_ID %in% c("CarTrans-Long-45", "CarTrans-Long-51", "CarTrans-Healthy-35", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) #Exclude unmeasured samples
 ```
 
