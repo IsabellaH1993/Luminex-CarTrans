@@ -77,12 +77,21 @@ table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
 # Combine Tables
   table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX)%>%
 mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %>% 
-    filter(!Study_ID %in% c("CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51", "CarTrans-Healthy-29", "CarTrans-Healthy-30", "CarTrans-Healthy-31", "CarTrans-Healthy-32", "CarTrans-Healthy-33", "CarTrans-Healthy-34", "CarTrans-Healthy-35", "CarTrans-Healthy-36", "CarTrans-Healthy-37", "CarTrans-Healthy-38", "CarTrans-Healthy-39", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) 
+    filter(!Study_ID %in% c("CarTrans-Long-45", "CarTrans-Long-51", "CarTrans-Healthy-35", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) 
 ```
 
 ```{r clean overall table}
 table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
-  select(-Class_Sup, -Transplantation_risk)
+  select(-Class_Sup)%>%
+  filter(!(Study_ID == "CarTrans-Long-47" & Visit == "V5" |
+           Study_ID == "CarTrans-Long-48" & Visit == "V5"|
+           Study_ID == "CarTrans-Long-48" & Visit == "V5"|
+           Study_ID == "CarTrans-Long-49" & Visit == "V5"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V2"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V3"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V4"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V5"
+           ))
 ```
 
 ```{r prep metadata, include=FALSE}
@@ -543,5 +552,88 @@ ggarrange(plotlist = lapply(c("CXCL10", "PD_L1", "IL2R"), plot_interaction),
           ncol = 3, common.legend = TRUE, legend = "bottom")
 ```
 
+# Plotting of transplantation risk score on late rejection
 
+```{r}
+risk_labels <- c(
+  "1" = "1",
+  "2" = "2",
+  "3" = "3",
+  "4" = "4",
+  "5" = "5"
+)
+
+ggplot(data_phase, aes(x = Transplantation_risk, fill = Rejection)) +
+  geom_bar(position = "fill") +
+  geom_text(stat = "count", aes(label = after_stat(count)),
+            position = position_fill(vjust = 0.5), size = 3) +
+  facet_wrap(~ Phase) +
+  scale_x_discrete(drop = FALSE, labels = risk_labels) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "Transplantation risk score", y = "Proportion of samples", fill = NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text())
+```
+```{r}
+ggplot(distinct(data_phase, Study_ID, Phase, Rejection, Transplantation_risk),
+       aes(x = Rejection, y = as.numeric(as.character(Transplantation_risk)))) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3) +
+  geom_jitter(width = 0.15, height = 0.1) +
+  facet_wrap(~ Phase) +
+  scale_y_continuous(breaks = 1:6) +
+  labs(x = NULL, y = "Transplantation risk score") +
+  theme_bw()
+```
+
+```{r}
+# Early phase
+m_early <- glmer(Rejection ~ as.numeric(as.character(Transplantation_risk)) + (1 | Study_ID),
+                 family = binomial, data = filter(data_phase, Phase == "Early"))
+
+# Late phase
+m_late <- glmer(Rejection ~ as.numeric(as.character(Transplantation_risk)) + (1 | Study_ID),
+                family = binomial, data = filter(data_phase, Phase == "Late"))
+
+summary(m_early)
+summary(m_late)
+
+# Odds ratio per +1 risk score point, with 95% CI
+exp(cbind(OR = fixef(m_early), confint(m_early, method = "Wald", parm = "beta_")))
+exp(cbind(OR = fixef(m_late),  confint(m_late,  method = "Wald", parm = "beta_")))
+```
+```{r}
+m_int <- glmer(Rejection ~ as.numeric(as.character(Transplantation_risk)) * Phase + (1 | Study_ID),
+               family = binomial, data = data_phase)
+summary(m_int)
+```
+
+```{r}
+late <- filter(data_phase, Phase == "Late", !is.na(ISHLT_2004))
+
+ggplot(late, aes(x = Transplantation_risk,
+                 fill = factor(ISHLT_2004, levels = c("ACR 0", "ACR 1R", "ACR 2R", "ACR 3R")))) +
+  geom_bar(position = "fill") +
+  geom_text(stat = "count", aes(label = after_stat(count)),
+            position = position_fill(vjust = 0.5), size = 3) +
+  scale_x_discrete(drop = FALSE, labels = risk_labels) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Reds") +
+  labs(x = NULL, y = "Proportion of late-phase samples",
+       fill = "ISHLT 2004") +
+  theme_bw() 
+```
+```{r}
+pat_late <- late %>%
+  group_by(Study_ID, Transplantation_risk) %>%
+  summarise(max_grade = max(as.numeric(factor(ISHLT_2004,
+                              levels = c("ACR 0", "ACR 1R", "ACR 2R", "ACR 3R")))),
+            .groups = "drop")
+
+cor.test(as.numeric(as.character(pat_late$Transplantation_risk)), pat_late$max_grade,
+         method = "kendall", exact = FALSE)
+
+# Spearman for comparison
+cor.test(as.numeric(as.character(pat_late$Transplantation_risk)), pat_late$max_grade,
+         method = "spearman", exact = FALSE)
+```
 

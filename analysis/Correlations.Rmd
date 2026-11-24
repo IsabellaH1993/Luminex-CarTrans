@@ -81,12 +81,21 @@ table_lum_CarTrans_V3 <- table_lum_CarTrans_V3 %>% select(-ATG_EMB1_3)
 # Combine Tables
   table_lum_CarTrans_overall <- rbind(table_lum_CarTrans_V0, table_lum_CarTrans_V1, table_lum_CarTrans_V2, table_lum_CarTrans_V3, table_lum_CarTrans_V4, table_lum_CarTrans_V5, table_lum_CarTrans_VX)%>%
 mutate(across(-c(Study_ID, Visit, ISHLT_1990, ISHLT_2004, Class_Sup))) %>% 
-    filter(!Study_ID %in% c("CarTrans-Long-38", "CarTrans-Long-39", "CarTrans-Long-40", "CarTrans-Long-41", "CarTrans-Long-42", "CarTrans-Long-43", "CarTrans-Long-44", "CarTrans-Long-45", "CarTrans-Long-46", "CarTrans-Long-47", "CarTrans-Long-48", "CarTrans-Long-49", "CarTrans-Long-50", "CarTrans-Long-51")) 
+    filter(!Study_ID %in% c("CarTrans-Long-45", "CarTrans-Long-51", "CarTrans-Healthy-35", "CarTrans-Healthy-40", "CarTrans-Healthy-41", "CarTrans-Healthy-42", "CarTrans-Healthy-43", "CarTrans-Healthy-44", "CarTrans-Healthy-45", "CarTrans-Healthy-46", "CarTrans-Healthy-47", "CarTrans-Healthy-48","CarTrans-Healthy-49", "CarTrans-Healthy-50")) 
 ```
 
 ```{r clean overall table}
 table_lum_CarTrans_overall <- table_lum_CarTrans_overall %>%
-  select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk)
+  select(-ISHLT_1990, -ISHLT_2004, -Class_Sup, -Transplantation_risk) %>%
+  filter(!(Study_ID == "CarTrans-Long-47" & Visit == "V5" |
+           Study_ID == "CarTrans-Long-48" & Visit == "V5"|
+           Study_ID == "CarTrans-Long-48" & Visit == "V5"|
+           Study_ID == "CarTrans-Long-49" & Visit == "V5"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V2"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V3"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V4"|
+           Study_ID == "CarTrans-Long-50" & Visit == "V5"
+           ))
 ```
 
 ```{r prep metadata}
@@ -211,10 +220,6 @@ table_lab <- table_lab %>%
 # Match Luminex and lab data per patient and visit
   table_corr <- inner_join(table_lum_CarTrans_overall, table_lab,
                            by = c("Study_ID", "Visit"))
-# Order Timepoints
-table_corr <- table_corr%>%
-mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2","Month 1-3", "Month 4-6", "Month 12", "Rejection Context")))
-
 # Define lab parameter (y axis)
   lab_param <- "NTproBNP"
   lab_label <- "NTproBNP (log ng/l)"
@@ -223,6 +228,11 @@ mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2","
   analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
   analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
   names(analyte_labels) <- analytes
+
+# Order Timepoints
+table_corr <- table_corr %>%
+  mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2", "Month 1-3","Month 4-6", "Month 12", "Rejection Context")),
+         across(all_of(c(analytes, lab_param)), ~ as.numeric(.x)))
 
 # Create list for plots
   plots_list <- list()
@@ -283,10 +293,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2","
 # CRP
 
 ```{r CRP correlation, warning=FALSE, fig.height=10, fig.width=15, include=FALSE, eval=FALSE}
-### Ausstehend: log transformation von CRP funktioniert bei Eingaben von <0.6 oder 0 nicht - korrigieren!!
-  
-  
-  # Define lab parameter (y axis)
+# Define lab parameter (y axis)
   lab_param <- "CRP"
   lab_label <- "CRP (log ng/l)"
 
@@ -294,6 +301,10 @@ mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2","
   analytes <- c("PD_L1", "CXCL10", "IL2R", "Grem2")
   analyte_labels <- c("PD L1 (log pg/ml)", "CXCL10 (log pg/ml)", "IL2R (log pg/ml)", "Grem2 (log pg/ml)")
   names(analyte_labels) <- analytes
+  
+# Remove NA
+table_corr <- table_corr %>%
+  mutate(across(all_of(c(analytes, lab_param)), ~ as.numeric(.x)))
 
 # Create list for plots
   plots_list <- list()
@@ -308,7 +319,7 @@ mutate(Timepoint = factor(Timepoint, levels = c("Baseline", "Week 1", "Week 2","
         
         # Mixed model: adjusted for timepoint and patient
         fit <- lmer(as.formula(paste0("log10(", lab_param, ") ~ log10(", p, ") + Timepoint + (1 | Study_ID)")),
-              data = table_corr)
+              data = filter(table_corr, .data[[lab_param]] > 0, .data[[p]] > 0)) #filtered for 0 values
         coef_adj <- summary(fit)$coefficients[2, ]
   
   

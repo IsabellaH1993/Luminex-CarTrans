@@ -33,8 +33,13 @@ library(purrr)
 library(tibble)
 ```
 
+```{r define filepath}
+basedir <- here ()
+```
+
+
 ```{r read in excel on combine all sheets to one file, include=FALSE}
-file <- "~/Desktop/Isabella/Clinical Data/RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx"
+file <- file.path(basedir, "data","RNAseq-CarTrans_Long_Clinical Data_ALL PATIENTS_Export.xlsx")
 
 # Map together different sheets
 sheets <- excel_sheets(file)
@@ -122,13 +127,21 @@ data$`Immunologic Data` <- data$`Immunologic Data` |>
       PIRCHE %in% c("NA", NA) ~ NA_character_,
       TRUE ~ PIRCHE
     ),
+    
+    ### DSA at transplantation
+    AntiHLAAk_Transplantation = dplyr::case_when(
+    AntiHLAAk_Transplantation == "No, not specific" ~ "No",
+    AntiHLAAk_Transplantation == "Yes" ~ "Yes",
+    AntiHLAAk_Transplantation %in% c("NA", NA) ~ NA_character_,
+      TRUE ~ AntiHLAAk_Transplantation
+    ),
 
   ) |>
   dplyr::mutate(
-    PIRCHE = factor(PIRCHE, levels = c("Low risk", "Intermediate risk", "High risk"))
+    AntiHLAAk_Transplantation = factor(AntiHLAAk_Transplantation, levels = c("Yes", "No"))
   )
 
-## Immunological Data
+## Transplantation
 data$`Transplantation` <- data$`Transplantation` |>
   dplyr::mutate(
 
@@ -168,7 +181,9 @@ data$`Immunologic Data` <- data$`Immunologic Data` |>
   dplyr::rename(
   "CMV Status" = CMV,
   "Pirche Score Overall" = total_PircheScore,
-  "Pirche Classification" = PIRCHE
+  "Pirche Classification" = PIRCHE,
+  "Transplantation risk score" = Transplantation_risk,
+  "DSA at transplantation" = AntiHLAAk_Transplantation
   )    
 
 data$`Transplantation` <- data$`Transplantation` |>
@@ -178,14 +193,10 @@ data$`Transplantation` <- data$`Transplantation` |>
   "Donor Transplant status" = HTx_status,
   "Waiting time (d)" = waiting_time
   ) 
-
-data$`Immunosuppression` <- data$`Immunosuppression` |>
-  dplyr::rename(
-  "Transplantation risk score" = Transplantation_risk)
-    
 ```
 
 ```{r merge different lists into one dataframe}
+
 clin <- as.data.frame(data$`Clinical Data`)
 lab <- as.data.frame(data$`Lab Data`)
 trans <- as.data.frame(data$`Transplantation`)
@@ -311,7 +322,8 @@ df <- df %>%
     Aetiology = case_when(
       Aetiology %in% c("Idiopathic","Hereditary","CAD","Immunologic") ~ Aetiology,
       TRUE ~ "Other")
-    )
+    )%>%
+  filter(!ID=="CarTrans-Long-09")
 ```
 
 ```{r choose annotation colours}
@@ -408,6 +420,12 @@ col_anno <- list(
   "Yes" = "#d73027",
    "No" = "white",
     "na" ="white"
+  ),  
+
+  `DSA at transplantation`  = c(
+  "Yes" = "#c994c7",
+   "No" = "white",
+    "na" ="white"
   )
   
 #  `AB0 mismatch`  = c(
@@ -440,7 +458,8 @@ annotation_df <- df %>%
     #CKD,
     `Donor Transplant status`,
     `Organ Care System`,
-    #`AB0 mismatch`
+    #`AB0 mismatch`,
+    `DSA at transplantation` 
   ) %>%
   mutate(across(-ID, as.character)) %>% 
   column_to_rownames("ID")
@@ -461,6 +480,7 @@ top_ha <- HeatmapAnnotation(df = annotation_df,col = col_anno,
     #`Shortterm Mechanical Support` = list(title = "Short-term MCS", at = c("Impella", "ECMO"), labels = c("Impella", "ECMO")),
     #Device = list(title = "Device", at = c("CRT-D", "ICD", "Life Vest"), labels = c("CRT-D", "ICD", "Life Vest")),
     `Pirche Classification` = list(title = "Pirche Classification", at = c("High risk", "Intermediate risk", "Low risk"), labels = c("High risk", "Intermediate risk", "Low risk")),
+    `DSA at transplantation` = list(title = "DSA at transplantation", at = c("Yes"), labels = c("Yes")),
    # Diabetes = list(title = "Diabetes",at = c("Yes"),labels = c("Yes")),
   #  `Pulmonary hypertension` = list(title = "Pulmonary hypertension", at = c("Yes"), labels = c("Yes")),
   #  CKD = list(title = "CKD",at = c("Yes"),labels = c("Yes")),
